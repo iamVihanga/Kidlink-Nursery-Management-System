@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-import LogoIpsum from "$/public/assets/logoipsum.svg";
+import LogoIpsum from "$/public/assets/kidlink_logo.png";
 
 export function Logo() {
   return (
@@ -10,7 +10,7 @@ export function Logo() {
       src={LogoIpsum}
       width={200}
       height={60}
-      className="h-6 w-48 object-contain"
+      className="h-16 w-48 object-contain"
     />
   );
 }

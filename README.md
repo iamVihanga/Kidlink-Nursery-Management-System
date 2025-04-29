@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Development Workflow - Instructions
 
-## Getting Started
+To copy all files and content from the `main` branch of your boilerplate repository to the `main` branch of your blank repository, you can follow these steps using Git. This assumes both repositories are hosted on GitHub and you have appropriate access.
 
-First, run the development server:
+### Steps
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Clone the Blank Repository**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```bash
+   git clone <blank-repo-url>
+   cd <blank-repo-name>
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   Replace `<blank-repo-url>` with the URL of your blank repository and `<blank-repo-name>` with its folder name.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Add the Boilerplate Repository as a Remote**
+   In the blank repository's local folder, add the boilerplate repository as a remote:
 
-## Learn More
+   ```bash
+   git remote add boilerplate <boilerplate-repo-url>
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+   Replace `<boilerplate-repo-url>` with the URL of your boilerplate repository.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Fetch the Boilerplate Repository's Data**
+   Fetch the contents of the boilerplate repository:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   git fetch boilerplate
+   ```
 
-## Deploy on Vercel
+4. **Merge the Boilerplate's Main Branch into Blank's Main Branch**
+   Ensure you're on the `main` branch of the blank repository:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   git checkout main
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   Then, merge the `main` branch from the boilerplate repository:
+
+   ```bash
+   git merge boilerplate/main --allow-unrelated-histories
+   ```
+
+   The `--allow-unrelated-histories` flag is needed because the two repositories have no common history.
+
+5. **Resolve Any Merge Conflicts (if any)**
+   If there are merge conflicts, Git will pause and notify you. Open the conflicting files, resolve the conflicts manually, then mark them as resolved:
+
+   ```bash
+   git add <file>
+   git commit
+   ```
+
+6. **Push the Changes to the Blank Repository**
+   Push the updated `main` branch to the blank repository on GitHub:
+
+   ```bash
+   git push origin main
+   ```
+
+7. **(Optional) Remove the Boilerplate Remote**
+   If you no longer need the boilerplate repository as a remote, you can remove it:
+   ```bash
+   git remote remove boilerplate
+   ```
+
+### Notes
+
+- This process copies all files and commit history from the boilerplate's `main` branch to the blank repository's `main` branch.
+- The blank repository's `dev` and `preview` branches remain unaffected.
+- Ensure you have write access to both repositories.
+- If you don’t want the boilerplate’s commit history, you can copy the files manually (e.g., via `git archive` or direct file copy) and commit them as a new commit in the blank repository. Let me know if you prefer this approach!
+
+Let me know if you encounter issues or need clarification!
+
+---
+
+## Organizational Roles Mapping
+
+1. Platform Level Roles
+
+- Admin (System Admin)
+- User (System User)
+
+2. Organization Roles
+
+- Owner
+- Admin
+- Member
+
+# Credentials
+
+- Admin
+  email: admin@kidlink.app
+  password: kidlinkAdmin
+
+- User
+  email: user@kidlink.app
+  password: kidlinkUser
