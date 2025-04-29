@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma/client";
 import { betterAuth } from "better-auth";
@@ -32,7 +33,7 @@ export const auth = betterAuth({
         return isAdmin;
       },
 
-      async sendInvitationEmail(data, request) {
+      async sendInvitationEmail(data) {
         const inviteLink = `${process.env.NEXT_PUBLIC_API_URL}/accept-invitation/${data.id}`;
 
         console.log({ inviteLink });

@@ -4,7 +4,7 @@ import type { UploadParams, MediaFile } from "@/modules/media/types";
 import {
   generatePresignedUrl,
   generateUniqueFileName,
-  getMediaType,
+  getMediaType
 } from "@/modules/media/utils";
 import { s3Client, s3Config } from "@/modules/media/config";
 
@@ -21,11 +21,7 @@ export class MediaService {
     return MediaService.instance;
   }
 
-  async uploadFile({
-    file,
-    type,
-    path = "",
-  }: UploadParams): Promise<MediaFile> {
+  async uploadFile({ file, path = "" }: UploadParams): Promise<MediaFile> {
     const filename = generateUniqueFileName(file.name);
     const key = path ? `${path}/${filename}` : filename;
 
@@ -39,7 +35,7 @@ export class MediaService {
         Body: buffer,
         ContentType: file.type,
         ACL: "public-read", // This makes the object publicly readable
-        CacheControl: "max-age=31536000", // Optional: 1 year cache
+        CacheControl: "max-age=31536000" // Optional: 1 year cache
       })
     );
 
@@ -49,7 +45,7 @@ export class MediaService {
       type: getMediaType(file.type),
       filename: filename,
       size: file.size,
-      createdAt: new Date(),
+      createdAt: new Date()
     };
   }
 
@@ -57,7 +53,7 @@ export class MediaService {
     await s3Client.send(
       new DeleteObjectCommand({
         Bucket: s3Config.bucket,
-        Key: key,
+        Key: key
       })
     );
   }
