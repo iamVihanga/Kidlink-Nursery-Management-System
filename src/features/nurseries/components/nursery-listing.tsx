@@ -2,19 +2,19 @@
 
 import React from "react";
 
-import { useGetClasses } from "@/features/classes/api/use-get-classes";
+import { useGetNurseries } from "@/features/nurseries/api/use-get-nurseries";
 
-import { columns } from "./classes-table/columns";
-import { useClassesTableFilters } from "./classes-table/use-classes-table-filters";
+import { columns } from "./nurseries-table/columns";
+import { useNurseriesTableFilters } from "./nurseries-table/use-nurseries-table-filters";
 
 import { DataTable } from "@/components/table/data-table";
 import { DataTableSkeleton } from "@/components/table/data-table-skeleton";
 import DataTableError from "@/components/table/data-table-error";
 
-export default function NurseriesTable() {
-  const { page, limit, searchQuery } = useClassesTableFilters();
+export function NurseriesTable() {
+  const { page, limit, searchQuery } = useNurseriesTableFilters();
 
-  const { data, error, isPending } = useGetClasses({
+  const { data, error, isPending } = useGetNurseries({
     limit,
     page,
     search: searchQuery
@@ -31,7 +31,7 @@ export default function NurseriesTable() {
   return (
     <DataTable
       columns={columns}
-      data={data.data}
+      data={data.nurseries}
       totalItems={data.pagination.total}
     />
   );

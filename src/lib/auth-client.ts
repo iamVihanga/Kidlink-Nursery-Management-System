@@ -7,7 +7,7 @@ import { ac, admin, member, owner } from "./permissions";
 import { env } from "@/lib/env";
 
 export const authClient = createAuthClient({
-  baseURL: env.NEXT_PUBLIC_API_URL,
+  baseURL: env.NEXT_PUBLIC_APP_URL,
   plugins: [
     adminClient(),
     organizationClient({

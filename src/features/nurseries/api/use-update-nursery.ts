@@ -2,23 +2,23 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
 import { useId } from "react";
-import { CreateClassSchema } from "../schema/create-class";
-import { authClient } from "@/features/auth/auth-client";
+import { CreateNurserySchema } from "../schemas/create-nursery";
+import { authClient } from "@/lib/auth-client";
 import { toKebabCase } from "@/lib/utils";
 import { MediaFile, MediaUploadPaths } from "@/modules/media/types";
 import { getMediaType } from "@/modules/media/utils";
 import { useMediaUpload } from "@/modules/media/hooks/useMediaUpload";
 
-export const useUpdateClass = () => {
+export const useUpdateNursery = () => {
   const queryClient = useQueryClient();
   const toastId = useId();
   const { upload } = useMediaUpload();
 
   const mutation = useMutation({
-    mutationFn: async (values: CreateClassSchema & { id: string }) => {
+    mutationFn: async (values: CreateNurserySchema & { id: string }) => {
       const finalValues = {
         ...values,
-        image: values.image instanceof File ? values.image : "",
+        image: values.image instanceof File ? values.image : ""
       };
 
       //   Implement image upload process
@@ -36,7 +36,7 @@ export const useUpdateClass = () => {
         uploadResult = await upload({
           file: imageFile,
           type: type,
-          path: MediaUploadPaths.ORGANIZATIONS,
+          path: MediaUploadPaths.ORGANIZATIONS
         });
       }
 
@@ -45,11 +45,11 @@ export const useUpdateClass = () => {
           name: finalValues.name,
           logo: uploadResult?.url || undefined,
           metadata: {
-            description: finalValues.description,
+            description: finalValues.description
           },
-          slug: toKebabCase(finalValues.name),
+          slug: toKebabCase(finalValues.name)
         },
-        organizationId: finalValues.id,
+        organizationId: finalValues.id
       });
 
       if (error) throw new Error(error.message);
@@ -57,17 +57,17 @@ export const useUpdateClass = () => {
       return data;
     },
     onMutate: () => {
-      toast.loading("Updating class...", { id: toastId });
+      toast.loading("Updating nursery...", { id: toastId });
     },
     onSuccess: () => {
-      toast.success("Class updated successfully !", { id: toastId });
-      queryClient.invalidateQueries({ queryKey: ["classes"] });
+      toast.success("Nursery updated successfully !", { id: toastId });
+      queryClient.invalidateQueries({ queryKey: ["nurseries"] });
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to update class", {
-        id: toastId,
+      toast.error(error.message || "Failed to update nursery", {
+        id: toastId
       });
-    },
+    }
   });
 
   return mutation;

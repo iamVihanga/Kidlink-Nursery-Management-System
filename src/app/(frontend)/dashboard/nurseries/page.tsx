@@ -5,8 +5,8 @@ import PageContainer from "@/components/layouts/page-container";
 import { Separator } from "@/components/ui/separator";
 
 import { AddNewNursery } from "@/features/nurseries/components/add-new-nursery-modal";
-// import ClassListing from "@/features/nurseries/components/nursery-listing";
-// import { ClassesTableActions } from "@/features/nurseries/components/nurseries-table/nurseries-table-actions";
+import { NurseriesTable as NurseriesListing } from "@/features/nurseries/components/nursery-listing";
+import { NurseriesTableActions } from "@/features/nurseries/components/nurseries-table/nurseries-table-actions";
 
 export default function ClassesPage() {
   return (
@@ -20,9 +20,9 @@ export default function ClassesPage() {
 
         <Separator />
 
-        {/* <ClassesTableActions />
+        <NurseriesTableActions />
 
-        <ClassListing /> */}
+        <NurseriesListing />
       </div>
     </PageContainer>
   );
