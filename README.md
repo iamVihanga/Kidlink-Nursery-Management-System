@@ -85,9 +85,9 @@ Let me know if you encounter issues or need clarification!
 
 2. Organization Roles
 
-- Owner
-- Admin
-- Member
+- Owner -> Nursery Admin
+- Admin -> Teacher
+- Member -> Parent
 
 # Credentials
 
