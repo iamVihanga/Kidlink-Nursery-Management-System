@@ -10,8 +10,7 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar
+  SidebarMenuItem
 } from "@/components/ui/sidebar";
 
 export function NavNurseryManagement({
@@ -26,7 +25,6 @@ export function NavNurseryManagement({
   }[];
   activeMemberRole: string;
 }) {
-  const { isMobile } = useSidebar();
   const pathname = usePathname();
 
   const [access, setAccess] = useState<"owner" | "admin" | string | null>(

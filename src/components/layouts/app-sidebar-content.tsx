@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useEffect, useTransition } from "react";
+import React, { useEffect } from "react";
 import {
   AudioWaveform,
   Command,
@@ -9,13 +10,9 @@ import {
   GraduationCapIcon,
   UsersIcon,
   LayoutDashboard,
-  BookOpenIcon,
-  LibraryBigIcon,
-  FileQuestionIcon,
   ShieldIcon,
   UserCog2Icon,
-  School2Icon,
-  Shield
+  School2Icon
 } from "lucide-react";
 
 import { type Session } from "@/lib/auth";
@@ -39,7 +36,7 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
     if (activeOrganization) router.refresh();
   }, [activeOrganization]);
 
-  let data = {
+  const data = {
     teams: [
       {
         name: "Acme Inc",
@@ -89,6 +86,7 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
         roles: ["admin", "owner"]
       }
     ],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getContents: (isAdmin: boolean) => [
       // {
       //   title: "Lessons",
