@@ -1,13 +1,11 @@
 "use client";
 import React from "react";
 
-import { useClassesTableFilters } from "./use-classes-table-filters";
+import { useNurseriesTableFilters } from "./use-nurseries-table-filters";
 import { DataTableSearch } from "@/components/table/data-table-search";
 import { DataTableResetFilter } from "@/components/table/data-table-reset-filter";
 
-type Props = {};
-
-export function ClassesTableActions({}: Props) {
+export function NurseriesTableActions() {
   const {
     // Search
     searchQuery,
@@ -18,8 +16,8 @@ export function ClassesTableActions({}: Props) {
 
     // Reset
     resetFilters,
-    isAnyFilterActive,
-  } = useClassesTableFilters();
+    isAnyFilterActive
+  } = useNurseriesTableFilters();
 
   return (
     <div className="flex flex-wrap items-center gap-4">

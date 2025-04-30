@@ -5,7 +5,7 @@ import { useQueryState } from "nuqs";
 
 import { searchParams } from "@/lib/searchparams";
 
-export function useClassesTableFilters() {
+export function useNurseriesTableFilters() {
   const [searchQuery, setSearchQuery] = useQueryState(
     "q",
     searchParams.q
@@ -47,6 +47,6 @@ export function useClassesTableFilters() {
 
     // Reset
     resetFilters,
-    isAnyFilterActive,
+    isAnyFilterActive
   };
 }

@@ -20,14 +20,12 @@ export const useGetNurseries = (params: FilterParams) => {
         ...(search && { search })
       };
 
-      const response = await client.api.classes.$get({
+      const response = await client.api.nurseries.$get({
         query: queryParams
       });
 
       if (!response.ok) {
-        const { error } = await response.json();
-
-        throw new Error(error || "Failed to fetch classes");
+        throw new Error("Failed to fetch nurseries");
       }
 
       const data = await response.json();

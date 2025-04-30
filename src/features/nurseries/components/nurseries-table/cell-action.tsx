@@ -22,22 +22,22 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import { Classes } from "./columns";
+import { Nurseries } from "./columns";
 import { authClient } from "@/lib/auth-client";
 
-import { useDeleteClass } from "../../api/use-delete-nursery";
-import { UpdateClassSheet } from "../update-class-sheet";
-import { useLeaveClass } from "../../api/use-leave-class";
+import { useDeleteNursery } from "@/features/nurseries/api/use-delete-nursery";
+import { useLeaveNursery } from "@/features/nurseries/api/use-leave-nursery";
+import { UpdateNurserySheet } from "@/features/nurseries/components/update-nursery-sheet";
 
 interface CellActionProps {
-  data: Classes;
+  data: Nurseries;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { data: sessionData } = authClient.useSession();
 
-  const { mutate, isPending } = useDeleteClass();
-  const { mutate: mutateLeave, isPending: leaving } = useLeaveClass();
+  const { mutate, isPending } = useDeleteNursery();
+  const { mutate: mutateLeave, isPending: leaving } = useLeaveNursery();
 
   const [isUpdateOpen, setUpdateOpen] = useState(false);
   const [isLeaveOpen, setLeaveOpen] = useState(false);
@@ -50,10 +50,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   return (
     <>
       {/* Update Sheet */}
-      <UpdateClassSheet
+      <UpdateNurserySheet
         open={isUpdateOpen}
         setOpen={setUpdateOpen}
-        updateClassId={data.id}
+        updateNurseryId={data.id}
       />
 
       {/* Alert Dialog */}
@@ -63,7 +63,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete created
-              class and remove data from our servers.
+              nursery and remove data from our servers.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -88,7 +88,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              {`You'll be left from the selected class.`}
+              {`You'll be left from the selected nursery.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

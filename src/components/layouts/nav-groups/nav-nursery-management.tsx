@@ -37,7 +37,7 @@ export function NavNurseryManagement({
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Class Management</SidebarGroupLabel>
+      <SidebarGroupLabel>Nursery Management</SidebarGroupLabel>
       <SidebarMenu>
         {cmLinks.map((item) => {
           const isPublic = !item?.roles;

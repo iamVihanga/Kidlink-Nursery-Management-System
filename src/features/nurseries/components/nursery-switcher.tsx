@@ -154,7 +154,7 @@ export function NurserySwitcher() {
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Classes
+              Nurseries
             </DropdownMenuLabel>
             {!isPendingAllNurseries && allNurseries ? (
               allNurseries.map((nursery) => (

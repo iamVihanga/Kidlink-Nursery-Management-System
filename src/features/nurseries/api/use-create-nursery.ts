@@ -61,7 +61,7 @@ export const useCreateClass = () => {
     },
     onSuccess: () => {
       toast.success("Nursery created successfully !", { id: toastId });
-      queryClient.invalidateQueries({ queryKey: ["classes"] });
+      queryClient.invalidateQueries({ queryKey: ["nurseries"] });
     },
     onError: (error) => {
       toast.error(error.message || "Failed to create nursery", {
