@@ -211,11 +211,11 @@ export type BankDetails = z.infer<typeof BankDetailsSchema>
 
 export const NurseryDetailsSchema = z.object({
   id: z.string(),
-  address: z.string(),
-  phoneNumber: z.string(),
-  email: z.string(),
-  themePrimaryColor: z.string(),
-  themeSecondaryColor: z.string(),
+  address: z.string().nullable(),
+  phoneNumber: z.string().nullable(),
+  email: z.string().nullable(),
+  themePrimaryColor: z.string().nullable(),
+  themeSecondaryColor: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   organizationId: z.string(),
@@ -1273,11 +1273,11 @@ export const NurseryDetailsWhereInputSchema: z.ZodType<Prisma.NurseryDetailsWher
   OR: z.lazy(() => NurseryDetailsWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => NurseryDetailsWhereInputSchema),z.lazy(() => NurseryDetailsWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  address: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  phoneNumber: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  email: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  themePrimaryColor: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  themeSecondaryColor: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  address: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  phoneNumber: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  email: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  themePrimaryColor: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  themeSecondaryColor: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   organizationId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
@@ -1317,11 +1317,11 @@ export const NurseryDetailsWhereUniqueInputSchema: z.ZodType<Prisma.NurseryDetai
   AND: z.union([ z.lazy(() => NurseryDetailsWhereInputSchema),z.lazy(() => NurseryDetailsWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => NurseryDetailsWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => NurseryDetailsWhereInputSchema),z.lazy(() => NurseryDetailsWhereInputSchema).array() ]).optional(),
-  address: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  phoneNumber: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  email: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  themePrimaryColor: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  themeSecondaryColor: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  address: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  phoneNumber: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  email: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  themePrimaryColor: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  themeSecondaryColor: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   organization: z.union([ z.lazy(() => OrganizationScalarRelationFilterSchema),z.lazy(() => OrganizationWhereInputSchema) ]).optional(),
@@ -1348,11 +1348,11 @@ export const NurseryDetailsScalarWhereWithAggregatesInputSchema: z.ZodType<Prism
   OR: z.lazy(() => NurseryDetailsScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => NurseryDetailsScalarWhereWithAggregatesInputSchema),z.lazy(() => NurseryDetailsScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  address: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  phoneNumber: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  email: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  themePrimaryColor: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  themeSecondaryColor: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  address: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  phoneNumber: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  email: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  themePrimaryColor: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  themeSecondaryColor: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   organizationId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
@@ -2086,11 +2086,11 @@ export const BankDetailsUncheckedUpdateManyInputSchema: z.ZodType<Prisma.BankDet
 
 export const NurseryDetailsCreateInputSchema: z.ZodType<Prisma.NurseryDetailsCreateInput> = z.object({
   id: z.string().optional(),
-  address: z.string(),
-  phoneNumber: z.string(),
-  email: z.string(),
-  themePrimaryColor: z.string(),
-  themeSecondaryColor: z.string(),
+  address: z.string().optional().nullable(),
+  phoneNumber: z.string().optional().nullable(),
+  email: z.string().optional().nullable(),
+  themePrimaryColor: z.string().optional().nullable(),
+  themeSecondaryColor: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   organization: z.lazy(() => OrganizationCreateNestedOneWithoutNurseryDetailsInputSchema),
@@ -2099,11 +2099,11 @@ export const NurseryDetailsCreateInputSchema: z.ZodType<Prisma.NurseryDetailsCre
 
 export const NurseryDetailsUncheckedCreateInputSchema: z.ZodType<Prisma.NurseryDetailsUncheckedCreateInput> = z.object({
   id: z.string().optional(),
-  address: z.string(),
-  phoneNumber: z.string(),
-  email: z.string(),
-  themePrimaryColor: z.string(),
-  themeSecondaryColor: z.string(),
+  address: z.string().optional().nullable(),
+  phoneNumber: z.string().optional().nullable(),
+  email: z.string().optional().nullable(),
+  themePrimaryColor: z.string().optional().nullable(),
+  themeSecondaryColor: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   organizationId: z.string(),
@@ -2111,11 +2111,11 @@ export const NurseryDetailsUncheckedCreateInputSchema: z.ZodType<Prisma.NurseryD
 }).strict();
 
 export const NurseryDetailsUpdateInputSchema: z.ZodType<Prisma.NurseryDetailsUpdateInput> = z.object({
-  address: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phoneNumber: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themePrimaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themeSecondaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  address: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  phoneNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themePrimaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themeSecondaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   organization: z.lazy(() => OrganizationUpdateOneRequiredWithoutNurseryDetailsNestedInputSchema).optional(),
@@ -2123,11 +2123,11 @@ export const NurseryDetailsUpdateInputSchema: z.ZodType<Prisma.NurseryDetailsUpd
 }).strict();
 
 export const NurseryDetailsUncheckedUpdateInputSchema: z.ZodType<Prisma.NurseryDetailsUncheckedUpdateInput> = z.object({
-  address: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phoneNumber: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themePrimaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themeSecondaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  address: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  phoneNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themePrimaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themeSecondaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   organizationId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2136,32 +2136,32 @@ export const NurseryDetailsUncheckedUpdateInputSchema: z.ZodType<Prisma.NurseryD
 
 export const NurseryDetailsCreateManyInputSchema: z.ZodType<Prisma.NurseryDetailsCreateManyInput> = z.object({
   id: z.string().optional(),
-  address: z.string(),
-  phoneNumber: z.string(),
-  email: z.string(),
-  themePrimaryColor: z.string(),
-  themeSecondaryColor: z.string(),
+  address: z.string().optional().nullable(),
+  phoneNumber: z.string().optional().nullable(),
+  email: z.string().optional().nullable(),
+  themePrimaryColor: z.string().optional().nullable(),
+  themeSecondaryColor: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   organizationId: z.string()
 }).strict();
 
 export const NurseryDetailsUpdateManyMutationInputSchema: z.ZodType<Prisma.NurseryDetailsUpdateManyMutationInput> = z.object({
-  address: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phoneNumber: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themePrimaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themeSecondaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  address: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  phoneNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themePrimaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themeSecondaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const NurseryDetailsUncheckedUpdateManyInputSchema: z.ZodType<Prisma.NurseryDetailsUncheckedUpdateManyInput> = z.object({
-  address: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phoneNumber: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themePrimaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themeSecondaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  address: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  phoneNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themePrimaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themeSecondaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   organizationId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3943,11 +3943,11 @@ export const InvitationCreateManyOrganizationInputEnvelopeSchema: z.ZodType<Pris
 
 export const NurseryDetailsCreateWithoutOrganizationInputSchema: z.ZodType<Prisma.NurseryDetailsCreateWithoutOrganizationInput> = z.object({
   id: z.string().optional(),
-  address: z.string(),
-  phoneNumber: z.string(),
-  email: z.string(),
-  themePrimaryColor: z.string(),
-  themeSecondaryColor: z.string(),
+  address: z.string().optional().nullable(),
+  phoneNumber: z.string().optional().nullable(),
+  email: z.string().optional().nullable(),
+  themePrimaryColor: z.string().optional().nullable(),
+  themeSecondaryColor: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   bankDetails: z.lazy(() => BankDetailsCreateNestedOneWithoutNurseryDetailsInputSchema).optional()
@@ -3955,11 +3955,11 @@ export const NurseryDetailsCreateWithoutOrganizationInputSchema: z.ZodType<Prism
 
 export const NurseryDetailsUncheckedCreateWithoutOrganizationInputSchema: z.ZodType<Prisma.NurseryDetailsUncheckedCreateWithoutOrganizationInput> = z.object({
   id: z.string().optional(),
-  address: z.string(),
-  phoneNumber: z.string(),
-  email: z.string(),
-  themePrimaryColor: z.string(),
-  themeSecondaryColor: z.string(),
+  address: z.string().optional().nullable(),
+  phoneNumber: z.string().optional().nullable(),
+  email: z.string().optional().nullable(),
+  themePrimaryColor: z.string().optional().nullable(),
+  themeSecondaryColor: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   bankDetails: z.lazy(() => BankDetailsUncheckedCreateNestedOneWithoutNurseryDetailsInputSchema).optional()
@@ -4014,22 +4014,22 @@ export const NurseryDetailsUpdateToOneWithWhereWithoutOrganizationInputSchema: z
 }).strict();
 
 export const NurseryDetailsUpdateWithoutOrganizationInputSchema: z.ZodType<Prisma.NurseryDetailsUpdateWithoutOrganizationInput> = z.object({
-  address: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phoneNumber: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themePrimaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themeSecondaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  address: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  phoneNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themePrimaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themeSecondaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   bankDetails: z.lazy(() => BankDetailsUpdateOneWithoutNurseryDetailsNestedInputSchema).optional()
 }).strict();
 
 export const NurseryDetailsUncheckedUpdateWithoutOrganizationInputSchema: z.ZodType<Prisma.NurseryDetailsUncheckedUpdateWithoutOrganizationInput> = z.object({
-  address: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phoneNumber: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themePrimaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themeSecondaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  address: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  phoneNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themePrimaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themeSecondaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   bankDetails: z.lazy(() => BankDetailsUncheckedUpdateOneWithoutNurseryDetailsNestedInputSchema).optional()
@@ -4423,11 +4423,11 @@ export const UserUncheckedUpdateWithoutTwofactorsInputSchema: z.ZodType<Prisma.U
 
 export const NurseryDetailsCreateWithoutBankDetailsInputSchema: z.ZodType<Prisma.NurseryDetailsCreateWithoutBankDetailsInput> = z.object({
   id: z.string().optional(),
-  address: z.string(),
-  phoneNumber: z.string(),
-  email: z.string(),
-  themePrimaryColor: z.string(),
-  themeSecondaryColor: z.string(),
+  address: z.string().optional().nullable(),
+  phoneNumber: z.string().optional().nullable(),
+  email: z.string().optional().nullable(),
+  themePrimaryColor: z.string().optional().nullable(),
+  themeSecondaryColor: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   organization: z.lazy(() => OrganizationCreateNestedOneWithoutNurseryDetailsInputSchema)
@@ -4435,11 +4435,11 @@ export const NurseryDetailsCreateWithoutBankDetailsInputSchema: z.ZodType<Prisma
 
 export const NurseryDetailsUncheckedCreateWithoutBankDetailsInputSchema: z.ZodType<Prisma.NurseryDetailsUncheckedCreateWithoutBankDetailsInput> = z.object({
   id: z.string().optional(),
-  address: z.string(),
-  phoneNumber: z.string(),
-  email: z.string(),
-  themePrimaryColor: z.string(),
-  themeSecondaryColor: z.string(),
+  address: z.string().optional().nullable(),
+  phoneNumber: z.string().optional().nullable(),
+  email: z.string().optional().nullable(),
+  themePrimaryColor: z.string().optional().nullable(),
+  themeSecondaryColor: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   organizationId: z.string()
@@ -4462,22 +4462,22 @@ export const NurseryDetailsUpdateToOneWithWhereWithoutBankDetailsInputSchema: z.
 }).strict();
 
 export const NurseryDetailsUpdateWithoutBankDetailsInputSchema: z.ZodType<Prisma.NurseryDetailsUpdateWithoutBankDetailsInput> = z.object({
-  address: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phoneNumber: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themePrimaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themeSecondaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  address: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  phoneNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themePrimaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themeSecondaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   organization: z.lazy(() => OrganizationUpdateOneRequiredWithoutNurseryDetailsNestedInputSchema).optional()
 }).strict();
 
 export const NurseryDetailsUncheckedUpdateWithoutBankDetailsInputSchema: z.ZodType<Prisma.NurseryDetailsUncheckedUpdateWithoutBankDetailsInput> = z.object({
-  address: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phoneNumber: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themePrimaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  themeSecondaryColor: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  address: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  phoneNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themePrimaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  themeSecondaryColor: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   organizationId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),

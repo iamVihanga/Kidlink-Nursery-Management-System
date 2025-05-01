@@ -164,11 +164,11 @@ model BankDetails {
 
 model NurseryDetails {
   id                  String       @id @default(auto()) @map("_id") @db.ObjectId
-  address             String
-  phoneNumber         String
-  email               String
-  themePrimaryColor   String
-  themeSecondaryColor String
+  address             String?
+  phoneNumber         String?
+  email               String?
+  themePrimaryColor   String?
+  themeSecondaryColor String?
   createdAt           DateTime     @default(now())
   updatedAt           DateTime     @updatedAt
   organizationId      String       @unique

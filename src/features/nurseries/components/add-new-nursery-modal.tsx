@@ -33,12 +33,12 @@ import {
   type CreateNurserySchema
 } from "../schemas/create-nursery";
 
-import { useCreateClass } from "../api/use-create-nursery";
+import { useCreateNursery } from "../api/use-create-nursery";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function AddNewNursery() {
   const { data: session, isPending: sessionPending } = authClient.useSession();
-  const { isPending, mutate } = useCreateClass();
+  const { isPending, mutate } = useCreateNursery();
 
   const [open, setOpen] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
