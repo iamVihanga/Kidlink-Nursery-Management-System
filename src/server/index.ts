@@ -6,6 +6,7 @@ import { authController } from "@/server/routes/auth/auth.routes";
 import rootRoute from "@/server/routes/root/index.route"; // Test Purpose
 import tasksRoute from "@/server/routes/tasks/tasks.index"; // Test Purpose
 import nurseriesRoute from "@/server/routes/nurseries/nurseries.index";
+// import bankDetailsRoute from "@/server/routes/bank-details/bankDetails.index";
 
 const app = createApp();
 
@@ -18,6 +19,7 @@ const routes = app
   .route("/", rootRoute)
   .route("/tasks", tasksRoute)
   .route("/nurseries", nurseriesRoute);
+// .route("/bank-details", bankDetailsRoute);
 
 export type AppType = typeof routes;
 

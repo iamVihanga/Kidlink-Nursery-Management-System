@@ -10,7 +10,7 @@ import { getMediaType } from "@/modules/media/utils";
 import { MediaFile, MediaUploadPaths } from "@/modules/media/types";
 import { useMediaUpload } from "@/modules/media/hooks/useMediaUpload";
 
-export const useCreateClass = () => {
+export const useCreateNursery = () => {
   const queryClient = useQueryClient();
   const toastId = useId();
   const { upload } = useMediaUpload();

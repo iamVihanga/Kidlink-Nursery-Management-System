@@ -3,11 +3,23 @@
 import * as HttpStatusCodes from "stoker/http-status-codes";
 
 import { prisma } from "@/server/prisma/client";
-import { ListRoute } from "@/server/routes/nurseries/nurseries.routes";
+import type {
+  ListRoute,
+  AddDetailsRoute,
+  GetDetailsRoute,
+  CreateBankDetailsRoute,
+  GetBankDetailsRoute
+} from "@/server/routes/nurseries/nurseries.routes";
 import { AppRouteHandler } from "@/types/server";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const user = c.get("user");
+
+  if (!user)
+    return c.json(
+      { message: "Unauthenticated user" },
+      HttpStatusCodes.UNAUTHORIZED
+    );
 
   const isAdmin = user?.role === "admin";
 
@@ -91,4 +103,203 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
     },
     HttpStatusCodes.OK
   );
+};
+
+export const addDetails: AppRouteHandler<AddDetailsRoute> = async (c) => {
+  const user = c.get("user");
+
+  if (!user) {
+    return c.json(
+      { message: "Unauthenticated user" },
+      HttpStatusCodes.UNAUTHORIZED
+    );
+  }
+
+  // Get the nursery ID from the request parameters
+  const { id } = c.req.valid("param");
+
+  // Get nursery (organization) by id
+  const organization = await prisma.organization.findUnique({
+    where: { id },
+    include: {
+      nurseryDetails: true
+    }
+  });
+
+  if (!organization) {
+    return c.json({ message: "Nursery not found" }, HttpStatusCodes.NOT_FOUND);
+  }
+
+  // Check if the user is a admin / owner of the organization
+  const currentUserOrgRole = await prisma.member.findFirst({
+    where: { organizationId: organization.id, userId: user.id },
+    select: { role: true }
+  });
+
+  if (currentUserOrgRole?.role !== "owner") {
+    if (currentUserOrgRole?.role !== "admin") {
+      return c.json(
+        {
+          message:
+            "Request Forbidden: Only Nursery owners or admins can update nursery details"
+        },
+        HttpStatusCodes.FORBIDDEN
+      );
+    }
+  }
+
+  // Get the nursery details from the request body
+  const newNurseryDetails = c.req.valid("json");
+
+  /**
+   * Check nursery details already exists
+   * - If it exists, update it
+   * - If it doesn't exist, create it
+   */
+  if (organization.nurseryDetails) {
+    const updatedRecord = await prisma.nurseryDetails.update({
+      where: { id: organization.nurseryDetails.id },
+      data: newNurseryDetails
+    });
+
+    return c.json(updatedRecord, HttpStatusCodes.OK);
+  }
+
+  const createdRecord = await prisma.nurseryDetails.create({
+    data: {
+      address: (newNurseryDetails?.address || "").toString(),
+      email: (newNurseryDetails?.email || "").toString(),
+      phoneNumber: (newNurseryDetails?.phoneNumber || "").toString(),
+      themePrimaryColor: (
+        newNurseryDetails?.themePrimaryColor || ""
+      ).toString(),
+      themeSecondaryColor: (
+        newNurseryDetails?.themeSecondaryColor || ""
+      ).toString(),
+      organizationId: organization.id
+    }
+  });
+
+  return c.json(createdRecord, HttpStatusCodes.OK);
+};
+
+export const getDetails: AppRouteHandler<GetDetailsRoute> = async (c) => {
+  const user = c.get("user");
+
+  if (!user) {
+    return c.json(
+      { message: "Unauthenticated user" },
+      HttpStatusCodes.UNAUTHORIZED
+    );
+  }
+
+  // Get the nursery ID from the request parameters
+  const { id } = c.req.valid("param");
+
+  // Get nursery (organization) by id
+  const organization = await prisma.organization.findUnique({
+    where: { id },
+    include: {
+      nurseryDetails: true
+    }
+  });
+
+  if (!organization) {
+    return c.json({ message: "Nursery not found" }, HttpStatusCodes.NOT_FOUND);
+  }
+
+  if (!organization.nurseryDetails) {
+    return c.json(
+      { message: "Nursery details not found" },
+      HttpStatusCodes.NOT_FOUND
+    );
+  }
+
+  return c.json(organization.nurseryDetails, HttpStatusCodes.OK);
+};
+
+export const getBankDetails: AppRouteHandler<GetBankDetailsRoute> = async (
+  c
+) => {
+  const user = c.get("user");
+
+  if (!user) {
+    return c.json(
+      { message: "Unauthenticated user" },
+      HttpStatusCodes.UNAUTHORIZED
+    );
+  }
+
+  // Get the nursery ID from the request parameters
+  const { id } = c.req.valid("param");
+
+  // Get nursery (organization) by id
+  const organization = await prisma.organization.findUnique({
+    where: { id },
+    select: { nurseryDetails: true }
+  });
+
+  if (!organization) {
+    return c.json({ message: "Nursery not found" }, HttpStatusCodes.NOT_FOUND);
+  }
+
+  if (!organization.nurseryDetails) {
+    return c.json(
+      { message: "Nursery details not added" },
+      HttpStatusCodes.NOT_FOUND
+    );
+  }
+
+  // Get nursery bank details by organization id
+  const bankDetails = await prisma.bankDetails.findUnique({
+    where: { nurseryDetailsId: organization.nurseryDetails.id }
+  });
+
+  if (!bankDetails) {
+    return c.json(
+      { message: "Bank details not found" },
+      HttpStatusCodes.NOT_FOUND
+    );
+  }
+
+  return c.json(bankDetails, HttpStatusCodes.OK);
+};
+
+export const createBankDetails: AppRouteHandler<
+  CreateBankDetailsRoute
+> = async (c) => {
+  const user = c.get("user");
+
+  if (!user) {
+    return c.json(
+      { message: "Unauthenticated user" },
+      HttpStatusCodes.UNAUTHORIZED
+    );
+  }
+
+  // Get the nursery ID from the request parameters
+  const { id } = c.req.valid("param");
+  const body = c.req.valid("json");
+
+  const nursery = await prisma.organization.findUnique({
+    where: { id },
+    include: { nurseryDetails: true }
+  });
+
+  if (!nursery || !nursery.nurseryDetails) {
+    return c.json(
+      { message: "Nursery or Nursery Details not found" },
+      HttpStatusCodes.NOT_FOUND
+    );
+  }
+
+  // Create nursery bank details
+  const createdBankDetails = await prisma.bankDetails.create({
+    data: {
+      ...body,
+      nurseryDetailsId: nursery.nurseryDetails.id
+    }
+  });
+
+  return c.json(createdBankDetails, HttpStatusCodes.OK);
 };

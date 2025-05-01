@@ -32,8 +32,10 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
 import { ImageIcon, Upload } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import { useUpdateNursery } from "@/features/nurseries/api/use-update-nursery";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { UpdateNurseryDetails } from "./update-nursery-details";
+import { UpdateNurseryBankDetails } from "./update-nursery-bank-details";
 
 interface UpdateNurserySheetProps {
   open: boolean;
@@ -133,149 +135,165 @@ export function UpdateNurserySheet({
           </SheetDescription>
         </SheetHeader>
 
-        {/* Update Form */}
-        {isFetching ? (
-          <div className="grid gap-6 py-8 px-6">
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-52" />
-              <Skeleton className="h-8 w-full" />
-            </div>
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-52" />
-              <Skeleton className="h-8 w-full" />
-            </div>
-            <div className="flex items-center gap-3 w-full">
-              <Skeleton className="size-14 rounded-full" />
-              <div className="space-y-2 flex-1">
+        <ScrollArea className="h-full pb-36">
+          {/* Update Form */}
+          {isFetching ? (
+            <div className="grid gap-6 py-2 px-6">
+              <div className="space-y-2">
                 <Skeleton className="h-4 w-52" />
-                <Skeleton className="h-8 w-40" />
+                <Skeleton className="h-8 w-full" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-52" />
+                <Skeleton className="h-8 w-full" />
+              </div>
+              <div className="flex items-center gap-3 w-full">
+                <Skeleton className="size-14 rounded-full" />
+                <div className="space-y-2 flex-1">
+                  <Skeleton className="h-4 w-52" />
+                  <Skeleton className="h-8 w-40" />
+                </div>
               </div>
             </div>
-          </div>
-        ) : (
-          currentNursery && (
-            <Form {...form}>
-              <form className="px-6" onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="flex flex-col gap-y-5 my-8">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nursery name</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Enter nursery name" />
-                        </FormControl>
-
-                        <FormMessage {...field} />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Description</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Nursery description (Ex: Gampaha)"
-                          />
-                        </FormControl>
-
-                        <FormMessage {...field} />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="image"
-                    render={({ field }) => (
-                      <div className="flex flex-col gap-y-2">
-                        <div className="flex items-center gap-x-5">
-                          {field.value ? (
-                            <div className="size-[72px] relative rounded-md overflow-hidden">
-                              <Image
-                                alt="logo"
-                                fill
-                                className="object-cover"
-                                src={
-                                  field.value instanceof File
-                                    ? URL.createObjectURL(field.value)
-                                    : field.value
-                                }
+          ) : (
+            currentNursery && (
+              <div className="flex flex-col">
+                {/* Basic Settings Form */}
+                <Form {...form}>
+                  <form className="px-6" onSubmit={form.handleSubmit(onSubmit)}>
+                    <div className="flex flex-col gap-y-5 my-2">
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nursery name</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="Enter nursery name"
                               />
+                            </FormControl>
+
+                            <FormMessage {...field} />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Description</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="Nursery description (Ex: Gampaha)"
+                              />
+                            </FormControl>
+
+                            <FormMessage {...field} />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="image"
+                        render={({ field }) => (
+                          <div className="flex flex-col gap-y-2">
+                            <div className="flex items-center gap-x-5">
+                              {field.value ? (
+                                <div className="size-[72px] relative rounded-md overflow-hidden">
+                                  <Image
+                                    alt="logo"
+                                    fill
+                                    className="object-cover"
+                                    src={
+                                      field.value instanceof File
+                                        ? URL.createObjectURL(field.value)
+                                        : field.value
+                                    }
+                                  />
+                                </div>
+                              ) : (
+                                <Avatar className="size-[72px]">
+                                  <AvatarFallback>
+                                    <ImageIcon className="size-[36px] text-neutral-400" />
+                                  </AvatarFallback>
+                                </Avatar>
+                              )}
+                              <div className="flex flex-col">
+                                <p className="text-sm">Nursery Logo</p>
+                                <p className="text-xs text-muted-foreground">
+                                  {`JPG, PNG, SVG or JPEG (max 1MB)`}
+                                </p>
+                                <input
+                                  className="hidden"
+                                  type="file"
+                                  accept=".jpg, .png, .jpeg, .svg"
+                                  ref={inputRef}
+                                  disabled={isPending}
+                                  onChange={handleImageChange}
+                                />
+                                {field.value ? (
+                                  <Button
+                                    type="button"
+                                    disabled={isPending}
+                                    variant={"destructive"}
+                                    size="sm"
+                                    className="w-fit mt-2"
+                                    onClick={() => {
+                                      field.onChange(null);
+                                      if (inputRef.current) {
+                                        inputRef.current.value = "";
+                                      }
+                                    }}
+                                    icon={<Upload className="size-3" />}
+                                  >
+                                    Remove Image
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    type="button"
+                                    disabled={isPending}
+                                    variant={"default"}
+                                    size="sm"
+                                    className="w-fit mt-2"
+                                    onClick={() => inputRef.current?.click()}
+                                    icon={<Upload className="size-3" />}
+                                  >
+                                    Upload Image
+                                  </Button>
+                                )}
+                              </div>
                             </div>
-                          ) : (
-                            <Avatar className="size-[72px]">
-                              <AvatarFallback>
-                                <ImageIcon className="size-[36px] text-neutral-400" />
-                              </AvatarFallback>
-                            </Avatar>
-                          )}
-                          <div className="flex flex-col">
-                            <p className="text-sm">Nursery Logo</p>
-                            <p className="text-xs text-muted-foreground">
-                              {`JPG, PNG, SVG or JPEG (max 1MB)`}
-                            </p>
-                            <input
-                              className="hidden"
-                              type="file"
-                              accept=".jpg, .png, .jpeg, .svg"
-                              ref={inputRef}
-                              disabled={isPending}
-                              onChange={handleImageChange}
-                            />
-                            {field.value ? (
-                              <Button
-                                type="button"
-                                disabled={isPending}
-                                variant={"destructive"}
-                                size="sm"
-                                className="w-fit mt-2"
-                                onClick={() => {
-                                  field.onChange(null);
-                                  if (inputRef.current) {
-                                    inputRef.current.value = "";
-                                  }
-                                }}
-                                icon={<Upload className="size-3" />}
-                              >
-                                Remove Image
-                              </Button>
-                            ) : (
-                              <Button
-                                type="button"
-                                disabled={isPending}
-                                variant={"default"}
-                                size="sm"
-                                className="w-fit mt-2"
-                                onClick={() => inputRef.current?.click()}
-                                icon={<Upload className="size-3" />}
-                              >
-                                Upload Image
-                              </Button>
-                            )}
                           </div>
-                        </div>
-                      </div>
-                    )}
-                  />
+                        )}
+                      />
+                    </div>
+
+                    <SheetFooter className="px-0">
+                      <SheetClose asChild>
+                        <Button type="submit">Save Basic Settings</Button>
+                      </SheetClose>
+                    </SheetFooter>
+                  </form>
+                </Form>
+
+                {/* Nursery Details Form */}
+                <div className="">
+                  <UpdateNurseryDetails currentNursery={currentNursery} />
                 </div>
 
-                <Separator className="my-4" />
-
-                <SheetFooter>
-                  <SheetClose asChild>
-                    <Button type="submit">Save changes</Button>
-                  </SheetClose>
-                </SheetFooter>
-              </form>
-            </Form>
-          )
-        )}
+                {/* Bank Details Form */}
+                <div className="">
+                  <UpdateNurseryBankDetails currentNursery={currentNursery} />
+                </div>
+              </div>
+            )
+          )}
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   );
