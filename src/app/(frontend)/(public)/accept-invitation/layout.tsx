@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import {
@@ -32,7 +32,13 @@ export default async function AcceptInviteLayout({ children }: Props) {
       </CardHeader>
 
       <CardContent>
-        {session ? children : <SigninForm invitationPage />}
+        {session ? (
+          children
+        ) : (
+          <Suspense fallback={<></>}>
+            <SigninForm invitationPage />
+          </Suspense>
+        )}
       </CardContent>
     </Card>
   );

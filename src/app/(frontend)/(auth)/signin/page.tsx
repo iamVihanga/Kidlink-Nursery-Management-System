@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 
 import { Logo } from "@/components/logo";
 import { SigninForm } from "@/features/auth/components/signin-form";
@@ -16,7 +16,9 @@ export default function LoginPage() {
         </p>
       </div>
       <div className="max-w-xl w-[350px] mx-auto">
-        <SigninForm />
+        <Suspense fallback={<></>}>
+          <SigninForm />
+        </Suspense>
       </div>
     </div>
   );
