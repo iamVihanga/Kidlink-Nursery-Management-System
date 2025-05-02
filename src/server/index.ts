@@ -10,6 +10,7 @@ import tasksRoute from "@/server/routes/tasks/tasks.index"; // Test Purpose
 import nurseriesRoute from "@/server/routes/nurseries/nurseries.index";
 // import bankDetailsRoute from "@/server/routes/bank-details/bankDetails.index";
 import teachersRoute from "@/server/routes/teachers/teachers.index";
+import parentsRoute from "@/server/routes/parents/parents.index";
 
 const app = createApp();
 
@@ -23,7 +24,8 @@ const routes = app
   .route("/tasks", tasksRoute)
   .route("/nurseries", nurseriesRoute)
   // .route("/bank-details", bankDetailsRoute)
-  .route("/teachers", teachersRoute);
+  .route("/teachers", teachersRoute)
+  .route("/parents", parentsRoute);
 
 export type AppType = typeof routes;
 

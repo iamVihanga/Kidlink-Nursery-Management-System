@@ -102,3 +102,7 @@ Let me know if you encounter issues or need clarification!
 - Teacher
   email: teacher@kidlink.app
   password: kidlinkTeacher
+
+- Parent
+  email: parent@kidlink.app
+  password: kidlinkParent

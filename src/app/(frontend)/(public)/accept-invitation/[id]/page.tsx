@@ -132,6 +132,12 @@ export default function AcceptInvitePage() {
         </Badge>
       )}
 
+      {invitation?.role === "member" && (
+        <Badge className="bg-green-500/10 border border-green-500 hover:bg-green-500/10 text-green-500 px-2">
+          Parent Invitation
+        </Badge>
+      )}
+
       <div className="text-center space-y-1">
         <h1 className="text-xl font-semibold">
           {invitation?.organizationName}
