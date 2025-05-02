@@ -6,7 +6,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
 import {
   Table,
@@ -14,11 +14,11 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import {
   DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
+  DoubleArrowRightIcon
 } from "@radix-ui/react-icons";
 import {
   ColumnDef,
@@ -26,7 +26,7 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   PaginationState,
-  useReactTable,
+  useReactTable
 } from "@tanstack/react-table";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
@@ -42,7 +42,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   totalItems,
-  pageSizeOptions = [10, 20, 30, 40, 50],
+  pageSizeOptions = [10, 20, 30, 40, 50]
 }: DataTableProps<TData, TValue>) {
   const [currentPage, setCurrentPage] = useQueryState(
     "page",
@@ -57,7 +57,7 @@ export function DataTable<TData, TValue>({
 
   const paginationState = {
     pageIndex: currentPage - 1, // zero-based index for React Table
-    pageSize: pageSize,
+    pageSize: pageSize
   };
 
   const pageCount = Math.ceil(totalItems / pageSize);
@@ -81,13 +81,13 @@ export function DataTable<TData, TValue>({
     columns,
     pageCount: pageCount,
     state: {
-      pagination: paginationState,
+      pagination: paginationState
     },
     onPaginationChange: handlePaginationChange,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,
-    manualFiltering: true,
+    manualFiltering: true
   });
 
   return (
