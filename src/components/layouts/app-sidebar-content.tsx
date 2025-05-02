@@ -59,29 +59,29 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
         title: "Dashboard",
         url: "/dashboard",
         icon: LayoutDashboard
+      },
+      {
+        title: "Nurseries",
+        url: "/dashboard/nurseries",
+        icon: School2Icon
       }
     ],
     nurseryManagement: [
       {
-        name: "Nurseries",
-        url: "/dashboard/nurseries",
-        icon: School2Icon
-      },
-      {
         name: "Admins", // Nursery Admins
-        url: "/dashboard/nurseries/admins",
+        url: "/dashboard/admins",
         icon: ShieldIcon,
         roles: ["owner"] // owner -> nursery admin
       },
       {
         name: "Teachers", // Nursery Teachers
-        url: "/dashboard/nurseries/teachers",
+        url: "/dashboard/teachers",
         icon: GraduationCapIcon,
         roles: ["owner"] // owner -> nursery admin
       },
       {
         name: "Parents",
-        url: "/dashboard/nurseries/Parents",
+        url: "/dashboard/Parents",
         icon: UsersIcon,
         roles: ["admin", "owner"]
       }
@@ -146,16 +146,20 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
     <>
       <NavMain items={data.navMain} />
 
-      <NavNurseryManagement
-        cmLinks={data.nurseryManagement}
-        activeMemberRole={activeMember?.role || null}
-      />
+      {activeOrganization.data && (
+        <NavNurseryManagement
+          cmLinks={data.nurseryManagement}
+          activeMemberRole={activeMember?.role || null}
+        />
+      )}
 
-      <NavContent
-        items={data.getContents(
-          activeMember?.role === "owner" || activeMember?.role === "admin"
-        )}
-      />
+      {activeOrganization.data && (
+        <NavContent
+          items={data.getContents(
+            activeMember?.role === "owner" || activeMember?.role === "admin"
+          )}
+        />
+      )}
 
       <NavSettings items={data.getSettings(session.user.role === "admin")} />
     </>

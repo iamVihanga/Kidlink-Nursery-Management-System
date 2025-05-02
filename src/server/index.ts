@@ -3,10 +3,13 @@ import { configureOpenAPI } from "@/server/helpers/configure-open-api";
 
 // Routes
 import { authController } from "@/server/routes/auth/auth.routes";
+
 import rootRoute from "@/server/routes/root/index.route"; // Test Purpose
 import tasksRoute from "@/server/routes/tasks/tasks.index"; // Test Purpose
+
 import nurseriesRoute from "@/server/routes/nurseries/nurseries.index";
 // import bankDetailsRoute from "@/server/routes/bank-details/bankDetails.index";
+import teachersRoute from "@/server/routes/teachers/teachers.index";
 
 const app = createApp();
 
@@ -18,8 +21,9 @@ const routes = app
   .route("/auth", authController)
   .route("/", rootRoute)
   .route("/tasks", tasksRoute)
-  .route("/nurseries", nurseriesRoute);
-// .route("/bank-details", bankDetailsRoute);
+  .route("/nurseries", nurseriesRoute)
+  // .route("/bank-details", bankDetailsRoute)
+  .route("/teachers", teachersRoute);
 
 export type AppType = typeof routes;
 

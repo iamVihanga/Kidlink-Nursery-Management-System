@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useId, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useId, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   Form,
   FormControl,
@@ -16,26 +17,32 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { PasswordInput } from "@/components/ui/password-input";
+import { Separator } from "@/components/ui/separator";
 
-import { authClient } from "@/lib/auth-client";
 import {
   signinSchema,
   type SigninSchemaT
 } from "@/features/auth/schemas/signin-schema";
-import { cn } from "@/lib/utils";
 
 import { GoogleAuthButton } from "./google-auth-button";
-import { GithubAuthButton } from "./github-auth-button";
-import { Separator } from "@/components/ui/separator";
-import { PasswordInput } from "@/components/ui/password-input";
+import { AppleAuthButton } from "./apple-auth-button";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 type Props = {
   className?: string;
+  invitationPage?: boolean;
 };
 
-export function SigninForm({ className }: Props) {
-  const [isPending, setIsPending] = useState<boolean>(false);
+export function SigninForm({ className, invitationPage = false }: Props) {
+  const [isPending, startSigninAction] = useTransition();
+  const searchParams = useSearchParams();
   const toastId = useId();
+  const router = useRouter();
+
+  const redirectTo = searchParams.get("redirect_to");
 
   const form = useForm<SigninSchemaT>({
     resolver: zodResolver(signinSchema),
@@ -45,33 +52,38 @@ export function SigninForm({ className }: Props) {
     }
   });
 
-  async function handleFormSubmit(formData: SigninSchemaT) {
-    setIsPending(true);
+  function handleFormSubmit(formData: SigninSchemaT) {
+    startSigninAction(async () => {
+      await authClient.signIn.email(
+        {
+          email: formData.email,
+          password: formData.password
+        },
+        {
+          onRequest: () => {
+            toast.loading("Signing in...", { id: toastId, description: "" });
+          },
+          onSuccess: () => {
+            toast.success("Signed in successfully", {
+              id: toastId,
+              description: ""
+            });
 
-    await authClient.signIn.email(
-      {
-        email: formData.email,
-        password: formData.password,
-        callbackURL: "/dashboard"
-      },
-      {
-        onRequest() {
-          toast.loading("Signing in...", { id: toastId });
-        },
-        onSuccess() {
-          toast.success("Successfully Signed in", { id: toastId });
-        },
-        onError({ error }) {
-          console.log(error);
-          toast.error("Sign in Failed !", {
-            id: toastId,
-            description: error.message
-          });
+            if (!invitationPage) {
+              router.push(redirectTo ? `${redirectTo}` : "/dashboard");
+            }
+
+            router.refresh();
+          },
+          onError: (ctx: { error: { message: any } }) => {
+            toast.error("Sign in Failed !", {
+              id: toastId,
+              description: ctx.error.message
+            });
+          }
         }
-      }
-    );
-
-    setIsPending(false);
+      );
+    });
   }
 
   return (
@@ -116,7 +128,7 @@ export function SigninForm({ className }: Props) {
             )}
           />
           <Button type="submit" className="w-full" loading={isPending}>
-            Login
+            Sign in
           </Button>
         </form>
       </Form>
@@ -131,13 +143,17 @@ export function SigninForm({ className }: Props) {
         </Button>
       </div>
 
-      <Separator />
+      {!invitationPage && (
+        <>
+          <Separator />
 
-      {/* Auth Provider Buttons */}
-      <div className="flex flex-col space-y-4">
-        <GoogleAuthButton mode="login" />
-        <GithubAuthButton mode="login" />
-      </div>
+          {/* Auth Provider Buttons */}
+          <div className="flex flex-col space-y-4">
+            <GoogleAuthButton mode="login" />
+            <AppleAuthButton mode="login" />
+          </div>
+        </>
+      )}
     </div>
   );
 }

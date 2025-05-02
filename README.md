@@ -98,3 +98,7 @@ Let me know if you encounter issues or need clarification!
 - User
   email: user@kidlink.app
   password: kidlinkUser
+
+- Teacher
+  email: teacher@kidlink.app
+  password: kidlinkTeacher
