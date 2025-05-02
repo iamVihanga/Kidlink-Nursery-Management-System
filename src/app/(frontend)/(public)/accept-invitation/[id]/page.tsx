@@ -119,12 +119,18 @@ export default function AcceptInvitePage() {
   return (
     <div className="mt-3 flex items-center justify-center flex-col gap-3">
       <div className="size-12 bg-primary rounded-xl flex items-center justify-center text-lg text-primary-foreground">
-        {invitation?.role !== "admin" ? (
+        {invitation?.role !== "owner" ? (
           invitation?.organizationName?.slice(0, 2)
         ) : (
           <Shield className="size-6" />
         )}
       </div>
+
+      {invitation?.role === "owner" && (
+        <Badge className="bg-green-500/10 border border-green-500 hover:bg-green-500/10 text-green-500 px-2">
+          Nursery Admin Invitation
+        </Badge>
+      )}
 
       {invitation?.role === "admin" && (
         <Badge className="bg-green-500/10 border border-green-500 hover:bg-green-500/10 text-green-500 px-2">
