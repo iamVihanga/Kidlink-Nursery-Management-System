@@ -81,7 +81,7 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
       },
       {
         name: "Parents",
-        url: "/dashboard/Parents",
+        url: "/dashboard/parents",
         icon: UsersIcon,
         roles: ["admin", "owner"]
       }

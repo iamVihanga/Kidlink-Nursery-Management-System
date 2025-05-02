@@ -27,8 +27,10 @@ export default async function AcceptInviteLayout({ children }: Props) {
           <Logo />
         </div>
 
-        <CardTitle className="font-heading">Accept Class Invitation</CardTitle>
-        <CardDescription>You are invited to a new class</CardDescription>
+        <CardTitle className="font-heading">
+          Accept Nursery Invitation
+        </CardTitle>
+        <CardDescription>You are invited to a new nursery</CardDescription>
       </CardHeader>
 
       <CardContent>
