@@ -12,6 +12,7 @@ import nurseriesRoute from "@/server/routes/nurseries/nurseries.index";
 import teachersRoute from "@/server/routes/teachers/teachers.index";
 import parentsRoute from "@/server/routes/parents/parents.index";
 import adminsRoute from "@/server/routes/admins/admins.index";
+import usersRoute from "@/server/routes/users/users.index";
 
 const app = createApp();
 
@@ -23,6 +24,7 @@ const routes = app
   .route("/auth", authController)
   .route("/", rootRoute)
   .route("/tasks", tasksRoute)
+  .route("/users", usersRoute)
   .route("/nurseries", nurseriesRoute)
   // .route("/bank-details", bankDetailsRoute)
   .route("/admins", adminsRoute)
