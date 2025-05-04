@@ -12,7 +12,8 @@ import {
   LayoutDashboard,
   ShieldIcon,
   UserCog2Icon,
-  School2Icon
+  School2Icon,
+  SmileIcon
 } from "lucide-react";
 
 import { type Session } from "@/lib/auth";
@@ -88,11 +89,12 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
     ],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getContents: (isAdmin: boolean) => [
-      // {
-      //   title: "Lessons",
-      //   url: "/dashboard/lessons",
-      //   icon: BookOpenIcon
-      // },
+      {
+        title: "Children",
+        url: "/dashboard/children",
+        icon: SmileIcon,
+        roles: ["owner", "admin", "member"]
+      }
       // {
       //   title: "Materials",
       //   url: "/dashboard/materials",
@@ -146,20 +148,18 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
     <>
       <NavMain items={data.navMain} />
 
-      {activeOrganization.data && (
+      {activeOrganization.data && activeMember?.role !== "member" && (
         <NavNurseryManagement
           cmLinks={data.nurseryManagement}
           activeMemberRole={activeMember?.role || null}
         />
       )}
 
-      {activeOrganization.data && (
-        <NavContent
-          items={data.getContents(
-            activeMember?.role === "owner" || activeMember?.role === "admin"
-          )}
-        />
-      )}
+      <NavContent
+        items={data.getContents(
+          activeMember?.role === "owner" || activeMember?.role === "admin"
+        )}
+      />
 
       <NavSettings items={data.getSettings(session.user.role === "admin")} />
     </>

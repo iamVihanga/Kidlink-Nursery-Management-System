@@ -37,6 +37,7 @@ model User {
   members          Member[]
   invitations      Invitation[]
   twofactors       TwoFactor[]
+  children         Child[] // Added this relation
 
   @@unique([email])
   @@map("user")
@@ -99,19 +100,22 @@ model Organization {
   members        Member[]
   invitations    Invitation[]
   nurseryDetails NurseryDetails?
+  classes        Class[]
+  children       Child[]
 
   @@unique([slug])
   @@map("organization")
 }
 
 model Member {
-  id             String       @id @map("_id")
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  userId         String
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role           String
-  createdAt      DateTime
+  id              String       @id @map("_id")
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role            String
+  createdAt       DateTime
+  teachingClasses Class[]
 
   @@map("member")
 }
@@ -176,4 +180,47 @@ model NurseryDetails {
   bankDetails         BankDetails?
 
   @@map("nurseryDetails")
+}
+
+model Class {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  description    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  teacherId      String
+  teacher        Member       @relation(fields: [teacherId], references: [id])
+  children       ChildClass[]
+
+  @@map("class")
+}
+
+model Child {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  classes     ChildClass[]
+  parentId    String // Now references User.id
+  parent      User         @relation(fields: [parentId], references: [id])
+  nurseryId   String // Now references Organization.id
+  nursery     Organization @relation(fields: [nurseryId], references: [id])
+
+  @@map("child")
+}
+
+model ChildClass {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  childId  String   @db.ObjectId
+  child    Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  classId  String   @db.ObjectId
+  class    Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  joinedAt DateTime @default(now())
+
+  @@unique([childId, classId])
+  @@map("childClass")
 }
