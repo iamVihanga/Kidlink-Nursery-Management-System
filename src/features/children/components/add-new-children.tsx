@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 import { useCreateChild } from "../api/use-create-child";
 
@@ -70,6 +71,11 @@ export function AddNewChildren() {
 
     if (data?.nurseryId === "") {
       if (!session?.session) return;
+
+      if (!session.session.activeOrganizationId) {
+        toast.error("Please select a nursery first.");
+        return;
+      }
 
       data.nurseryId = session.session.activeOrganizationId;
     }

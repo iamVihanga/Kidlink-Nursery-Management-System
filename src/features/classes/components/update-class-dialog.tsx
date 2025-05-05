@@ -4,7 +4,6 @@ import React, { useEffect, useState, useTransition } from "react";
 import { EditIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
 
 // import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -44,7 +43,7 @@ type Props = {
   className?: string;
 };
 
-export function UpdateLesson({}: Props) {
+export function UpdateClass({}: Props) {
   const { mutate: mutateFetching } = useGetClass();
   const { mutate: mutateUpdate, isPending: isUpdating } = useUpdateClass();
 
@@ -91,7 +90,7 @@ export function UpdateLesson({}: Props) {
       mutateFetching(
         { id: updateId },
         {
-          onSuccess({ data }) {
+          onSuccess: (data) => {
             form.reset({
               name: data.name,
               description: data?.description || "",
@@ -212,7 +211,7 @@ export function UpdateLesson({}: Props) {
                         <FormItem>
                           <FormLabel>Teacher</FormLabel>
                           <FormControl>
-                            {!field.value && (
+                            {field.value && (
                               <TeachersDropdown
                                 value={field.value}
                                 onChange={field.onChange}
