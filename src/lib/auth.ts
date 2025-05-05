@@ -6,7 +6,8 @@ import {
   organization,
   twoFactor,
   admin as adminPlugin,
-  openAPI
+  openAPI,
+  bearer
 } from "better-auth/plugins";
 import { ac, member, admin, owner } from "./permissions";
 
@@ -20,6 +21,7 @@ export const auth = betterAuth({
     twoFactor(),
     adminPlugin(),
     openAPI(),
+    bearer(),
     organization({
       ac: ac,
       roles: {
