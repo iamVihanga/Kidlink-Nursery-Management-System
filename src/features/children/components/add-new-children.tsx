@@ -68,6 +68,12 @@ export function AddNewChildren() {
       data.parentId = session.user.id;
     }
 
+    if (data?.nurseryId === "") {
+      if (!session?.session) return;
+
+      data.nurseryId = session.session.activeOrganizationId;
+    }
+
     mutate(data, {
       onSuccess: () => {
         setOpen(false);

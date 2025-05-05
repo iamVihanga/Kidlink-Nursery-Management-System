@@ -13,7 +13,8 @@ import {
   ShieldIcon,
   UserCog2Icon,
   School2Icon,
-  SmileIcon
+  SmileIcon,
+  School
 } from "lucide-react";
 
 import { type Session } from "@/lib/auth";
@@ -93,6 +94,12 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
         title: "Children",
         url: "/dashboard/children",
         icon: SmileIcon,
+        roles: ["owner", "admin", "member"]
+      },
+      {
+        title: "Classes",
+        url: "/dashboard/classes",
+        icon: School,
         roles: ["owner", "admin", "member"]
       }
       // {
