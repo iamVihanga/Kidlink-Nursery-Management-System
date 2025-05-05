@@ -11,22 +11,22 @@ import {
  */
 const statement = {
   ...defaultStatements,
-  lesson: ["create", "read", "share", "update", "delete"]
+  class: ["create", "read", "update", "delete"]
 } as const;
 
 export const ac = createAccessControl(statement);
 
 export const member = ac.newRole({
-  lesson: ["read", "share"],
+  class: ["read"],
   ...memberAc.statements
 });
 
 export const admin = ac.newRole({
-  lesson: ["read", "create", "update", "share", "delete"],
+  class: ["read", "create", "update"],
   ...adminAc.statements
 });
 
 export const owner = ac.newRole({
-  lesson: ["create", "read", "share", "update", "delete"],
+  class: ["create", "read", "update", "delete"],
   ...ownerAc.statements
 });
