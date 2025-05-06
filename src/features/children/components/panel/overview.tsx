@@ -108,7 +108,9 @@ export function Overview() {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Link href={`/nurseries/${data.nurseryId}`}>
+                            <Link
+                              href={`/dashboard/nurseries/${data.nurseryId}`}
+                            >
                               <Button
                                 variant="outline"
                                 size="sm"

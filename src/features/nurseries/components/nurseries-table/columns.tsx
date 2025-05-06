@@ -4,6 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import type { Organization } from "@/types/schema-types/index";
 import Image from "next/image";
 import { CellAction } from "./cell-action";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -49,6 +51,17 @@ export const columns: ColumnDef<Nurseries>[] = [
       if (row.original.metadata) {
         return JSON.parse(row.original.metadata)?.description || "-";
       } else return "-";
+    }
+  },
+  {
+    accessorKey: "id",
+    header: "Details",
+    cell: ({ row }) => {
+      return (
+        <Button asChild size={"sm"} variant={"link"}>
+          <Link href={`/dashboard/nurseries/${row.original.id}`}>View</Link>
+        </Button>
+      );
     }
   },
   {
