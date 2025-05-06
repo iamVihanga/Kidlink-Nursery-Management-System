@@ -6,7 +6,8 @@ import type {
   CreateRoute,
   FindOneRoute,
   UpdateRoute,
-  RemoveRoute
+  RemoveRoute,
+  AssignRoute
 } from "@/server/routes/children/children.routes";
 import { AppRouteHandler } from "@/types/server";
 
@@ -152,7 +153,14 @@ export const findOne: AppRouteHandler<FindOneRoute> = async (c) => {
   const params = c.req.valid("param");
 
   const child = await prisma.child.findUnique({
-    where: { id: params.id }
+    where: { id: params.id },
+    include: {
+      classes: {
+        include: {
+          class: true
+        }
+      }
+    }
   });
 
   if (!child) {
@@ -175,7 +183,13 @@ export const findOne: AppRouteHandler<FindOneRoute> = async (c) => {
     }
   }
 
-  return c.json(child, HttpStatusCodes.OK);
+  // Transform the data to match the expected format
+  const transformedChild = {
+    ...child,
+    classes: child.classes.map((enrollment) => enrollment.class)
+  };
+
+  return c.json(transformedChild, HttpStatusCodes.OK);
 };
 
 // ------------ Update child ------------
@@ -226,4 +240,32 @@ export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
   });
 
   return c.json({ message: "Child deleted successfully" }, HttpStatusCodes.OK);
+};
+
+// ------------ Assign Child to Class ------------
+export const assign: AppRouteHandler<AssignRoute> = async (c) => {
+  const user = c.get("user");
+
+  if (!user) {
+    return c.json(
+      { message: "Unauthenticated access" },
+      HttpStatusCodes.UNAUTHORIZED
+    );
+  }
+
+  const params = c.req.valid("param");
+  const { classId } = c.req.valid("json"); // this is the class id to assign
+
+  const createdChild = await prisma.child.update({
+    where: { id: params.id },
+    data: {
+      classes: {
+        create: {
+          classId: classId
+        }
+      }
+    }
+  });
+
+  return c.json(createdChild, HttpStatusCodes.OK);
 };

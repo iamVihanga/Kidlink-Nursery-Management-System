@@ -2,9 +2,10 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import { Badge } from "@/components/ui/badge";
 
 import { Child } from "./cell-action";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const columns: ColumnDef<Child>[] = [
   {
@@ -25,10 +26,14 @@ export const columns: ColumnDef<Child>[] = [
     }
   },
   {
-    accessorKey: "parentId",
-    header: "Parent",
+    accessorKey: "id",
+    header: "Details",
     cell: ({ row }) => {
-      return <Badge onClick={() => row.original.parentId}>View Parent</Badge>;
+      return (
+        <Button asChild size={"sm"} variant={"link"}>
+          <Link href={`/dashboard/children/${row.original.id}`}>View</Link>
+        </Button>
+      );
     }
   },
   {

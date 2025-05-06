@@ -7,6 +7,8 @@ import { serverAuthMiddleware } from "@/server/middlewares/auth-middleware";
 import { ChildSchema } from "@/types/schema-types/index";
 import { createChildSchema } from "@/features/children/schemas/create-child";
 import { updateChildSchema } from "@/features/children/schemas/update-child";
+import { childWithClassesSchema } from "@/features/children/schemas/child-with-classes";
+import { assignToClassSchema } from "@/features/children/schemas/assign-to-class";
 
 const tags = ["Children"];
 
@@ -86,7 +88,7 @@ export const findOne = createRoute({
     params: IdParamsSchema
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(ChildSchema, "The child"),
+    [HttpStatusCodes.OK]: jsonContent(childWithClassesSchema, "The child"),
     [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
       z.object({ message: z.string() }),
       "Unauthenticated request"
@@ -159,22 +161,20 @@ export const remove = createRoute({
   }
 });
 
-export const assignToClass = createRoute({
+export const assign = createRoute({
   tags,
-  path: "/class/",
+  path: "/assign/{id}",
   method: "put",
   middleware: [serverAuthMiddleware],
   request: {
+    params: IdParamsSchema,
     body: jsonContentRequired(
-      z.object({
-        childId: z.string(),
-        classId: z.string()
-      }),
-      "The child and class information to update"
+      assignToClassSchema,
+      "The class id to assign to the child"
     )
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(ChildSchema, "The child updated"),
+    [HttpStatusCodes.OK]: jsonContent(ChildSchema, "The updated child"),
     [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
       z.object({ message: z.string() }),
       "Unauthenticated request"
@@ -182,41 +182,6 @@ export const assignToClass = createRoute({
     [HttpStatusCodes.FORBIDDEN]: jsonContent(
       z.object({ message: z.string() }),
       "Access Forbidden"
-    ),
-    [HttpStatusCodes.NOT_FOUND]: jsonContent(
-      z.object({ message: z.string() }),
-      "Child / Class not found !"
-    )
-  }
-});
-
-export const leaveFromClass = createRoute({
-  tags,
-  path: "/class/",
-  method: "delete",
-  middleware: [serverAuthMiddleware],
-  request: {
-    body: jsonContentRequired(
-      z.object({
-        childId: z.string(),
-        classId: z.string()
-      }),
-      "The child and class information to leave from class"
-    )
-  },
-  responses: {
-    [HttpStatusCodes.OK]: jsonContent(ChildSchema, "The child updated"),
-    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
-      z.object({ message: z.string() }),
-      "Unauthenticated request"
-    ),
-    [HttpStatusCodes.FORBIDDEN]: jsonContent(
-      z.object({ message: z.string() }),
-      "Access Forbidden"
-    ),
-    [HttpStatusCodes.NOT_FOUND]: jsonContent(
-      z.object({ message: z.string() }),
-      "Child / Class not found !"
     )
   }
 });
@@ -226,3 +191,4 @@ export type CreateRoute = typeof create;
 export type FindOneRoute = typeof findOne;
 export type UpdateRoute = typeof update;
 export type RemoveRoute = typeof remove;
+export type AssignRoute = typeof assign;
