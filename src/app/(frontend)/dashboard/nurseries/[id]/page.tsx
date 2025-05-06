@@ -11,9 +11,9 @@ import { Card } from "@/components/ui/card";
 import { NurseryDetails } from "@/features/nurseries/components/panel/nursery-details";
 
 interface NurseryPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function NurseryPage({ params }: NurseryPageProps) {
