@@ -210,7 +210,7 @@ export const getDetails: AppRouteHandler<GetDetailsRoute> = async (c) => {
 
   if (!organization.nurseryDetails) {
     return c.json(
-      { message: "Nursery details not found" },
+      { message: "Nursery details not updated" },
       HttpStatusCodes.NOT_FOUND
     );
   }
