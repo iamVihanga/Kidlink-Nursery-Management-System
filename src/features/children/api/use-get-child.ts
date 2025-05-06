@@ -6,7 +6,7 @@ interface Params {
   id: string;
 }
 
-export const useGetChildren = ({ id }: Params) => {
+export const useGetChild = ({ id }: Params) => {
   const query = useQuery({
     queryKey: ["children"],
     queryFn: async () => {

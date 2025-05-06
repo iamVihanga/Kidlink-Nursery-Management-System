@@ -100,7 +100,7 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
         title: "Classes",
         url: "/dashboard/classes",
         icon: School,
-        roles: ["owner", "admin", "member"]
+        roles: ["owner", "admin"]
       }
       // {
       //   title: "Materials",

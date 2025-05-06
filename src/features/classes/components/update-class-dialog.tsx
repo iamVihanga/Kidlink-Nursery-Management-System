@@ -120,7 +120,7 @@ export function UpdateClass({}: Props) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[500px] h-[90vh]">
+      <DialogContent className="sm:max-w-[500px] h-fit">
         <DialogHeader>
           <DialogTitle>Update Class</DialogTitle>
           <DialogDescription>

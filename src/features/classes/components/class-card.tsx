@@ -52,7 +52,7 @@ export function ClassCard({ _class, authContext }: Props) {
   };
 
   return (
-    <Card className="w-full max-w-sm hover:shadow-md dark:bg-secondary/10 transition-shadow duration-300">
+    <Card className="w-full h-fit max-w-sm hover:shadow-md dark:bg-secondary/10 transition-shadow duration-300">
       <CardHeader className="relative pb-0">
         {role !== "member" && (
           <div className="absolute right-4 -top-4 z-10">
