@@ -7,9 +7,11 @@ import type {
   FindOneRoute,
   UpdateRoute,
   RemoveRoute,
-  AssignRoute
+  AssignRoute,
+  BadgesRoute
 } from "@/server/routes/children/children.routes";
 import { AppRouteHandler } from "@/types/server";
+import { ChildWithBadges } from "@/features/children/schemas/child-with-badges";
 
 type QueryParams = {
   page?: string;
@@ -268,4 +270,41 @@ export const assign: AppRouteHandler<AssignRoute> = async (c) => {
   });
 
   return c.json(createdChild, HttpStatusCodes.OK);
+};
+
+// ------------ Get Child with Badges ------------
+export const badges: AppRouteHandler<BadgesRoute> = async (c) => {
+  const user = c.get("user");
+
+  if (!user) {
+    return c.json(
+      { message: "Unauthenticated access" },
+      HttpStatusCodes.UNAUTHORIZED
+    );
+  }
+
+  const params = c.req.valid("param");
+
+  const childWithBadges = await prisma.child.findUnique({
+    where: { id: params.id },
+    include: {
+      badges: {
+        include: {
+          badge: true
+        }
+      }
+    }
+  });
+
+  if (!childWithBadges) {
+    return c.json({ message: "Child not found" }, HttpStatusCodes.NOT_FOUND);
+  }
+
+  const transformedData: ChildWithBadges = {
+    ...childWithBadges,
+    badges:
+      childWithBadges?.badges?.map((badgeRelation) => badgeRelation.badge) || []
+  };
+
+  return c.json(transformedData, HttpStatusCodes.OK);
 };
