@@ -82,7 +82,7 @@ export function Overview() {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Link href={`/parents/${data.parentId}`}>
+                          <Link href={`/dashboard/parents/${data.parentId}`}>
                             <Button
                               variant="outline"
                               size="sm"
