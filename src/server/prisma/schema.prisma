@@ -108,14 +108,15 @@ model Organization {
 }
 
 model Member {
-  id              String       @id @map("_id")
+  id              String          @id @map("_id")
   organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   userId          String
-  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   role            String
   createdAt       DateTime
   teachingClasses Class[]
+  ChildFeedback   ChildFeedback[]
 
   @@map("member")
 }
@@ -198,17 +199,19 @@ model Class {
 }
 
 model Child {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
   firstName   String
   lastName    String
   dateOfBirth DateTime
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
   classes     ChildClass[]
   parentId    String // Now references User.id
-  parent      User         @relation(fields: [parentId], references: [id])
+  parent      User            @relation(fields: [parentId], references: [id])
   nurseryId   String // Now references Organization.id
-  nursery     Organization @relation(fields: [nurseryId], references: [id])
+  nursery     Organization    @relation(fields: [nurseryId], references: [id])
+  badges      ChildBadge[] // Added relation to badges
+  feedbacks   ChildFeedback[] // Added relation to feedbacks
 
   @@map("child")
 }
@@ -223,4 +226,45 @@ model ChildClass {
 
   @@unique([childId, classId])
   @@map("childClass")
+}
+
+// New Badge model
+model Badge {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  imageUrl    String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  children    ChildBadge[]
+
+  @@map("badge")
+}
+
+// Junction table for Child and Badge (many-to-many)
+model ChildBadge {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  childId   String   @db.ObjectId
+  child     Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  badgeId   String   @db.ObjectId
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  awardedAt DateTime @default(now())
+
+  @@unique([childId, badgeId])
+  @@map("childBadge")
+}
+
+// Feedback model for children
+model ChildFeedback {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  rating    Int? // Optional rating (e.g., 1-5)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  childId   String   @db.ObjectId
+  child     Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  teacherId String // References the Member who provided the feedback
+  teacher   Member   @relation(fields: [teacherId], references: [id])
+
+  @@map("childFeedback")
 }

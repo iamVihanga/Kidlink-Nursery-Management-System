@@ -38,6 +38,12 @@ export const ChildScalarFieldEnumSchema = z.enum(['id','firstName','lastName','d
 
 export const ChildClassScalarFieldEnumSchema = z.enum(['id','childId','classId','joinedAt']);
 
+export const BadgeScalarFieldEnumSchema = z.enum(['id','name','description','imageUrl','createdAt','updatedAt']);
+
+export const ChildBadgeScalarFieldEnumSchema = z.enum(['id','childId','badgeId','awardedAt']);
+
+export const ChildFeedbackScalarFieldEnumSchema = z.enum(['id','content','rating','createdAt','updatedAt','childId','teacherId']);
+
 export const SortOrderSchema = z.enum(['asc','desc']);
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
@@ -276,6 +282,50 @@ export const ChildClassSchema = z.object({
 export type ChildClass = z.infer<typeof ChildClassSchema>
 
 /////////////////////////////////////////
+// BADGE SCHEMA
+/////////////////////////////////////////
+
+export const BadgeSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+  imageUrl: z.string().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type Badge = z.infer<typeof BadgeSchema>
+
+/////////////////////////////////////////
+// CHILD BADGE SCHEMA
+/////////////////////////////////////////
+
+export const ChildBadgeSchema = z.object({
+  id: z.string(),
+  childId: z.string(),
+  badgeId: z.string(),
+  awardedAt: z.coerce.date(),
+})
+
+export type ChildBadge = z.infer<typeof ChildBadgeSchema>
+
+/////////////////////////////////////////
+// CHILD FEEDBACK SCHEMA
+/////////////////////////////////////////
+
+export const ChildFeedbackSchema = z.object({
+  id: z.string(),
+  content: z.string(),
+  rating: z.number().int().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  childId: z.string(),
+  teacherId: z.string(),
+})
+
+export type ChildFeedback = z.infer<typeof ChildFeedbackSchema>
+
+/////////////////////////////////////////
 // SELECT & INCLUDE
 /////////////////////////////////////////
 
@@ -448,6 +498,7 @@ export const MemberCountOutputTypeArgsSchema: z.ZodType<Prisma.MemberCountOutput
 
 export const MemberCountOutputTypeSelectSchema: z.ZodType<Prisma.MemberCountOutputTypeSelect> = z.object({
   teachingClasses: z.boolean().optional(),
+  ChildFeedback: z.boolean().optional(),
 }).strict();
 
 export const MemberSelectSchema: z.ZodType<Prisma.MemberSelect> = z.object({
@@ -459,6 +510,7 @@ export const MemberSelectSchema: z.ZodType<Prisma.MemberSelect> = z.object({
   organization: z.union([z.boolean(),z.lazy(() => OrganizationArgsSchema)]).optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   teachingClasses: z.union([z.boolean(),z.lazy(() => ClassArgsSchema)]).optional(),
+  ChildFeedback: z.union([z.boolean(),z.lazy(() => ChildFeedbackArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => MemberCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -617,6 +669,8 @@ export const ChildCountOutputTypeArgsSchema: z.ZodType<Prisma.ChildCountOutputTy
 
 export const ChildCountOutputTypeSelectSchema: z.ZodType<Prisma.ChildCountOutputTypeSelect> = z.object({
   classes: z.boolean().optional(),
+  badges: z.boolean().optional(),
+  feedbacks: z.boolean().optional(),
 }).strict();
 
 export const ChildSelectSchema: z.ZodType<Prisma.ChildSelect> = z.object({
@@ -631,6 +685,8 @@ export const ChildSelectSchema: z.ZodType<Prisma.ChildSelect> = z.object({
   classes: z.union([z.boolean(),z.lazy(() => ChildClassArgsSchema)]).optional(),
   parent: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   nursery: z.union([z.boolean(),z.lazy(() => OrganizationArgsSchema)]).optional(),
+  badges: z.union([z.boolean(),z.lazy(() => ChildBadgeArgsSchema)]).optional(),
+  feedbacks: z.union([z.boolean(),z.lazy(() => ChildFeedbackArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => ChildCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -652,6 +708,79 @@ export const ChildClassSelectSchema: z.ZodType<Prisma.ChildClassSelect> = z.obje
   joinedAt: z.boolean().optional(),
   child: z.union([z.boolean(),z.lazy(() => ChildArgsSchema)]).optional(),
   class: z.union([z.boolean(),z.lazy(() => ClassArgsSchema)]).optional(),
+}).strict()
+
+// BADGE
+//------------------------------------------------------
+
+export const BadgeIncludeSchema: z.ZodType<Prisma.BadgeInclude> = z.object({
+}).strict()
+
+export const BadgeArgsSchema: z.ZodType<Prisma.BadgeDefaultArgs> = z.object({
+  select: z.lazy(() => BadgeSelectSchema).optional(),
+  include: z.lazy(() => BadgeIncludeSchema).optional(),
+}).strict();
+
+export const BadgeCountOutputTypeArgsSchema: z.ZodType<Prisma.BadgeCountOutputTypeDefaultArgs> = z.object({
+  select: z.lazy(() => BadgeCountOutputTypeSelectSchema).nullish(),
+}).strict();
+
+export const BadgeCountOutputTypeSelectSchema: z.ZodType<Prisma.BadgeCountOutputTypeSelect> = z.object({
+  children: z.boolean().optional(),
+}).strict();
+
+export const BadgeSelectSchema: z.ZodType<Prisma.BadgeSelect> = z.object({
+  id: z.boolean().optional(),
+  name: z.boolean().optional(),
+  description: z.boolean().optional(),
+  imageUrl: z.boolean().optional(),
+  createdAt: z.boolean().optional(),
+  updatedAt: z.boolean().optional(),
+  children: z.union([z.boolean(),z.lazy(() => ChildBadgeArgsSchema)]).optional(),
+  _count: z.union([z.boolean(),z.lazy(() => BadgeCountOutputTypeArgsSchema)]).optional(),
+}).strict()
+
+// CHILD BADGE
+//------------------------------------------------------
+
+export const ChildBadgeIncludeSchema: z.ZodType<Prisma.ChildBadgeInclude> = z.object({
+}).strict()
+
+export const ChildBadgeArgsSchema: z.ZodType<Prisma.ChildBadgeDefaultArgs> = z.object({
+  select: z.lazy(() => ChildBadgeSelectSchema).optional(),
+  include: z.lazy(() => ChildBadgeIncludeSchema).optional(),
+}).strict();
+
+export const ChildBadgeSelectSchema: z.ZodType<Prisma.ChildBadgeSelect> = z.object({
+  id: z.boolean().optional(),
+  childId: z.boolean().optional(),
+  badgeId: z.boolean().optional(),
+  awardedAt: z.boolean().optional(),
+  child: z.union([z.boolean(),z.lazy(() => ChildArgsSchema)]).optional(),
+  badge: z.union([z.boolean(),z.lazy(() => BadgeArgsSchema)]).optional(),
+}).strict()
+
+// CHILD FEEDBACK
+//------------------------------------------------------
+
+export const ChildFeedbackIncludeSchema: z.ZodType<Prisma.ChildFeedbackInclude> = z.object({
+}).strict()
+
+export const ChildFeedbackArgsSchema: z.ZodType<Prisma.ChildFeedbackDefaultArgs> = z.object({
+  select: z.lazy(() => ChildFeedbackSelectSchema).optional(),
+  include: z.lazy(() => ChildFeedbackIncludeSchema).optional(),
+}).strict();
+
+export const ChildFeedbackSelectSchema: z.ZodType<Prisma.ChildFeedbackSelect> = z.object({
+  id: z.boolean().optional(),
+  content: z.boolean().optional(),
+  rating: z.boolean().optional(),
+  createdAt: z.boolean().optional(),
+  updatedAt: z.boolean().optional(),
+  childId: z.boolean().optional(),
+  teacherId: z.boolean().optional(),
+  child: z.union([z.boolean(),z.lazy(() => ChildArgsSchema)]).optional(),
+  teacher: z.union([z.boolean(),z.lazy(() => MemberArgsSchema)]).optional(),
 }).strict()
 
 
@@ -1121,7 +1250,8 @@ export const MemberWhereInputSchema: z.ZodType<Prisma.MemberWhereInput> = z.obje
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   organization: z.union([ z.lazy(() => OrganizationScalarRelationFilterSchema),z.lazy(() => OrganizationWhereInputSchema) ]).optional(),
   user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
-  teachingClasses: z.lazy(() => ClassListRelationFilterSchema).optional()
+  teachingClasses: z.lazy(() => ClassListRelationFilterSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackListRelationFilterSchema).optional()
 }).strict();
 
 export const MemberOrderByWithRelationInputSchema: z.ZodType<Prisma.MemberOrderByWithRelationInput> = z.object({
@@ -1132,7 +1262,8 @@ export const MemberOrderByWithRelationInputSchema: z.ZodType<Prisma.MemberOrderB
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   organization: z.lazy(() => OrganizationOrderByWithRelationInputSchema).optional(),
   user: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
-  teachingClasses: z.lazy(() => ClassOrderByRelationAggregateInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassOrderByRelationAggregateInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackOrderByRelationAggregateInputSchema).optional()
 }).strict();
 
 export const MemberWhereUniqueInputSchema: z.ZodType<Prisma.MemberWhereUniqueInput> = z.object({
@@ -1149,7 +1280,8 @@ export const MemberWhereUniqueInputSchema: z.ZodType<Prisma.MemberWhereUniqueInp
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   organization: z.union([ z.lazy(() => OrganizationScalarRelationFilterSchema),z.lazy(() => OrganizationWhereInputSchema) ]).optional(),
   user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
-  teachingClasses: z.lazy(() => ClassListRelationFilterSchema).optional()
+  teachingClasses: z.lazy(() => ClassListRelationFilterSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackListRelationFilterSchema).optional()
 }).strict());
 
 export const MemberOrderByWithAggregationInputSchema: z.ZodType<Prisma.MemberOrderByWithAggregationInput> = z.object({
@@ -1614,6 +1746,8 @@ export const ChildWhereInputSchema: z.ZodType<Prisma.ChildWhereInput> = z.object
   classes: z.lazy(() => ChildClassListRelationFilterSchema).optional(),
   parent: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   nursery: z.union([ z.lazy(() => OrganizationScalarRelationFilterSchema),z.lazy(() => OrganizationWhereInputSchema) ]).optional(),
+  badges: z.lazy(() => ChildBadgeListRelationFilterSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackListRelationFilterSchema).optional()
 }).strict();
 
 export const ChildOrderByWithRelationInputSchema: z.ZodType<Prisma.ChildOrderByWithRelationInput> = z.object({
@@ -1627,7 +1761,9 @@ export const ChildOrderByWithRelationInputSchema: z.ZodType<Prisma.ChildOrderByW
   nurseryId: z.lazy(() => SortOrderSchema).optional(),
   classes: z.lazy(() => ChildClassOrderByRelationAggregateInputSchema).optional(),
   parent: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
-  nursery: z.lazy(() => OrganizationOrderByWithRelationInputSchema).optional()
+  nursery: z.lazy(() => OrganizationOrderByWithRelationInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeOrderByRelationAggregateInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackOrderByRelationAggregateInputSchema).optional()
 }).strict();
 
 export const ChildWhereUniqueInputSchema: z.ZodType<Prisma.ChildWhereUniqueInput> = z.object({
@@ -1648,6 +1784,8 @@ export const ChildWhereUniqueInputSchema: z.ZodType<Prisma.ChildWhereUniqueInput
   classes: z.lazy(() => ChildClassListRelationFilterSchema).optional(),
   parent: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   nursery: z.union([ z.lazy(() => OrganizationScalarRelationFilterSchema),z.lazy(() => OrganizationWhereInputSchema) ]).optional(),
+  badges: z.lazy(() => ChildBadgeListRelationFilterSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackListRelationFilterSchema).optional()
 }).strict());
 
 export const ChildOrderByWithAggregationInputSchema: z.ZodType<Prisma.ChildOrderByWithAggregationInput> = z.object({
@@ -1742,6 +1880,208 @@ export const ChildClassScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Ch
   childId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   classId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   joinedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+}).strict();
+
+export const BadgeWhereInputSchema: z.ZodType<Prisma.BadgeWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => BadgeWhereInputSchema),z.lazy(() => BadgeWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => BadgeWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => BadgeWhereInputSchema),z.lazy(() => BadgeWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  imageUrl: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  children: z.lazy(() => ChildBadgeListRelationFilterSchema).optional()
+}).strict();
+
+export const BadgeOrderByWithRelationInputSchema: z.ZodType<Prisma.BadgeOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional(),
+  imageUrl: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  children: z.lazy(() => ChildBadgeOrderByRelationAggregateInputSchema).optional()
+}).strict();
+
+export const BadgeWhereUniqueInputSchema: z.ZodType<Prisma.BadgeWhereUniqueInput> = z.object({
+  id: z.string()
+})
+.and(z.object({
+  id: z.string().optional(),
+  AND: z.union([ z.lazy(() => BadgeWhereInputSchema),z.lazy(() => BadgeWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => BadgeWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => BadgeWhereInputSchema),z.lazy(() => BadgeWhereInputSchema).array() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  imageUrl: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  children: z.lazy(() => ChildBadgeListRelationFilterSchema).optional()
+}).strict());
+
+export const BadgeOrderByWithAggregationInputSchema: z.ZodType<Prisma.BadgeOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional(),
+  imageUrl: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => BadgeCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => BadgeMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => BadgeMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const BadgeScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.BadgeScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => BadgeScalarWhereWithAggregatesInputSchema),z.lazy(() => BadgeScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => BadgeScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => BadgeScalarWhereWithAggregatesInputSchema),z.lazy(() => BadgeScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  description: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  imageUrl: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+}).strict();
+
+export const ChildBadgeWhereInputSchema: z.ZodType<Prisma.ChildBadgeWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => ChildBadgeWhereInputSchema),z.lazy(() => ChildBadgeWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ChildBadgeWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ChildBadgeWhereInputSchema),z.lazy(() => ChildBadgeWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  childId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  badgeId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  awardedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  child: z.union([ z.lazy(() => ChildScalarRelationFilterSchema),z.lazy(() => ChildWhereInputSchema) ]).optional(),
+  badge: z.union([ z.lazy(() => BadgeScalarRelationFilterSchema),z.lazy(() => BadgeWhereInputSchema) ]).optional(),
+}).strict();
+
+export const ChildBadgeOrderByWithRelationInputSchema: z.ZodType<Prisma.ChildBadgeOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  childId: z.lazy(() => SortOrderSchema).optional(),
+  badgeId: z.lazy(() => SortOrderSchema).optional(),
+  awardedAt: z.lazy(() => SortOrderSchema).optional(),
+  child: z.lazy(() => ChildOrderByWithRelationInputSchema).optional(),
+  badge: z.lazy(() => BadgeOrderByWithRelationInputSchema).optional()
+}).strict();
+
+export const ChildBadgeWhereUniqueInputSchema: z.ZodType<Prisma.ChildBadgeWhereUniqueInput> = z.union([
+  z.object({
+    id: z.string(),
+    childId_badgeId: z.lazy(() => ChildBadgeChildIdBadgeIdCompoundUniqueInputSchema)
+  }),
+  z.object({
+    id: z.string(),
+  }),
+  z.object({
+    childId_badgeId: z.lazy(() => ChildBadgeChildIdBadgeIdCompoundUniqueInputSchema),
+  }),
+])
+.and(z.object({
+  id: z.string().optional(),
+  childId_badgeId: z.lazy(() => ChildBadgeChildIdBadgeIdCompoundUniqueInputSchema).optional(),
+  AND: z.union([ z.lazy(() => ChildBadgeWhereInputSchema),z.lazy(() => ChildBadgeWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ChildBadgeWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ChildBadgeWhereInputSchema),z.lazy(() => ChildBadgeWhereInputSchema).array() ]).optional(),
+  childId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  badgeId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  awardedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  child: z.union([ z.lazy(() => ChildScalarRelationFilterSchema),z.lazy(() => ChildWhereInputSchema) ]).optional(),
+  badge: z.union([ z.lazy(() => BadgeScalarRelationFilterSchema),z.lazy(() => BadgeWhereInputSchema) ]).optional(),
+}).strict());
+
+export const ChildBadgeOrderByWithAggregationInputSchema: z.ZodType<Prisma.ChildBadgeOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  childId: z.lazy(() => SortOrderSchema).optional(),
+  badgeId: z.lazy(() => SortOrderSchema).optional(),
+  awardedAt: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => ChildBadgeCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => ChildBadgeMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => ChildBadgeMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const ChildBadgeScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.ChildBadgeScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => ChildBadgeScalarWhereWithAggregatesInputSchema),z.lazy(() => ChildBadgeScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ChildBadgeScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ChildBadgeScalarWhereWithAggregatesInputSchema),z.lazy(() => ChildBadgeScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  childId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  badgeId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  awardedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+}).strict();
+
+export const ChildFeedbackWhereInputSchema: z.ZodType<Prisma.ChildFeedbackWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => ChildFeedbackWhereInputSchema),z.lazy(() => ChildFeedbackWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ChildFeedbackWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ChildFeedbackWhereInputSchema),z.lazy(() => ChildFeedbackWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  content: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  rating: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  childId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  teacherId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  child: z.union([ z.lazy(() => ChildScalarRelationFilterSchema),z.lazy(() => ChildWhereInputSchema) ]).optional(),
+  teacher: z.union([ z.lazy(() => MemberScalarRelationFilterSchema),z.lazy(() => MemberWhereInputSchema) ]).optional(),
+}).strict();
+
+export const ChildFeedbackOrderByWithRelationInputSchema: z.ZodType<Prisma.ChildFeedbackOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  content: z.lazy(() => SortOrderSchema).optional(),
+  rating: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  childId: z.lazy(() => SortOrderSchema).optional(),
+  teacherId: z.lazy(() => SortOrderSchema).optional(),
+  child: z.lazy(() => ChildOrderByWithRelationInputSchema).optional(),
+  teacher: z.lazy(() => MemberOrderByWithRelationInputSchema).optional()
+}).strict();
+
+export const ChildFeedbackWhereUniqueInputSchema: z.ZodType<Prisma.ChildFeedbackWhereUniqueInput> = z.object({
+  id: z.string()
+})
+.and(z.object({
+  id: z.string().optional(),
+  AND: z.union([ z.lazy(() => ChildFeedbackWhereInputSchema),z.lazy(() => ChildFeedbackWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ChildFeedbackWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ChildFeedbackWhereInputSchema),z.lazy(() => ChildFeedbackWhereInputSchema).array() ]).optional(),
+  content: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  rating: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
+  createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  childId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  teacherId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  child: z.union([ z.lazy(() => ChildScalarRelationFilterSchema),z.lazy(() => ChildWhereInputSchema) ]).optional(),
+  teacher: z.union([ z.lazy(() => MemberScalarRelationFilterSchema),z.lazy(() => MemberWhereInputSchema) ]).optional(),
+}).strict());
+
+export const ChildFeedbackOrderByWithAggregationInputSchema: z.ZodType<Prisma.ChildFeedbackOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  content: z.lazy(() => SortOrderSchema).optional(),
+  rating: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  childId: z.lazy(() => SortOrderSchema).optional(),
+  teacherId: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => ChildFeedbackCountOrderByAggregateInputSchema).optional(),
+  _avg: z.lazy(() => ChildFeedbackAvgOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => ChildFeedbackMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => ChildFeedbackMinOrderByAggregateInputSchema).optional(),
+  _sum: z.lazy(() => ChildFeedbackSumOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const ChildFeedbackScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.ChildFeedbackScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => ChildFeedbackScalarWhereWithAggregatesInputSchema),z.lazy(() => ChildFeedbackScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ChildFeedbackScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ChildFeedbackScalarWhereWithAggregatesInputSchema),z.lazy(() => ChildFeedbackScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  content: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  rating: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
+  createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+  childId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  teacherId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
 }).strict();
 
 export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object({
@@ -2206,7 +2546,8 @@ export const MemberCreateInputSchema: z.ZodType<Prisma.MemberCreateInput> = z.ob
   createdAt: z.coerce.date(),
   organization: z.lazy(() => OrganizationCreateNestedOneWithoutMembersInputSchema),
   user: z.lazy(() => UserCreateNestedOneWithoutMembersInputSchema),
-  teachingClasses: z.lazy(() => ClassCreateNestedManyWithoutTeacherInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassCreateNestedManyWithoutTeacherInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackCreateNestedManyWithoutTeacherInputSchema).optional()
 }).strict();
 
 export const MemberUncheckedCreateInputSchema: z.ZodType<Prisma.MemberUncheckedCreateInput> = z.object({
@@ -2215,7 +2556,8 @@ export const MemberUncheckedCreateInputSchema: z.ZodType<Prisma.MemberUncheckedC
   userId: z.string(),
   role: z.string(),
   createdAt: z.coerce.date(),
-  teachingClasses: z.lazy(() => ClassUncheckedCreateNestedManyWithoutTeacherInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassUncheckedCreateNestedManyWithoutTeacherInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackUncheckedCreateNestedManyWithoutTeacherInputSchema).optional()
 }).strict();
 
 export const MemberUpdateInputSchema: z.ZodType<Prisma.MemberUpdateInput> = z.object({
@@ -2223,7 +2565,8 @@ export const MemberUpdateInputSchema: z.ZodType<Prisma.MemberUpdateInput> = z.ob
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   organization: z.lazy(() => OrganizationUpdateOneRequiredWithoutMembersNestedInputSchema).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutMembersNestedInputSchema).optional(),
-  teachingClasses: z.lazy(() => ClassUpdateManyWithoutTeacherNestedInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassUpdateManyWithoutTeacherNestedInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackUpdateManyWithoutTeacherNestedInputSchema).optional()
 }).strict();
 
 export const MemberUncheckedUpdateInputSchema: z.ZodType<Prisma.MemberUncheckedUpdateInput> = z.object({
@@ -2231,7 +2574,8 @@ export const MemberUncheckedUpdateInputSchema: z.ZodType<Prisma.MemberUncheckedU
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   role: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  teachingClasses: z.lazy(() => ClassUncheckedUpdateManyWithoutTeacherNestedInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassUncheckedUpdateManyWithoutTeacherNestedInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackUncheckedUpdateManyWithoutTeacherNestedInputSchema).optional()
 }).strict();
 
 export const MemberCreateManyInputSchema: z.ZodType<Prisma.MemberCreateManyInput> = z.object({
@@ -2646,7 +2990,9 @@ export const ChildCreateInputSchema: z.ZodType<Prisma.ChildCreateInput> = z.obje
   updatedAt: z.coerce.date().optional(),
   classes: z.lazy(() => ChildClassCreateNestedManyWithoutChildInputSchema).optional(),
   parent: z.lazy(() => UserCreateNestedOneWithoutChildrenInputSchema),
-  nursery: z.lazy(() => OrganizationCreateNestedOneWithoutChildrenInputSchema)
+  nursery: z.lazy(() => OrganizationCreateNestedOneWithoutChildrenInputSchema),
+  badges: z.lazy(() => ChildBadgeCreateNestedManyWithoutChildInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackCreateNestedManyWithoutChildInputSchema).optional()
 }).strict();
 
 export const ChildUncheckedCreateInputSchema: z.ZodType<Prisma.ChildUncheckedCreateInput> = z.object({
@@ -2658,7 +3004,9 @@ export const ChildUncheckedCreateInputSchema: z.ZodType<Prisma.ChildUncheckedCre
   updatedAt: z.coerce.date().optional(),
   parentId: z.string(),
   nurseryId: z.string(),
-  classes: z.lazy(() => ChildClassUncheckedCreateNestedManyWithoutChildInputSchema).optional()
+  classes: z.lazy(() => ChildClassUncheckedCreateNestedManyWithoutChildInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUncheckedCreateNestedManyWithoutChildInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUncheckedCreateNestedManyWithoutChildInputSchema).optional()
 }).strict();
 
 export const ChildUpdateInputSchema: z.ZodType<Prisma.ChildUpdateInput> = z.object({
@@ -2669,7 +3017,9 @@ export const ChildUpdateInputSchema: z.ZodType<Prisma.ChildUpdateInput> = z.obje
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   classes: z.lazy(() => ChildClassUpdateManyWithoutChildNestedInputSchema).optional(),
   parent: z.lazy(() => UserUpdateOneRequiredWithoutChildrenNestedInputSchema).optional(),
-  nursery: z.lazy(() => OrganizationUpdateOneRequiredWithoutChildrenNestedInputSchema).optional()
+  nursery: z.lazy(() => OrganizationUpdateOneRequiredWithoutChildrenNestedInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUpdateManyWithoutChildNestedInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUpdateManyWithoutChildNestedInputSchema).optional()
 }).strict();
 
 export const ChildUncheckedUpdateInputSchema: z.ZodType<Prisma.ChildUncheckedUpdateInput> = z.object({
@@ -2680,7 +3030,9 @@ export const ChildUncheckedUpdateInputSchema: z.ZodType<Prisma.ChildUncheckedUpd
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   parentId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nurseryId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  classes: z.lazy(() => ChildClassUncheckedUpdateManyWithoutChildNestedInputSchema).optional()
+  classes: z.lazy(() => ChildClassUncheckedUpdateManyWithoutChildNestedInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUncheckedUpdateManyWithoutChildNestedInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUncheckedUpdateManyWithoutChildNestedInputSchema).optional()
 }).strict();
 
 export const ChildCreateManyInputSchema: z.ZodType<Prisma.ChildCreateManyInput> = z.object({
@@ -2753,6 +3105,176 @@ export const ChildClassUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ChildCla
   childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   classId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   joinedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const BadgeCreateInputSchema: z.ZodType<Prisma.BadgeCreateInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  description: z.string().optional().nullable(),
+  imageUrl: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  children: z.lazy(() => ChildBadgeCreateNestedManyWithoutBadgeInputSchema).optional()
+}).strict();
+
+export const BadgeUncheckedCreateInputSchema: z.ZodType<Prisma.BadgeUncheckedCreateInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  description: z.string().optional().nullable(),
+  imageUrl: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  children: z.lazy(() => ChildBadgeUncheckedCreateNestedManyWithoutBadgeInputSchema).optional()
+}).strict();
+
+export const BadgeUpdateInputSchema: z.ZodType<Prisma.BadgeUpdateInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  imageUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  children: z.lazy(() => ChildBadgeUpdateManyWithoutBadgeNestedInputSchema).optional()
+}).strict();
+
+export const BadgeUncheckedUpdateInputSchema: z.ZodType<Prisma.BadgeUncheckedUpdateInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  imageUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  children: z.lazy(() => ChildBadgeUncheckedUpdateManyWithoutBadgeNestedInputSchema).optional()
+}).strict();
+
+export const BadgeCreateManyInputSchema: z.ZodType<Prisma.BadgeCreateManyInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  description: z.string().optional().nullable(),
+  imageUrl: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const BadgeUpdateManyMutationInputSchema: z.ZodType<Prisma.BadgeUpdateManyMutationInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  imageUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const BadgeUncheckedUpdateManyInputSchema: z.ZodType<Prisma.BadgeUncheckedUpdateManyInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  imageUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildBadgeCreateInputSchema: z.ZodType<Prisma.ChildBadgeCreateInput> = z.object({
+  id: z.string().optional(),
+  awardedAt: z.coerce.date().optional(),
+  child: z.lazy(() => ChildCreateNestedOneWithoutBadgesInputSchema),
+  badge: z.lazy(() => BadgeCreateNestedOneWithoutChildrenInputSchema)
+}).strict();
+
+export const ChildBadgeUncheckedCreateInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedCreateInput> = z.object({
+  id: z.string().optional(),
+  childId: z.string(),
+  badgeId: z.string(),
+  awardedAt: z.coerce.date().optional()
+}).strict();
+
+export const ChildBadgeUpdateInputSchema: z.ZodType<Prisma.ChildBadgeUpdateInput> = z.object({
+  awardedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  child: z.lazy(() => ChildUpdateOneRequiredWithoutBadgesNestedInputSchema).optional(),
+  badge: z.lazy(() => BadgeUpdateOneRequiredWithoutChildrenNestedInputSchema).optional()
+}).strict();
+
+export const ChildBadgeUncheckedUpdateInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedUpdateInput> = z.object({
+  childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  badgeId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  awardedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildBadgeCreateManyInputSchema: z.ZodType<Prisma.ChildBadgeCreateManyInput> = z.object({
+  id: z.string().optional(),
+  childId: z.string(),
+  badgeId: z.string(),
+  awardedAt: z.coerce.date().optional()
+}).strict();
+
+export const ChildBadgeUpdateManyMutationInputSchema: z.ZodType<Prisma.ChildBadgeUpdateManyMutationInput> = z.object({
+  awardedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildBadgeUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedUpdateManyInput> = z.object({
+  childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  badgeId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  awardedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildFeedbackCreateInputSchema: z.ZodType<Prisma.ChildFeedbackCreateInput> = z.object({
+  id: z.string().optional(),
+  content: z.string(),
+  rating: z.number().int().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  child: z.lazy(() => ChildCreateNestedOneWithoutFeedbacksInputSchema),
+  teacher: z.lazy(() => MemberCreateNestedOneWithoutChildFeedbackInputSchema)
+}).strict();
+
+export const ChildFeedbackUncheckedCreateInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedCreateInput> = z.object({
+  id: z.string().optional(),
+  content: z.string(),
+  rating: z.number().int().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  childId: z.string(),
+  teacherId: z.string()
+}).strict();
+
+export const ChildFeedbackUpdateInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateInput> = z.object({
+  content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  child: z.lazy(() => ChildUpdateOneRequiredWithoutFeedbacksNestedInputSchema).optional(),
+  teacher: z.lazy(() => MemberUpdateOneRequiredWithoutChildFeedbackNestedInputSchema).optional()
+}).strict();
+
+export const ChildFeedbackUncheckedUpdateInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateInput> = z.object({
+  content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  teacherId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildFeedbackCreateManyInputSchema: z.ZodType<Prisma.ChildFeedbackCreateManyInput> = z.object({
+  id: z.string().optional(),
+  content: z.string(),
+  rating: z.number().int().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  childId: z.string(),
+  teacherId: z.string()
+}).strict();
+
+export const ChildFeedbackUpdateManyMutationInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateManyMutationInput> = z.object({
+  content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildFeedbackUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateManyInput> = z.object({
+  content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  teacherId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const StringFilterSchema: z.ZodType<Prisma.StringFilter> = z.object({
@@ -3174,6 +3696,16 @@ export const OrganizationScalarRelationFilterSchema: z.ZodType<Prisma.Organizati
   isNot: z.lazy(() => OrganizationWhereInputSchema).optional()
 }).strict();
 
+export const ChildFeedbackListRelationFilterSchema: z.ZodType<Prisma.ChildFeedbackListRelationFilter> = z.object({
+  every: z.lazy(() => ChildFeedbackWhereInputSchema).optional(),
+  some: z.lazy(() => ChildFeedbackWhereInputSchema).optional(),
+  none: z.lazy(() => ChildFeedbackWhereInputSchema).optional()
+}).strict();
+
+export const ChildFeedbackOrderByRelationAggregateInputSchema: z.ZodType<Prisma.ChildFeedbackOrderByRelationAggregateInput> = z.object({
+  _count: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
 export const MemberCountOrderByAggregateInputSchema: z.ZodType<Prisma.MemberCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   organizationId: z.lazy(() => SortOrderSchema).optional(),
@@ -3392,6 +3924,16 @@ export const ClassMinOrderByAggregateInputSchema: z.ZodType<Prisma.ClassMinOrder
   teacherId: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
+export const ChildBadgeListRelationFilterSchema: z.ZodType<Prisma.ChildBadgeListRelationFilter> = z.object({
+  every: z.lazy(() => ChildBadgeWhereInputSchema).optional(),
+  some: z.lazy(() => ChildBadgeWhereInputSchema).optional(),
+  none: z.lazy(() => ChildBadgeWhereInputSchema).optional()
+}).strict();
+
+export const ChildBadgeOrderByRelationAggregateInputSchema: z.ZodType<Prisma.ChildBadgeOrderByRelationAggregateInput> = z.object({
+  _count: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
 export const ChildCountOrderByAggregateInputSchema: z.ZodType<Prisma.ChildCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   firstName: z.lazy(() => SortOrderSchema).optional(),
@@ -3459,6 +4001,131 @@ export const ChildClassMinOrderByAggregateInputSchema: z.ZodType<Prisma.ChildCla
   childId: z.lazy(() => SortOrderSchema).optional(),
   classId: z.lazy(() => SortOrderSchema).optional(),
   joinedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const BadgeCountOrderByAggregateInputSchema: z.ZodType<Prisma.BadgeCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional(),
+  imageUrl: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const BadgeMaxOrderByAggregateInputSchema: z.ZodType<Prisma.BadgeMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional(),
+  imageUrl: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const BadgeMinOrderByAggregateInputSchema: z.ZodType<Prisma.BadgeMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional(),
+  imageUrl: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const BadgeScalarRelationFilterSchema: z.ZodType<Prisma.BadgeScalarRelationFilter> = z.object({
+  is: z.lazy(() => BadgeWhereInputSchema).optional(),
+  isNot: z.lazy(() => BadgeWhereInputSchema).optional()
+}).strict();
+
+export const ChildBadgeChildIdBadgeIdCompoundUniqueInputSchema: z.ZodType<Prisma.ChildBadgeChildIdBadgeIdCompoundUniqueInput> = z.object({
+  childId: z.string(),
+  badgeId: z.string()
+}).strict();
+
+export const ChildBadgeCountOrderByAggregateInputSchema: z.ZodType<Prisma.ChildBadgeCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  childId: z.lazy(() => SortOrderSchema).optional(),
+  badgeId: z.lazy(() => SortOrderSchema).optional(),
+  awardedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const ChildBadgeMaxOrderByAggregateInputSchema: z.ZodType<Prisma.ChildBadgeMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  childId: z.lazy(() => SortOrderSchema).optional(),
+  badgeId: z.lazy(() => SortOrderSchema).optional(),
+  awardedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const ChildBadgeMinOrderByAggregateInputSchema: z.ZodType<Prisma.ChildBadgeMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  childId: z.lazy(() => SortOrderSchema).optional(),
+  badgeId: z.lazy(() => SortOrderSchema).optional(),
+  awardedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const IntNullableFilterSchema: z.ZodType<Prisma.IntNullableFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableFilterSchema) ]).optional().nullable(),
+  isSet: z.boolean().optional()
+}).strict();
+
+export const ChildFeedbackCountOrderByAggregateInputSchema: z.ZodType<Prisma.ChildFeedbackCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  content: z.lazy(() => SortOrderSchema).optional(),
+  rating: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  childId: z.lazy(() => SortOrderSchema).optional(),
+  teacherId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const ChildFeedbackAvgOrderByAggregateInputSchema: z.ZodType<Prisma.ChildFeedbackAvgOrderByAggregateInput> = z.object({
+  rating: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const ChildFeedbackMaxOrderByAggregateInputSchema: z.ZodType<Prisma.ChildFeedbackMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  content: z.lazy(() => SortOrderSchema).optional(),
+  rating: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  childId: z.lazy(() => SortOrderSchema).optional(),
+  teacherId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const ChildFeedbackMinOrderByAggregateInputSchema: z.ZodType<Prisma.ChildFeedbackMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  content: z.lazy(() => SortOrderSchema).optional(),
+  rating: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  childId: z.lazy(() => SortOrderSchema).optional(),
+  teacherId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const ChildFeedbackSumOrderByAggregateInputSchema: z.ZodType<Prisma.ChildFeedbackSumOrderByAggregateInput> = z.object({
+  rating: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const IntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.IntNullableWithAggregatesFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatNullableFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  isSet: z.boolean().optional()
 }).strict();
 
 export const SessionCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.SessionCreateNestedManyWithoutUserInput> = z.object({
@@ -3987,11 +4654,25 @@ export const ClassCreateNestedManyWithoutTeacherInputSchema: z.ZodType<Prisma.Cl
   connect: z.union([ z.lazy(() => ClassWhereUniqueInputSchema),z.lazy(() => ClassWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
+export const ChildFeedbackCreateNestedManyWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackCreateNestedManyWithoutTeacherInput> = z.object({
+  create: z.union([ z.lazy(() => ChildFeedbackCreateWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackCreateWithoutTeacherInputSchema).array(),z.lazy(() => ChildFeedbackUncheckedCreateWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUncheckedCreateWithoutTeacherInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildFeedbackCreateOrConnectWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackCreateOrConnectWithoutTeacherInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildFeedbackCreateManyTeacherInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
 export const ClassUncheckedCreateNestedManyWithoutTeacherInputSchema: z.ZodType<Prisma.ClassUncheckedCreateNestedManyWithoutTeacherInput> = z.object({
   create: z.union([ z.lazy(() => ClassCreateWithoutTeacherInputSchema),z.lazy(() => ClassCreateWithoutTeacherInputSchema).array(),z.lazy(() => ClassUncheckedCreateWithoutTeacherInputSchema),z.lazy(() => ClassUncheckedCreateWithoutTeacherInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => ClassCreateOrConnectWithoutTeacherInputSchema),z.lazy(() => ClassCreateOrConnectWithoutTeacherInputSchema).array() ]).optional(),
   createMany: z.lazy(() => ClassCreateManyTeacherInputEnvelopeSchema).optional(),
   connect: z.union([ z.lazy(() => ClassWhereUniqueInputSchema),z.lazy(() => ClassWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const ChildFeedbackUncheckedCreateNestedManyWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedCreateNestedManyWithoutTeacherInput> = z.object({
+  create: z.union([ z.lazy(() => ChildFeedbackCreateWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackCreateWithoutTeacherInputSchema).array(),z.lazy(() => ChildFeedbackUncheckedCreateWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUncheckedCreateWithoutTeacherInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildFeedbackCreateOrConnectWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackCreateOrConnectWithoutTeacherInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildFeedbackCreateManyTeacherInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
 export const OrganizationUpdateOneRequiredWithoutMembersNestedInputSchema: z.ZodType<Prisma.OrganizationUpdateOneRequiredWithoutMembersNestedInput> = z.object({
@@ -4024,6 +4705,20 @@ export const ClassUpdateManyWithoutTeacherNestedInputSchema: z.ZodType<Prisma.Cl
   deleteMany: z.union([ z.lazy(() => ClassScalarWhereInputSchema),z.lazy(() => ClassScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
+export const ChildFeedbackUpdateManyWithoutTeacherNestedInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateManyWithoutTeacherNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ChildFeedbackCreateWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackCreateWithoutTeacherInputSchema).array(),z.lazy(() => ChildFeedbackUncheckedCreateWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUncheckedCreateWithoutTeacherInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildFeedbackCreateOrConnectWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackCreateOrConnectWithoutTeacherInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ChildFeedbackUpsertWithWhereUniqueWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUpsertWithWhereUniqueWithoutTeacherInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildFeedbackCreateManyTeacherInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ChildFeedbackUpdateWithWhereUniqueWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUpdateWithWhereUniqueWithoutTeacherInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ChildFeedbackUpdateManyWithWhereWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUpdateManyWithWhereWithoutTeacherInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => ChildFeedbackScalarWhereInputSchema),z.lazy(() => ChildFeedbackScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
 export const ClassUncheckedUpdateManyWithoutTeacherNestedInputSchema: z.ZodType<Prisma.ClassUncheckedUpdateManyWithoutTeacherNestedInput> = z.object({
   create: z.union([ z.lazy(() => ClassCreateWithoutTeacherInputSchema),z.lazy(() => ClassCreateWithoutTeacherInputSchema).array(),z.lazy(() => ClassUncheckedCreateWithoutTeacherInputSchema),z.lazy(() => ClassUncheckedCreateWithoutTeacherInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => ClassCreateOrConnectWithoutTeacherInputSchema),z.lazy(() => ClassCreateOrConnectWithoutTeacherInputSchema).array() ]).optional(),
@@ -4036,6 +4731,20 @@ export const ClassUncheckedUpdateManyWithoutTeacherNestedInputSchema: z.ZodType<
   update: z.union([ z.lazy(() => ClassUpdateWithWhereUniqueWithoutTeacherInputSchema),z.lazy(() => ClassUpdateWithWhereUniqueWithoutTeacherInputSchema).array() ]).optional(),
   updateMany: z.union([ z.lazy(() => ClassUpdateManyWithWhereWithoutTeacherInputSchema),z.lazy(() => ClassUpdateManyWithWhereWithoutTeacherInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => ClassScalarWhereInputSchema),z.lazy(() => ClassScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const ChildFeedbackUncheckedUpdateManyWithoutTeacherNestedInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateManyWithoutTeacherNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ChildFeedbackCreateWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackCreateWithoutTeacherInputSchema).array(),z.lazy(() => ChildFeedbackUncheckedCreateWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUncheckedCreateWithoutTeacherInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildFeedbackCreateOrConnectWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackCreateOrConnectWithoutTeacherInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ChildFeedbackUpsertWithWhereUniqueWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUpsertWithWhereUniqueWithoutTeacherInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildFeedbackCreateManyTeacherInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ChildFeedbackUpdateWithWhereUniqueWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUpdateWithWhereUniqueWithoutTeacherInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ChildFeedbackUpdateManyWithWhereWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUpdateManyWithWhereWithoutTeacherInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => ChildFeedbackScalarWhereInputSchema),z.lazy(() => ChildFeedbackScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
 export const OrganizationCreateNestedOneWithoutInvitationsInputSchema: z.ZodType<Prisma.OrganizationCreateNestedOneWithoutInvitationsInput> = z.object({
@@ -4231,11 +4940,39 @@ export const OrganizationCreateNestedOneWithoutChildrenInputSchema: z.ZodType<Pr
   connect: z.lazy(() => OrganizationWhereUniqueInputSchema).optional()
 }).strict();
 
+export const ChildBadgeCreateNestedManyWithoutChildInputSchema: z.ZodType<Prisma.ChildBadgeCreateNestedManyWithoutChildInput> = z.object({
+  create: z.union([ z.lazy(() => ChildBadgeCreateWithoutChildInputSchema),z.lazy(() => ChildBadgeCreateWithoutChildInputSchema).array(),z.lazy(() => ChildBadgeUncheckedCreateWithoutChildInputSchema),z.lazy(() => ChildBadgeUncheckedCreateWithoutChildInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildBadgeCreateOrConnectWithoutChildInputSchema),z.lazy(() => ChildBadgeCreateOrConnectWithoutChildInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildBadgeCreateManyChildInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const ChildFeedbackCreateNestedManyWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackCreateNestedManyWithoutChildInput> = z.object({
+  create: z.union([ z.lazy(() => ChildFeedbackCreateWithoutChildInputSchema),z.lazy(() => ChildFeedbackCreateWithoutChildInputSchema).array(),z.lazy(() => ChildFeedbackUncheckedCreateWithoutChildInputSchema),z.lazy(() => ChildFeedbackUncheckedCreateWithoutChildInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildFeedbackCreateOrConnectWithoutChildInputSchema),z.lazy(() => ChildFeedbackCreateOrConnectWithoutChildInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildFeedbackCreateManyChildInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
 export const ChildClassUncheckedCreateNestedManyWithoutChildInputSchema: z.ZodType<Prisma.ChildClassUncheckedCreateNestedManyWithoutChildInput> = z.object({
   create: z.union([ z.lazy(() => ChildClassCreateWithoutChildInputSchema),z.lazy(() => ChildClassCreateWithoutChildInputSchema).array(),z.lazy(() => ChildClassUncheckedCreateWithoutChildInputSchema),z.lazy(() => ChildClassUncheckedCreateWithoutChildInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => ChildClassCreateOrConnectWithoutChildInputSchema),z.lazy(() => ChildClassCreateOrConnectWithoutChildInputSchema).array() ]).optional(),
   createMany: z.lazy(() => ChildClassCreateManyChildInputEnvelopeSchema).optional(),
   connect: z.union([ z.lazy(() => ChildClassWhereUniqueInputSchema),z.lazy(() => ChildClassWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const ChildBadgeUncheckedCreateNestedManyWithoutChildInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedCreateNestedManyWithoutChildInput> = z.object({
+  create: z.union([ z.lazy(() => ChildBadgeCreateWithoutChildInputSchema),z.lazy(() => ChildBadgeCreateWithoutChildInputSchema).array(),z.lazy(() => ChildBadgeUncheckedCreateWithoutChildInputSchema),z.lazy(() => ChildBadgeUncheckedCreateWithoutChildInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildBadgeCreateOrConnectWithoutChildInputSchema),z.lazy(() => ChildBadgeCreateOrConnectWithoutChildInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildBadgeCreateManyChildInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const ChildFeedbackUncheckedCreateNestedManyWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedCreateNestedManyWithoutChildInput> = z.object({
+  create: z.union([ z.lazy(() => ChildFeedbackCreateWithoutChildInputSchema),z.lazy(() => ChildFeedbackCreateWithoutChildInputSchema).array(),z.lazy(() => ChildFeedbackUncheckedCreateWithoutChildInputSchema),z.lazy(() => ChildFeedbackUncheckedCreateWithoutChildInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildFeedbackCreateOrConnectWithoutChildInputSchema),z.lazy(() => ChildFeedbackCreateOrConnectWithoutChildInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildFeedbackCreateManyChildInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
 export const ChildClassUpdateManyWithoutChildNestedInputSchema: z.ZodType<Prisma.ChildClassUpdateManyWithoutChildNestedInput> = z.object({
@@ -4268,6 +5005,34 @@ export const OrganizationUpdateOneRequiredWithoutChildrenNestedInputSchema: z.Zo
   update: z.union([ z.lazy(() => OrganizationUpdateToOneWithWhereWithoutChildrenInputSchema),z.lazy(() => OrganizationUpdateWithoutChildrenInputSchema),z.lazy(() => OrganizationUncheckedUpdateWithoutChildrenInputSchema) ]).optional(),
 }).strict();
 
+export const ChildBadgeUpdateManyWithoutChildNestedInputSchema: z.ZodType<Prisma.ChildBadgeUpdateManyWithoutChildNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ChildBadgeCreateWithoutChildInputSchema),z.lazy(() => ChildBadgeCreateWithoutChildInputSchema).array(),z.lazy(() => ChildBadgeUncheckedCreateWithoutChildInputSchema),z.lazy(() => ChildBadgeUncheckedCreateWithoutChildInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildBadgeCreateOrConnectWithoutChildInputSchema),z.lazy(() => ChildBadgeCreateOrConnectWithoutChildInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ChildBadgeUpsertWithWhereUniqueWithoutChildInputSchema),z.lazy(() => ChildBadgeUpsertWithWhereUniqueWithoutChildInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildBadgeCreateManyChildInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ChildBadgeUpdateWithWhereUniqueWithoutChildInputSchema),z.lazy(() => ChildBadgeUpdateWithWhereUniqueWithoutChildInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ChildBadgeUpdateManyWithWhereWithoutChildInputSchema),z.lazy(() => ChildBadgeUpdateManyWithWhereWithoutChildInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => ChildBadgeScalarWhereInputSchema),z.lazy(() => ChildBadgeScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const ChildFeedbackUpdateManyWithoutChildNestedInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateManyWithoutChildNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ChildFeedbackCreateWithoutChildInputSchema),z.lazy(() => ChildFeedbackCreateWithoutChildInputSchema).array(),z.lazy(() => ChildFeedbackUncheckedCreateWithoutChildInputSchema),z.lazy(() => ChildFeedbackUncheckedCreateWithoutChildInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildFeedbackCreateOrConnectWithoutChildInputSchema),z.lazy(() => ChildFeedbackCreateOrConnectWithoutChildInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ChildFeedbackUpsertWithWhereUniqueWithoutChildInputSchema),z.lazy(() => ChildFeedbackUpsertWithWhereUniqueWithoutChildInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildFeedbackCreateManyChildInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ChildFeedbackUpdateWithWhereUniqueWithoutChildInputSchema),z.lazy(() => ChildFeedbackUpdateWithWhereUniqueWithoutChildInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ChildFeedbackUpdateManyWithWhereWithoutChildInputSchema),z.lazy(() => ChildFeedbackUpdateManyWithWhereWithoutChildInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => ChildFeedbackScalarWhereInputSchema),z.lazy(() => ChildFeedbackScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
 export const ChildClassUncheckedUpdateManyWithoutChildNestedInputSchema: z.ZodType<Prisma.ChildClassUncheckedUpdateManyWithoutChildNestedInput> = z.object({
   create: z.union([ z.lazy(() => ChildClassCreateWithoutChildInputSchema),z.lazy(() => ChildClassCreateWithoutChildInputSchema).array(),z.lazy(() => ChildClassUncheckedCreateWithoutChildInputSchema),z.lazy(() => ChildClassUncheckedCreateWithoutChildInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => ChildClassCreateOrConnectWithoutChildInputSchema),z.lazy(() => ChildClassCreateOrConnectWithoutChildInputSchema).array() ]).optional(),
@@ -4280,6 +5045,34 @@ export const ChildClassUncheckedUpdateManyWithoutChildNestedInputSchema: z.ZodTy
   update: z.union([ z.lazy(() => ChildClassUpdateWithWhereUniqueWithoutChildInputSchema),z.lazy(() => ChildClassUpdateWithWhereUniqueWithoutChildInputSchema).array() ]).optional(),
   updateMany: z.union([ z.lazy(() => ChildClassUpdateManyWithWhereWithoutChildInputSchema),z.lazy(() => ChildClassUpdateManyWithWhereWithoutChildInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => ChildClassScalarWhereInputSchema),z.lazy(() => ChildClassScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const ChildBadgeUncheckedUpdateManyWithoutChildNestedInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedUpdateManyWithoutChildNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ChildBadgeCreateWithoutChildInputSchema),z.lazy(() => ChildBadgeCreateWithoutChildInputSchema).array(),z.lazy(() => ChildBadgeUncheckedCreateWithoutChildInputSchema),z.lazy(() => ChildBadgeUncheckedCreateWithoutChildInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildBadgeCreateOrConnectWithoutChildInputSchema),z.lazy(() => ChildBadgeCreateOrConnectWithoutChildInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ChildBadgeUpsertWithWhereUniqueWithoutChildInputSchema),z.lazy(() => ChildBadgeUpsertWithWhereUniqueWithoutChildInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildBadgeCreateManyChildInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ChildBadgeUpdateWithWhereUniqueWithoutChildInputSchema),z.lazy(() => ChildBadgeUpdateWithWhereUniqueWithoutChildInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ChildBadgeUpdateManyWithWhereWithoutChildInputSchema),z.lazy(() => ChildBadgeUpdateManyWithWhereWithoutChildInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => ChildBadgeScalarWhereInputSchema),z.lazy(() => ChildBadgeScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const ChildFeedbackUncheckedUpdateManyWithoutChildNestedInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateManyWithoutChildNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ChildFeedbackCreateWithoutChildInputSchema),z.lazy(() => ChildFeedbackCreateWithoutChildInputSchema).array(),z.lazy(() => ChildFeedbackUncheckedCreateWithoutChildInputSchema),z.lazy(() => ChildFeedbackUncheckedCreateWithoutChildInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildFeedbackCreateOrConnectWithoutChildInputSchema),z.lazy(() => ChildFeedbackCreateOrConnectWithoutChildInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ChildFeedbackUpsertWithWhereUniqueWithoutChildInputSchema),z.lazy(() => ChildFeedbackUpsertWithWhereUniqueWithoutChildInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildFeedbackCreateManyChildInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => ChildFeedbackWhereUniqueInputSchema),z.lazy(() => ChildFeedbackWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ChildFeedbackUpdateWithWhereUniqueWithoutChildInputSchema),z.lazy(() => ChildFeedbackUpdateWithWhereUniqueWithoutChildInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ChildFeedbackUpdateManyWithWhereWithoutChildInputSchema),z.lazy(() => ChildFeedbackUpdateManyWithWhereWithoutChildInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => ChildFeedbackScalarWhereInputSchema),z.lazy(() => ChildFeedbackScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
 export const ChildCreateNestedOneWithoutClassesInputSchema: z.ZodType<Prisma.ChildCreateNestedOneWithoutClassesInput> = z.object({
@@ -4308,6 +5101,113 @@ export const ClassUpdateOneRequiredWithoutChildrenNestedInputSchema: z.ZodType<P
   upsert: z.lazy(() => ClassUpsertWithoutChildrenInputSchema).optional(),
   connect: z.lazy(() => ClassWhereUniqueInputSchema).optional(),
   update: z.union([ z.lazy(() => ClassUpdateToOneWithWhereWithoutChildrenInputSchema),z.lazy(() => ClassUpdateWithoutChildrenInputSchema),z.lazy(() => ClassUncheckedUpdateWithoutChildrenInputSchema) ]).optional(),
+}).strict();
+
+export const ChildBadgeCreateNestedManyWithoutBadgeInputSchema: z.ZodType<Prisma.ChildBadgeCreateNestedManyWithoutBadgeInput> = z.object({
+  create: z.union([ z.lazy(() => ChildBadgeCreateWithoutBadgeInputSchema),z.lazy(() => ChildBadgeCreateWithoutBadgeInputSchema).array(),z.lazy(() => ChildBadgeUncheckedCreateWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUncheckedCreateWithoutBadgeInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildBadgeCreateOrConnectWithoutBadgeInputSchema),z.lazy(() => ChildBadgeCreateOrConnectWithoutBadgeInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildBadgeCreateManyBadgeInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const ChildBadgeUncheckedCreateNestedManyWithoutBadgeInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedCreateNestedManyWithoutBadgeInput> = z.object({
+  create: z.union([ z.lazy(() => ChildBadgeCreateWithoutBadgeInputSchema),z.lazy(() => ChildBadgeCreateWithoutBadgeInputSchema).array(),z.lazy(() => ChildBadgeUncheckedCreateWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUncheckedCreateWithoutBadgeInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildBadgeCreateOrConnectWithoutBadgeInputSchema),z.lazy(() => ChildBadgeCreateOrConnectWithoutBadgeInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildBadgeCreateManyBadgeInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const ChildBadgeUpdateManyWithoutBadgeNestedInputSchema: z.ZodType<Prisma.ChildBadgeUpdateManyWithoutBadgeNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ChildBadgeCreateWithoutBadgeInputSchema),z.lazy(() => ChildBadgeCreateWithoutBadgeInputSchema).array(),z.lazy(() => ChildBadgeUncheckedCreateWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUncheckedCreateWithoutBadgeInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildBadgeCreateOrConnectWithoutBadgeInputSchema),z.lazy(() => ChildBadgeCreateOrConnectWithoutBadgeInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ChildBadgeUpsertWithWhereUniqueWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUpsertWithWhereUniqueWithoutBadgeInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildBadgeCreateManyBadgeInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ChildBadgeUpdateWithWhereUniqueWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUpdateWithWhereUniqueWithoutBadgeInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ChildBadgeUpdateManyWithWhereWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUpdateManyWithWhereWithoutBadgeInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => ChildBadgeScalarWhereInputSchema),z.lazy(() => ChildBadgeScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const ChildBadgeUncheckedUpdateManyWithoutBadgeNestedInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedUpdateManyWithoutBadgeNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ChildBadgeCreateWithoutBadgeInputSchema),z.lazy(() => ChildBadgeCreateWithoutBadgeInputSchema).array(),z.lazy(() => ChildBadgeUncheckedCreateWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUncheckedCreateWithoutBadgeInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChildBadgeCreateOrConnectWithoutBadgeInputSchema),z.lazy(() => ChildBadgeCreateOrConnectWithoutBadgeInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ChildBadgeUpsertWithWhereUniqueWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUpsertWithWhereUniqueWithoutBadgeInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChildBadgeCreateManyBadgeInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => ChildBadgeWhereUniqueInputSchema),z.lazy(() => ChildBadgeWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ChildBadgeUpdateWithWhereUniqueWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUpdateWithWhereUniqueWithoutBadgeInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ChildBadgeUpdateManyWithWhereWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUpdateManyWithWhereWithoutBadgeInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => ChildBadgeScalarWhereInputSchema),z.lazy(() => ChildBadgeScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const ChildCreateNestedOneWithoutBadgesInputSchema: z.ZodType<Prisma.ChildCreateNestedOneWithoutBadgesInput> = z.object({
+  create: z.union([ z.lazy(() => ChildCreateWithoutBadgesInputSchema),z.lazy(() => ChildUncheckedCreateWithoutBadgesInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => ChildCreateOrConnectWithoutBadgesInputSchema).optional(),
+  connect: z.lazy(() => ChildWhereUniqueInputSchema).optional()
+}).strict();
+
+export const BadgeCreateNestedOneWithoutChildrenInputSchema: z.ZodType<Prisma.BadgeCreateNestedOneWithoutChildrenInput> = z.object({
+  create: z.union([ z.lazy(() => BadgeCreateWithoutChildrenInputSchema),z.lazy(() => BadgeUncheckedCreateWithoutChildrenInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => BadgeCreateOrConnectWithoutChildrenInputSchema).optional(),
+  connect: z.lazy(() => BadgeWhereUniqueInputSchema).optional()
+}).strict();
+
+export const ChildUpdateOneRequiredWithoutBadgesNestedInputSchema: z.ZodType<Prisma.ChildUpdateOneRequiredWithoutBadgesNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ChildCreateWithoutBadgesInputSchema),z.lazy(() => ChildUncheckedCreateWithoutBadgesInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => ChildCreateOrConnectWithoutBadgesInputSchema).optional(),
+  upsert: z.lazy(() => ChildUpsertWithoutBadgesInputSchema).optional(),
+  connect: z.lazy(() => ChildWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => ChildUpdateToOneWithWhereWithoutBadgesInputSchema),z.lazy(() => ChildUpdateWithoutBadgesInputSchema),z.lazy(() => ChildUncheckedUpdateWithoutBadgesInputSchema) ]).optional(),
+}).strict();
+
+export const BadgeUpdateOneRequiredWithoutChildrenNestedInputSchema: z.ZodType<Prisma.BadgeUpdateOneRequiredWithoutChildrenNestedInput> = z.object({
+  create: z.union([ z.lazy(() => BadgeCreateWithoutChildrenInputSchema),z.lazy(() => BadgeUncheckedCreateWithoutChildrenInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => BadgeCreateOrConnectWithoutChildrenInputSchema).optional(),
+  upsert: z.lazy(() => BadgeUpsertWithoutChildrenInputSchema).optional(),
+  connect: z.lazy(() => BadgeWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => BadgeUpdateToOneWithWhereWithoutChildrenInputSchema),z.lazy(() => BadgeUpdateWithoutChildrenInputSchema),z.lazy(() => BadgeUncheckedUpdateWithoutChildrenInputSchema) ]).optional(),
+}).strict();
+
+export const ChildCreateNestedOneWithoutFeedbacksInputSchema: z.ZodType<Prisma.ChildCreateNestedOneWithoutFeedbacksInput> = z.object({
+  create: z.union([ z.lazy(() => ChildCreateWithoutFeedbacksInputSchema),z.lazy(() => ChildUncheckedCreateWithoutFeedbacksInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => ChildCreateOrConnectWithoutFeedbacksInputSchema).optional(),
+  connect: z.lazy(() => ChildWhereUniqueInputSchema).optional()
+}).strict();
+
+export const MemberCreateNestedOneWithoutChildFeedbackInputSchema: z.ZodType<Prisma.MemberCreateNestedOneWithoutChildFeedbackInput> = z.object({
+  create: z.union([ z.lazy(() => MemberCreateWithoutChildFeedbackInputSchema),z.lazy(() => MemberUncheckedCreateWithoutChildFeedbackInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => MemberCreateOrConnectWithoutChildFeedbackInputSchema).optional(),
+  connect: z.lazy(() => MemberWhereUniqueInputSchema).optional()
+}).strict();
+
+export const NullableIntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableIntFieldUpdateOperationsInput> = z.object({
+  set: z.number().optional().nullable(),
+  increment: z.number().optional(),
+  decrement: z.number().optional(),
+  multiply: z.number().optional(),
+  divide: z.number().optional(),
+  unset: z.boolean().optional()
+}).strict();
+
+export const ChildUpdateOneRequiredWithoutFeedbacksNestedInputSchema: z.ZodType<Prisma.ChildUpdateOneRequiredWithoutFeedbacksNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ChildCreateWithoutFeedbacksInputSchema),z.lazy(() => ChildUncheckedCreateWithoutFeedbacksInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => ChildCreateOrConnectWithoutFeedbacksInputSchema).optional(),
+  upsert: z.lazy(() => ChildUpsertWithoutFeedbacksInputSchema).optional(),
+  connect: z.lazy(() => ChildWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => ChildUpdateToOneWithWhereWithoutFeedbacksInputSchema),z.lazy(() => ChildUpdateWithoutFeedbacksInputSchema),z.lazy(() => ChildUncheckedUpdateWithoutFeedbacksInputSchema) ]).optional(),
+}).strict();
+
+export const MemberUpdateOneRequiredWithoutChildFeedbackNestedInputSchema: z.ZodType<Prisma.MemberUpdateOneRequiredWithoutChildFeedbackNestedInput> = z.object({
+  create: z.union([ z.lazy(() => MemberCreateWithoutChildFeedbackInputSchema),z.lazy(() => MemberUncheckedCreateWithoutChildFeedbackInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => MemberCreateOrConnectWithoutChildFeedbackInputSchema).optional(),
+  upsert: z.lazy(() => MemberUpsertWithoutChildFeedbackInputSchema).optional(),
+  connect: z.lazy(() => MemberWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => MemberUpdateToOneWithWhereWithoutChildFeedbackInputSchema),z.lazy(() => MemberUpdateWithoutChildFeedbackInputSchema),z.lazy(() => MemberUncheckedUpdateWithoutChildFeedbackInputSchema) ]).optional(),
 }).strict();
 
 export const NestedStringFilterSchema: z.ZodType<Prisma.NestedStringFilter> = z.object({
@@ -4477,6 +5377,35 @@ export const NestedDateTimeNullableWithAggregatesFilterSchema: z.ZodType<Prisma.
   isSet: z.boolean().optional()
 }).strict();
 
+export const NestedIntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntNullableWithAggregatesFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatNullableFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  isSet: z.boolean().optional()
+}).strict();
+
+export const NestedFloatNullableFilterSchema: z.ZodType<Prisma.NestedFloatNullableFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedFloatNullableFilterSchema) ]).optional().nullable(),
+  isSet: z.boolean().optional()
+}).strict();
+
 export const SessionCreateWithoutUserInputSchema: z.ZodType<Prisma.SessionCreateWithoutUserInput> = z.object({
   id: z.string(),
   expiresAt: z.coerce.date(),
@@ -4554,7 +5483,8 @@ export const MemberCreateWithoutUserInputSchema: z.ZodType<Prisma.MemberCreateWi
   role: z.string(),
   createdAt: z.coerce.date(),
   organization: z.lazy(() => OrganizationCreateNestedOneWithoutMembersInputSchema),
-  teachingClasses: z.lazy(() => ClassCreateNestedManyWithoutTeacherInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassCreateNestedManyWithoutTeacherInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackCreateNestedManyWithoutTeacherInputSchema).optional()
 }).strict();
 
 export const MemberUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.MemberUncheckedCreateWithoutUserInput> = z.object({
@@ -4562,7 +5492,8 @@ export const MemberUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.Membe
   organizationId: z.string(),
   role: z.string(),
   createdAt: z.coerce.date(),
-  teachingClasses: z.lazy(() => ClassUncheckedCreateNestedManyWithoutTeacherInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassUncheckedCreateNestedManyWithoutTeacherInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackUncheckedCreateNestedManyWithoutTeacherInputSchema).optional()
 }).strict();
 
 export const MemberCreateOrConnectWithoutUserInputSchema: z.ZodType<Prisma.MemberCreateOrConnectWithoutUserInput> = z.object({
@@ -4630,7 +5561,9 @@ export const ChildCreateWithoutParentInputSchema: z.ZodType<Prisma.ChildCreateWi
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   classes: z.lazy(() => ChildClassCreateNestedManyWithoutChildInputSchema).optional(),
-  nursery: z.lazy(() => OrganizationCreateNestedOneWithoutChildrenInputSchema)
+  nursery: z.lazy(() => OrganizationCreateNestedOneWithoutChildrenInputSchema),
+  badges: z.lazy(() => ChildBadgeCreateNestedManyWithoutChildInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackCreateNestedManyWithoutChildInputSchema).optional()
 }).strict();
 
 export const ChildUncheckedCreateWithoutParentInputSchema: z.ZodType<Prisma.ChildUncheckedCreateWithoutParentInput> = z.object({
@@ -4641,7 +5574,9 @@ export const ChildUncheckedCreateWithoutParentInputSchema: z.ZodType<Prisma.Chil
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   nurseryId: z.string(),
-  classes: z.lazy(() => ChildClassUncheckedCreateNestedManyWithoutChildInputSchema).optional()
+  classes: z.lazy(() => ChildClassUncheckedCreateNestedManyWithoutChildInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUncheckedCreateNestedManyWithoutChildInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUncheckedCreateNestedManyWithoutChildInputSchema).optional()
 }).strict();
 
 export const ChildCreateOrConnectWithoutParentInputSchema: z.ZodType<Prisma.ChildCreateOrConnectWithoutParentInput> = z.object({
@@ -5025,7 +5960,8 @@ export const MemberCreateWithoutOrganizationInputSchema: z.ZodType<Prisma.Member
   role: z.string(),
   createdAt: z.coerce.date(),
   user: z.lazy(() => UserCreateNestedOneWithoutMembersInputSchema),
-  teachingClasses: z.lazy(() => ClassCreateNestedManyWithoutTeacherInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassCreateNestedManyWithoutTeacherInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackCreateNestedManyWithoutTeacherInputSchema).optional()
 }).strict();
 
 export const MemberUncheckedCreateWithoutOrganizationInputSchema: z.ZodType<Prisma.MemberUncheckedCreateWithoutOrganizationInput> = z.object({
@@ -5033,7 +5969,8 @@ export const MemberUncheckedCreateWithoutOrganizationInputSchema: z.ZodType<Pris
   userId: z.string(),
   role: z.string(),
   createdAt: z.coerce.date(),
-  teachingClasses: z.lazy(() => ClassUncheckedCreateNestedManyWithoutTeacherInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassUncheckedCreateNestedManyWithoutTeacherInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackUncheckedCreateNestedManyWithoutTeacherInputSchema).optional()
 }).strict();
 
 export const MemberCreateOrConnectWithoutOrganizationInputSchema: z.ZodType<Prisma.MemberCreateOrConnectWithoutOrganizationInput> = z.object({
@@ -5138,7 +6075,9 @@ export const ChildCreateWithoutNurseryInputSchema: z.ZodType<Prisma.ChildCreateW
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   classes: z.lazy(() => ChildClassCreateNestedManyWithoutChildInputSchema).optional(),
-  parent: z.lazy(() => UserCreateNestedOneWithoutChildrenInputSchema)
+  parent: z.lazy(() => UserCreateNestedOneWithoutChildrenInputSchema),
+  badges: z.lazy(() => ChildBadgeCreateNestedManyWithoutChildInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackCreateNestedManyWithoutChildInputSchema).optional()
 }).strict();
 
 export const ChildUncheckedCreateWithoutNurseryInputSchema: z.ZodType<Prisma.ChildUncheckedCreateWithoutNurseryInput> = z.object({
@@ -5149,7 +6088,9 @@ export const ChildUncheckedCreateWithoutNurseryInputSchema: z.ZodType<Prisma.Chi
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   parentId: z.string(),
-  classes: z.lazy(() => ChildClassUncheckedCreateNestedManyWithoutChildInputSchema).optional()
+  classes: z.lazy(() => ChildClassUncheckedCreateNestedManyWithoutChildInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUncheckedCreateNestedManyWithoutChildInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUncheckedCreateNestedManyWithoutChildInputSchema).optional()
 }).strict();
 
 export const ChildCreateOrConnectWithoutNurseryInputSchema: z.ZodType<Prisma.ChildCreateOrConnectWithoutNurseryInput> = z.object({
@@ -5376,6 +6317,33 @@ export const ClassCreateManyTeacherInputEnvelopeSchema: z.ZodType<Prisma.ClassCr
   data: z.union([ z.lazy(() => ClassCreateManyTeacherInputSchema),z.lazy(() => ClassCreateManyTeacherInputSchema).array() ]),
 }).strict();
 
+export const ChildFeedbackCreateWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackCreateWithoutTeacherInput> = z.object({
+  id: z.string().optional(),
+  content: z.string(),
+  rating: z.number().int().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  child: z.lazy(() => ChildCreateNestedOneWithoutFeedbacksInputSchema)
+}).strict();
+
+export const ChildFeedbackUncheckedCreateWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedCreateWithoutTeacherInput> = z.object({
+  id: z.string().optional(),
+  content: z.string(),
+  rating: z.number().int().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  childId: z.string()
+}).strict();
+
+export const ChildFeedbackCreateOrConnectWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackCreateOrConnectWithoutTeacherInput> = z.object({
+  where: z.lazy(() => ChildFeedbackWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => ChildFeedbackCreateWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUncheckedCreateWithoutTeacherInputSchema) ]),
+}).strict();
+
+export const ChildFeedbackCreateManyTeacherInputEnvelopeSchema: z.ZodType<Prisma.ChildFeedbackCreateManyTeacherInputEnvelope> = z.object({
+  data: z.union([ z.lazy(() => ChildFeedbackCreateManyTeacherInputSchema),z.lazy(() => ChildFeedbackCreateManyTeacherInputSchema).array() ]),
+}).strict();
+
 export const OrganizationUpsertWithoutMembersInputSchema: z.ZodType<Prisma.OrganizationUpsertWithoutMembersInput> = z.object({
   update: z.union([ z.lazy(() => OrganizationUpdateWithoutMembersInputSchema),z.lazy(() => OrganizationUncheckedUpdateWithoutMembersInputSchema) ]),
   create: z.union([ z.lazy(() => OrganizationCreateWithoutMembersInputSchema),z.lazy(() => OrganizationUncheckedCreateWithoutMembersInputSchema) ]),
@@ -5474,6 +6442,35 @@ export const ClassUpdateWithWhereUniqueWithoutTeacherInputSchema: z.ZodType<Pris
 export const ClassUpdateManyWithWhereWithoutTeacherInputSchema: z.ZodType<Prisma.ClassUpdateManyWithWhereWithoutTeacherInput> = z.object({
   where: z.lazy(() => ClassScalarWhereInputSchema),
   data: z.union([ z.lazy(() => ClassUpdateManyMutationInputSchema),z.lazy(() => ClassUncheckedUpdateManyWithoutTeacherInputSchema) ]),
+}).strict();
+
+export const ChildFeedbackUpsertWithWhereUniqueWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackUpsertWithWhereUniqueWithoutTeacherInput> = z.object({
+  where: z.lazy(() => ChildFeedbackWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => ChildFeedbackUpdateWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUncheckedUpdateWithoutTeacherInputSchema) ]),
+  create: z.union([ z.lazy(() => ChildFeedbackCreateWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUncheckedCreateWithoutTeacherInputSchema) ]),
+}).strict();
+
+export const ChildFeedbackUpdateWithWhereUniqueWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateWithWhereUniqueWithoutTeacherInput> = z.object({
+  where: z.lazy(() => ChildFeedbackWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => ChildFeedbackUpdateWithoutTeacherInputSchema),z.lazy(() => ChildFeedbackUncheckedUpdateWithoutTeacherInputSchema) ]),
+}).strict();
+
+export const ChildFeedbackUpdateManyWithWhereWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateManyWithWhereWithoutTeacherInput> = z.object({
+  where: z.lazy(() => ChildFeedbackScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => ChildFeedbackUpdateManyMutationInputSchema),z.lazy(() => ChildFeedbackUncheckedUpdateManyWithoutTeacherInputSchema) ]),
+}).strict();
+
+export const ChildFeedbackScalarWhereInputSchema: z.ZodType<Prisma.ChildFeedbackScalarWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => ChildFeedbackScalarWhereInputSchema),z.lazy(() => ChildFeedbackScalarWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ChildFeedbackScalarWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ChildFeedbackScalarWhereInputSchema),z.lazy(() => ChildFeedbackScalarWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  content: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  rating: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  childId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  teacherId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
 }).strict();
 
 export const OrganizationCreateWithoutInvitationsInputSchema: z.ZodType<Prisma.OrganizationCreateWithoutInvitationsInput> = z.object({
@@ -5956,7 +6953,8 @@ export const MemberCreateWithoutTeachingClassesInputSchema: z.ZodType<Prisma.Mem
   role: z.string(),
   createdAt: z.coerce.date(),
   organization: z.lazy(() => OrganizationCreateNestedOneWithoutMembersInputSchema),
-  user: z.lazy(() => UserCreateNestedOneWithoutMembersInputSchema)
+  user: z.lazy(() => UserCreateNestedOneWithoutMembersInputSchema),
+  ChildFeedback: z.lazy(() => ChildFeedbackCreateNestedManyWithoutTeacherInputSchema).optional()
 }).strict();
 
 export const MemberUncheckedCreateWithoutTeachingClassesInputSchema: z.ZodType<Prisma.MemberUncheckedCreateWithoutTeachingClassesInput> = z.object({
@@ -5964,7 +6962,8 @@ export const MemberUncheckedCreateWithoutTeachingClassesInputSchema: z.ZodType<P
   organizationId: z.string(),
   userId: z.string(),
   role: z.string(),
-  createdAt: z.coerce.date()
+  createdAt: z.coerce.date(),
+  ChildFeedback: z.lazy(() => ChildFeedbackUncheckedCreateNestedManyWithoutTeacherInputSchema).optional()
 }).strict();
 
 export const MemberCreateOrConnectWithoutTeachingClassesInputSchema: z.ZodType<Prisma.MemberCreateOrConnectWithoutTeachingClassesInput> = z.object({
@@ -6043,7 +7042,8 @@ export const MemberUpdateWithoutTeachingClassesInputSchema: z.ZodType<Prisma.Mem
   role: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   organization: z.lazy(() => OrganizationUpdateOneRequiredWithoutMembersNestedInputSchema).optional(),
-  user: z.lazy(() => UserUpdateOneRequiredWithoutMembersNestedInputSchema).optional()
+  user: z.lazy(() => UserUpdateOneRequiredWithoutMembersNestedInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackUpdateManyWithoutTeacherNestedInputSchema).optional()
 }).strict();
 
 export const MemberUncheckedUpdateWithoutTeachingClassesInputSchema: z.ZodType<Prisma.MemberUncheckedUpdateWithoutTeachingClassesInput> = z.object({
@@ -6051,6 +7051,7 @@ export const MemberUncheckedUpdateWithoutTeachingClassesInputSchema: z.ZodType<P
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   role: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackUncheckedUpdateManyWithoutTeacherNestedInputSchema).optional()
 }).strict();
 
 export const ChildClassUpsertWithWhereUniqueWithoutClassInputSchema: z.ZodType<Prisma.ChildClassUpsertWithWhereUniqueWithoutClassInput> = z.object({
@@ -6176,6 +7177,54 @@ export const OrganizationCreateOrConnectWithoutChildrenInputSchema: z.ZodType<Pr
   create: z.union([ z.lazy(() => OrganizationCreateWithoutChildrenInputSchema),z.lazy(() => OrganizationUncheckedCreateWithoutChildrenInputSchema) ]),
 }).strict();
 
+export const ChildBadgeCreateWithoutChildInputSchema: z.ZodType<Prisma.ChildBadgeCreateWithoutChildInput> = z.object({
+  id: z.string().optional(),
+  awardedAt: z.coerce.date().optional(),
+  badge: z.lazy(() => BadgeCreateNestedOneWithoutChildrenInputSchema)
+}).strict();
+
+export const ChildBadgeUncheckedCreateWithoutChildInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedCreateWithoutChildInput> = z.object({
+  id: z.string().optional(),
+  badgeId: z.string(),
+  awardedAt: z.coerce.date().optional()
+}).strict();
+
+export const ChildBadgeCreateOrConnectWithoutChildInputSchema: z.ZodType<Prisma.ChildBadgeCreateOrConnectWithoutChildInput> = z.object({
+  where: z.lazy(() => ChildBadgeWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => ChildBadgeCreateWithoutChildInputSchema),z.lazy(() => ChildBadgeUncheckedCreateWithoutChildInputSchema) ]),
+}).strict();
+
+export const ChildBadgeCreateManyChildInputEnvelopeSchema: z.ZodType<Prisma.ChildBadgeCreateManyChildInputEnvelope> = z.object({
+  data: z.union([ z.lazy(() => ChildBadgeCreateManyChildInputSchema),z.lazy(() => ChildBadgeCreateManyChildInputSchema).array() ]),
+}).strict();
+
+export const ChildFeedbackCreateWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackCreateWithoutChildInput> = z.object({
+  id: z.string().optional(),
+  content: z.string(),
+  rating: z.number().int().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  teacher: z.lazy(() => MemberCreateNestedOneWithoutChildFeedbackInputSchema)
+}).strict();
+
+export const ChildFeedbackUncheckedCreateWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedCreateWithoutChildInput> = z.object({
+  id: z.string().optional(),
+  content: z.string(),
+  rating: z.number().int().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  teacherId: z.string()
+}).strict();
+
+export const ChildFeedbackCreateOrConnectWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackCreateOrConnectWithoutChildInput> = z.object({
+  where: z.lazy(() => ChildFeedbackWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => ChildFeedbackCreateWithoutChildInputSchema),z.lazy(() => ChildFeedbackUncheckedCreateWithoutChildInputSchema) ]),
+}).strict();
+
+export const ChildFeedbackCreateManyChildInputEnvelopeSchema: z.ZodType<Prisma.ChildFeedbackCreateManyChildInputEnvelope> = z.object({
+  data: z.union([ z.lazy(() => ChildFeedbackCreateManyChildInputSchema),z.lazy(() => ChildFeedbackCreateManyChildInputSchema).array() ]),
+}).strict();
+
 export const ChildClassUpsertWithWhereUniqueWithoutChildInputSchema: z.ZodType<Prisma.ChildClassUpsertWithWhereUniqueWithoutChildInput> = z.object({
   where: z.lazy(() => ChildClassWhereUniqueInputSchema),
   update: z.union([ z.lazy(() => ChildClassUpdateWithoutChildInputSchema),z.lazy(() => ChildClassUncheckedUpdateWithoutChildInputSchema) ]),
@@ -6276,6 +7325,48 @@ export const OrganizationUncheckedUpdateWithoutChildrenInputSchema: z.ZodType<Pr
   classes: z.lazy(() => ClassUncheckedUpdateManyWithoutOrganizationNestedInputSchema).optional()
 }).strict();
 
+export const ChildBadgeUpsertWithWhereUniqueWithoutChildInputSchema: z.ZodType<Prisma.ChildBadgeUpsertWithWhereUniqueWithoutChildInput> = z.object({
+  where: z.lazy(() => ChildBadgeWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => ChildBadgeUpdateWithoutChildInputSchema),z.lazy(() => ChildBadgeUncheckedUpdateWithoutChildInputSchema) ]),
+  create: z.union([ z.lazy(() => ChildBadgeCreateWithoutChildInputSchema),z.lazy(() => ChildBadgeUncheckedCreateWithoutChildInputSchema) ]),
+}).strict();
+
+export const ChildBadgeUpdateWithWhereUniqueWithoutChildInputSchema: z.ZodType<Prisma.ChildBadgeUpdateWithWhereUniqueWithoutChildInput> = z.object({
+  where: z.lazy(() => ChildBadgeWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => ChildBadgeUpdateWithoutChildInputSchema),z.lazy(() => ChildBadgeUncheckedUpdateWithoutChildInputSchema) ]),
+}).strict();
+
+export const ChildBadgeUpdateManyWithWhereWithoutChildInputSchema: z.ZodType<Prisma.ChildBadgeUpdateManyWithWhereWithoutChildInput> = z.object({
+  where: z.lazy(() => ChildBadgeScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => ChildBadgeUpdateManyMutationInputSchema),z.lazy(() => ChildBadgeUncheckedUpdateManyWithoutChildInputSchema) ]),
+}).strict();
+
+export const ChildBadgeScalarWhereInputSchema: z.ZodType<Prisma.ChildBadgeScalarWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => ChildBadgeScalarWhereInputSchema),z.lazy(() => ChildBadgeScalarWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ChildBadgeScalarWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ChildBadgeScalarWhereInputSchema),z.lazy(() => ChildBadgeScalarWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  childId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  badgeId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  awardedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+}).strict();
+
+export const ChildFeedbackUpsertWithWhereUniqueWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackUpsertWithWhereUniqueWithoutChildInput> = z.object({
+  where: z.lazy(() => ChildFeedbackWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => ChildFeedbackUpdateWithoutChildInputSchema),z.lazy(() => ChildFeedbackUncheckedUpdateWithoutChildInputSchema) ]),
+  create: z.union([ z.lazy(() => ChildFeedbackCreateWithoutChildInputSchema),z.lazy(() => ChildFeedbackUncheckedCreateWithoutChildInputSchema) ]),
+}).strict();
+
+export const ChildFeedbackUpdateWithWhereUniqueWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateWithWhereUniqueWithoutChildInput> = z.object({
+  where: z.lazy(() => ChildFeedbackWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => ChildFeedbackUpdateWithoutChildInputSchema),z.lazy(() => ChildFeedbackUncheckedUpdateWithoutChildInputSchema) ]),
+}).strict();
+
+export const ChildFeedbackUpdateManyWithWhereWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateManyWithWhereWithoutChildInput> = z.object({
+  where: z.lazy(() => ChildFeedbackScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => ChildFeedbackUpdateManyMutationInputSchema),z.lazy(() => ChildFeedbackUncheckedUpdateManyWithoutChildInputSchema) ]),
+}).strict();
+
 export const ChildCreateWithoutClassesInputSchema: z.ZodType<Prisma.ChildCreateWithoutClassesInput> = z.object({
   id: z.string().optional(),
   firstName: z.string(),
@@ -6284,7 +7375,9 @@ export const ChildCreateWithoutClassesInputSchema: z.ZodType<Prisma.ChildCreateW
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   parent: z.lazy(() => UserCreateNestedOneWithoutChildrenInputSchema),
-  nursery: z.lazy(() => OrganizationCreateNestedOneWithoutChildrenInputSchema)
+  nursery: z.lazy(() => OrganizationCreateNestedOneWithoutChildrenInputSchema),
+  badges: z.lazy(() => ChildBadgeCreateNestedManyWithoutChildInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackCreateNestedManyWithoutChildInputSchema).optional()
 }).strict();
 
 export const ChildUncheckedCreateWithoutClassesInputSchema: z.ZodType<Prisma.ChildUncheckedCreateWithoutClassesInput> = z.object({
@@ -6295,7 +7388,9 @@ export const ChildUncheckedCreateWithoutClassesInputSchema: z.ZodType<Prisma.Chi
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   parentId: z.string(),
-  nurseryId: z.string()
+  nurseryId: z.string(),
+  badges: z.lazy(() => ChildBadgeUncheckedCreateNestedManyWithoutChildInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUncheckedCreateNestedManyWithoutChildInputSchema).optional()
 }).strict();
 
 export const ChildCreateOrConnectWithoutClassesInputSchema: z.ZodType<Prisma.ChildCreateOrConnectWithoutClassesInput> = z.object({
@@ -6346,7 +7441,9 @@ export const ChildUpdateWithoutClassesInputSchema: z.ZodType<Prisma.ChildUpdateW
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   parent: z.lazy(() => UserUpdateOneRequiredWithoutChildrenNestedInputSchema).optional(),
-  nursery: z.lazy(() => OrganizationUpdateOneRequiredWithoutChildrenNestedInputSchema).optional()
+  nursery: z.lazy(() => OrganizationUpdateOneRequiredWithoutChildrenNestedInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUpdateManyWithoutChildNestedInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUpdateManyWithoutChildNestedInputSchema).optional()
 }).strict();
 
 export const ChildUncheckedUpdateWithoutClassesInputSchema: z.ZodType<Prisma.ChildUncheckedUpdateWithoutClassesInput> = z.object({
@@ -6357,6 +7454,8 @@ export const ChildUncheckedUpdateWithoutClassesInputSchema: z.ZodType<Prisma.Chi
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   parentId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nurseryId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  badges: z.lazy(() => ChildBadgeUncheckedUpdateManyWithoutChildNestedInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUncheckedUpdateManyWithoutChildNestedInputSchema).optional()
 }).strict();
 
 export const ClassUpsertWithoutChildrenInputSchema: z.ZodType<Prisma.ClassUpsertWithoutChildrenInput> = z.object({
@@ -6386,6 +7485,275 @@ export const ClassUncheckedUpdateWithoutChildrenInputSchema: z.ZodType<Prisma.Cl
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   organizationId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   teacherId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildBadgeCreateWithoutBadgeInputSchema: z.ZodType<Prisma.ChildBadgeCreateWithoutBadgeInput> = z.object({
+  id: z.string().optional(),
+  awardedAt: z.coerce.date().optional(),
+  child: z.lazy(() => ChildCreateNestedOneWithoutBadgesInputSchema)
+}).strict();
+
+export const ChildBadgeUncheckedCreateWithoutBadgeInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedCreateWithoutBadgeInput> = z.object({
+  id: z.string().optional(),
+  childId: z.string(),
+  awardedAt: z.coerce.date().optional()
+}).strict();
+
+export const ChildBadgeCreateOrConnectWithoutBadgeInputSchema: z.ZodType<Prisma.ChildBadgeCreateOrConnectWithoutBadgeInput> = z.object({
+  where: z.lazy(() => ChildBadgeWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => ChildBadgeCreateWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUncheckedCreateWithoutBadgeInputSchema) ]),
+}).strict();
+
+export const ChildBadgeCreateManyBadgeInputEnvelopeSchema: z.ZodType<Prisma.ChildBadgeCreateManyBadgeInputEnvelope> = z.object({
+  data: z.union([ z.lazy(() => ChildBadgeCreateManyBadgeInputSchema),z.lazy(() => ChildBadgeCreateManyBadgeInputSchema).array() ]),
+}).strict();
+
+export const ChildBadgeUpsertWithWhereUniqueWithoutBadgeInputSchema: z.ZodType<Prisma.ChildBadgeUpsertWithWhereUniqueWithoutBadgeInput> = z.object({
+  where: z.lazy(() => ChildBadgeWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => ChildBadgeUpdateWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUncheckedUpdateWithoutBadgeInputSchema) ]),
+  create: z.union([ z.lazy(() => ChildBadgeCreateWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUncheckedCreateWithoutBadgeInputSchema) ]),
+}).strict();
+
+export const ChildBadgeUpdateWithWhereUniqueWithoutBadgeInputSchema: z.ZodType<Prisma.ChildBadgeUpdateWithWhereUniqueWithoutBadgeInput> = z.object({
+  where: z.lazy(() => ChildBadgeWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => ChildBadgeUpdateWithoutBadgeInputSchema),z.lazy(() => ChildBadgeUncheckedUpdateWithoutBadgeInputSchema) ]),
+}).strict();
+
+export const ChildBadgeUpdateManyWithWhereWithoutBadgeInputSchema: z.ZodType<Prisma.ChildBadgeUpdateManyWithWhereWithoutBadgeInput> = z.object({
+  where: z.lazy(() => ChildBadgeScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => ChildBadgeUpdateManyMutationInputSchema),z.lazy(() => ChildBadgeUncheckedUpdateManyWithoutBadgeInputSchema) ]),
+}).strict();
+
+export const ChildCreateWithoutBadgesInputSchema: z.ZodType<Prisma.ChildCreateWithoutBadgesInput> = z.object({
+  id: z.string().optional(),
+  firstName: z.string(),
+  lastName: z.string(),
+  dateOfBirth: z.coerce.date(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  classes: z.lazy(() => ChildClassCreateNestedManyWithoutChildInputSchema).optional(),
+  parent: z.lazy(() => UserCreateNestedOneWithoutChildrenInputSchema),
+  nursery: z.lazy(() => OrganizationCreateNestedOneWithoutChildrenInputSchema),
+  feedbacks: z.lazy(() => ChildFeedbackCreateNestedManyWithoutChildInputSchema).optional()
+}).strict();
+
+export const ChildUncheckedCreateWithoutBadgesInputSchema: z.ZodType<Prisma.ChildUncheckedCreateWithoutBadgesInput> = z.object({
+  id: z.string().optional(),
+  firstName: z.string(),
+  lastName: z.string(),
+  dateOfBirth: z.coerce.date(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  parentId: z.string(),
+  nurseryId: z.string(),
+  classes: z.lazy(() => ChildClassUncheckedCreateNestedManyWithoutChildInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUncheckedCreateNestedManyWithoutChildInputSchema).optional()
+}).strict();
+
+export const ChildCreateOrConnectWithoutBadgesInputSchema: z.ZodType<Prisma.ChildCreateOrConnectWithoutBadgesInput> = z.object({
+  where: z.lazy(() => ChildWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => ChildCreateWithoutBadgesInputSchema),z.lazy(() => ChildUncheckedCreateWithoutBadgesInputSchema) ]),
+}).strict();
+
+export const BadgeCreateWithoutChildrenInputSchema: z.ZodType<Prisma.BadgeCreateWithoutChildrenInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  description: z.string().optional().nullable(),
+  imageUrl: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const BadgeUncheckedCreateWithoutChildrenInputSchema: z.ZodType<Prisma.BadgeUncheckedCreateWithoutChildrenInput> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  description: z.string().optional().nullable(),
+  imageUrl: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const BadgeCreateOrConnectWithoutChildrenInputSchema: z.ZodType<Prisma.BadgeCreateOrConnectWithoutChildrenInput> = z.object({
+  where: z.lazy(() => BadgeWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => BadgeCreateWithoutChildrenInputSchema),z.lazy(() => BadgeUncheckedCreateWithoutChildrenInputSchema) ]),
+}).strict();
+
+export const ChildUpsertWithoutBadgesInputSchema: z.ZodType<Prisma.ChildUpsertWithoutBadgesInput> = z.object({
+  update: z.union([ z.lazy(() => ChildUpdateWithoutBadgesInputSchema),z.lazy(() => ChildUncheckedUpdateWithoutBadgesInputSchema) ]),
+  create: z.union([ z.lazy(() => ChildCreateWithoutBadgesInputSchema),z.lazy(() => ChildUncheckedCreateWithoutBadgesInputSchema) ]),
+  where: z.lazy(() => ChildWhereInputSchema).optional()
+}).strict();
+
+export const ChildUpdateToOneWithWhereWithoutBadgesInputSchema: z.ZodType<Prisma.ChildUpdateToOneWithWhereWithoutBadgesInput> = z.object({
+  where: z.lazy(() => ChildWhereInputSchema).optional(),
+  data: z.union([ z.lazy(() => ChildUpdateWithoutBadgesInputSchema),z.lazy(() => ChildUncheckedUpdateWithoutBadgesInputSchema) ]),
+}).strict();
+
+export const ChildUpdateWithoutBadgesInputSchema: z.ZodType<Prisma.ChildUpdateWithoutBadgesInput> = z.object({
+  firstName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  lastName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  dateOfBirth: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  classes: z.lazy(() => ChildClassUpdateManyWithoutChildNestedInputSchema).optional(),
+  parent: z.lazy(() => UserUpdateOneRequiredWithoutChildrenNestedInputSchema).optional(),
+  nursery: z.lazy(() => OrganizationUpdateOneRequiredWithoutChildrenNestedInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUpdateManyWithoutChildNestedInputSchema).optional()
+}).strict();
+
+export const ChildUncheckedUpdateWithoutBadgesInputSchema: z.ZodType<Prisma.ChildUncheckedUpdateWithoutBadgesInput> = z.object({
+  firstName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  lastName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  dateOfBirth: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  parentId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  nurseryId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  classes: z.lazy(() => ChildClassUncheckedUpdateManyWithoutChildNestedInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUncheckedUpdateManyWithoutChildNestedInputSchema).optional()
+}).strict();
+
+export const BadgeUpsertWithoutChildrenInputSchema: z.ZodType<Prisma.BadgeUpsertWithoutChildrenInput> = z.object({
+  update: z.union([ z.lazy(() => BadgeUpdateWithoutChildrenInputSchema),z.lazy(() => BadgeUncheckedUpdateWithoutChildrenInputSchema) ]),
+  create: z.union([ z.lazy(() => BadgeCreateWithoutChildrenInputSchema),z.lazy(() => BadgeUncheckedCreateWithoutChildrenInputSchema) ]),
+  where: z.lazy(() => BadgeWhereInputSchema).optional()
+}).strict();
+
+export const BadgeUpdateToOneWithWhereWithoutChildrenInputSchema: z.ZodType<Prisma.BadgeUpdateToOneWithWhereWithoutChildrenInput> = z.object({
+  where: z.lazy(() => BadgeWhereInputSchema).optional(),
+  data: z.union([ z.lazy(() => BadgeUpdateWithoutChildrenInputSchema),z.lazy(() => BadgeUncheckedUpdateWithoutChildrenInputSchema) ]),
+}).strict();
+
+export const BadgeUpdateWithoutChildrenInputSchema: z.ZodType<Prisma.BadgeUpdateWithoutChildrenInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  imageUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const BadgeUncheckedUpdateWithoutChildrenInputSchema: z.ZodType<Prisma.BadgeUncheckedUpdateWithoutChildrenInput> = z.object({
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  imageUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildCreateWithoutFeedbacksInputSchema: z.ZodType<Prisma.ChildCreateWithoutFeedbacksInput> = z.object({
+  id: z.string().optional(),
+  firstName: z.string(),
+  lastName: z.string(),
+  dateOfBirth: z.coerce.date(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  classes: z.lazy(() => ChildClassCreateNestedManyWithoutChildInputSchema).optional(),
+  parent: z.lazy(() => UserCreateNestedOneWithoutChildrenInputSchema),
+  nursery: z.lazy(() => OrganizationCreateNestedOneWithoutChildrenInputSchema),
+  badges: z.lazy(() => ChildBadgeCreateNestedManyWithoutChildInputSchema).optional()
+}).strict();
+
+export const ChildUncheckedCreateWithoutFeedbacksInputSchema: z.ZodType<Prisma.ChildUncheckedCreateWithoutFeedbacksInput> = z.object({
+  id: z.string().optional(),
+  firstName: z.string(),
+  lastName: z.string(),
+  dateOfBirth: z.coerce.date(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  parentId: z.string(),
+  nurseryId: z.string(),
+  classes: z.lazy(() => ChildClassUncheckedCreateNestedManyWithoutChildInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUncheckedCreateNestedManyWithoutChildInputSchema).optional()
+}).strict();
+
+export const ChildCreateOrConnectWithoutFeedbacksInputSchema: z.ZodType<Prisma.ChildCreateOrConnectWithoutFeedbacksInput> = z.object({
+  where: z.lazy(() => ChildWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => ChildCreateWithoutFeedbacksInputSchema),z.lazy(() => ChildUncheckedCreateWithoutFeedbacksInputSchema) ]),
+}).strict();
+
+export const MemberCreateWithoutChildFeedbackInputSchema: z.ZodType<Prisma.MemberCreateWithoutChildFeedbackInput> = z.object({
+  id: z.string(),
+  role: z.string(),
+  createdAt: z.coerce.date(),
+  organization: z.lazy(() => OrganizationCreateNestedOneWithoutMembersInputSchema),
+  user: z.lazy(() => UserCreateNestedOneWithoutMembersInputSchema),
+  teachingClasses: z.lazy(() => ClassCreateNestedManyWithoutTeacherInputSchema).optional()
+}).strict();
+
+export const MemberUncheckedCreateWithoutChildFeedbackInputSchema: z.ZodType<Prisma.MemberUncheckedCreateWithoutChildFeedbackInput> = z.object({
+  id: z.string(),
+  organizationId: z.string(),
+  userId: z.string(),
+  role: z.string(),
+  createdAt: z.coerce.date(),
+  teachingClasses: z.lazy(() => ClassUncheckedCreateNestedManyWithoutTeacherInputSchema).optional()
+}).strict();
+
+export const MemberCreateOrConnectWithoutChildFeedbackInputSchema: z.ZodType<Prisma.MemberCreateOrConnectWithoutChildFeedbackInput> = z.object({
+  where: z.lazy(() => MemberWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => MemberCreateWithoutChildFeedbackInputSchema),z.lazy(() => MemberUncheckedCreateWithoutChildFeedbackInputSchema) ]),
+}).strict();
+
+export const ChildUpsertWithoutFeedbacksInputSchema: z.ZodType<Prisma.ChildUpsertWithoutFeedbacksInput> = z.object({
+  update: z.union([ z.lazy(() => ChildUpdateWithoutFeedbacksInputSchema),z.lazy(() => ChildUncheckedUpdateWithoutFeedbacksInputSchema) ]),
+  create: z.union([ z.lazy(() => ChildCreateWithoutFeedbacksInputSchema),z.lazy(() => ChildUncheckedCreateWithoutFeedbacksInputSchema) ]),
+  where: z.lazy(() => ChildWhereInputSchema).optional()
+}).strict();
+
+export const ChildUpdateToOneWithWhereWithoutFeedbacksInputSchema: z.ZodType<Prisma.ChildUpdateToOneWithWhereWithoutFeedbacksInput> = z.object({
+  where: z.lazy(() => ChildWhereInputSchema).optional(),
+  data: z.union([ z.lazy(() => ChildUpdateWithoutFeedbacksInputSchema),z.lazy(() => ChildUncheckedUpdateWithoutFeedbacksInputSchema) ]),
+}).strict();
+
+export const ChildUpdateWithoutFeedbacksInputSchema: z.ZodType<Prisma.ChildUpdateWithoutFeedbacksInput> = z.object({
+  firstName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  lastName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  dateOfBirth: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  classes: z.lazy(() => ChildClassUpdateManyWithoutChildNestedInputSchema).optional(),
+  parent: z.lazy(() => UserUpdateOneRequiredWithoutChildrenNestedInputSchema).optional(),
+  nursery: z.lazy(() => OrganizationUpdateOneRequiredWithoutChildrenNestedInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUpdateManyWithoutChildNestedInputSchema).optional()
+}).strict();
+
+export const ChildUncheckedUpdateWithoutFeedbacksInputSchema: z.ZodType<Prisma.ChildUncheckedUpdateWithoutFeedbacksInput> = z.object({
+  firstName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  lastName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  dateOfBirth: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  parentId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  nurseryId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  classes: z.lazy(() => ChildClassUncheckedUpdateManyWithoutChildNestedInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUncheckedUpdateManyWithoutChildNestedInputSchema).optional()
+}).strict();
+
+export const MemberUpsertWithoutChildFeedbackInputSchema: z.ZodType<Prisma.MemberUpsertWithoutChildFeedbackInput> = z.object({
+  update: z.union([ z.lazy(() => MemberUpdateWithoutChildFeedbackInputSchema),z.lazy(() => MemberUncheckedUpdateWithoutChildFeedbackInputSchema) ]),
+  create: z.union([ z.lazy(() => MemberCreateWithoutChildFeedbackInputSchema),z.lazy(() => MemberUncheckedCreateWithoutChildFeedbackInputSchema) ]),
+  where: z.lazy(() => MemberWhereInputSchema).optional()
+}).strict();
+
+export const MemberUpdateToOneWithWhereWithoutChildFeedbackInputSchema: z.ZodType<Prisma.MemberUpdateToOneWithWhereWithoutChildFeedbackInput> = z.object({
+  where: z.lazy(() => MemberWhereInputSchema).optional(),
+  data: z.union([ z.lazy(() => MemberUpdateWithoutChildFeedbackInputSchema),z.lazy(() => MemberUncheckedUpdateWithoutChildFeedbackInputSchema) ]),
+}).strict();
+
+export const MemberUpdateWithoutChildFeedbackInputSchema: z.ZodType<Prisma.MemberUpdateWithoutChildFeedbackInput> = z.object({
+  role: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  organization: z.lazy(() => OrganizationUpdateOneRequiredWithoutMembersNestedInputSchema).optional(),
+  user: z.lazy(() => UserUpdateOneRequiredWithoutMembersNestedInputSchema).optional(),
+  teachingClasses: z.lazy(() => ClassUpdateManyWithoutTeacherNestedInputSchema).optional()
+}).strict();
+
+export const MemberUncheckedUpdateWithoutChildFeedbackInputSchema: z.ZodType<Prisma.MemberUncheckedUpdateWithoutChildFeedbackInput> = z.object({
+  organizationId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  role: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  teachingClasses: z.lazy(() => ClassUncheckedUpdateManyWithoutTeacherNestedInputSchema).optional()
 }).strict();
 
 export const SessionCreateManyUserInputSchema: z.ZodType<Prisma.SessionCreateManyUserInput> = z.object({
@@ -6526,14 +7894,16 @@ export const MemberUpdateWithoutUserInputSchema: z.ZodType<Prisma.MemberUpdateWi
   role: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   organization: z.lazy(() => OrganizationUpdateOneRequiredWithoutMembersNestedInputSchema).optional(),
-  teachingClasses: z.lazy(() => ClassUpdateManyWithoutTeacherNestedInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassUpdateManyWithoutTeacherNestedInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackUpdateManyWithoutTeacherNestedInputSchema).optional()
 }).strict();
 
 export const MemberUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.MemberUncheckedUpdateWithoutUserInput> = z.object({
   organizationId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   role: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  teachingClasses: z.lazy(() => ClassUncheckedUpdateManyWithoutTeacherNestedInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassUncheckedUpdateManyWithoutTeacherNestedInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackUncheckedUpdateManyWithoutTeacherNestedInputSchema).optional()
 }).strict();
 
 export const MemberUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.MemberUncheckedUpdateManyWithoutUserInput> = z.object({
@@ -6588,7 +7958,9 @@ export const ChildUpdateWithoutParentInputSchema: z.ZodType<Prisma.ChildUpdateWi
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   classes: z.lazy(() => ChildClassUpdateManyWithoutChildNestedInputSchema).optional(),
-  nursery: z.lazy(() => OrganizationUpdateOneRequiredWithoutChildrenNestedInputSchema).optional()
+  nursery: z.lazy(() => OrganizationUpdateOneRequiredWithoutChildrenNestedInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUpdateManyWithoutChildNestedInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUpdateManyWithoutChildNestedInputSchema).optional()
 }).strict();
 
 export const ChildUncheckedUpdateWithoutParentInputSchema: z.ZodType<Prisma.ChildUncheckedUpdateWithoutParentInput> = z.object({
@@ -6598,7 +7970,9 @@ export const ChildUncheckedUpdateWithoutParentInputSchema: z.ZodType<Prisma.Chil
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   nurseryId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  classes: z.lazy(() => ChildClassUncheckedUpdateManyWithoutChildNestedInputSchema).optional()
+  classes: z.lazy(() => ChildClassUncheckedUpdateManyWithoutChildNestedInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUncheckedUpdateManyWithoutChildNestedInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUncheckedUpdateManyWithoutChildNestedInputSchema).optional()
 }).strict();
 
 export const ChildUncheckedUpdateManyWithoutParentInputSchema: z.ZodType<Prisma.ChildUncheckedUpdateManyWithoutParentInput> = z.object({
@@ -6649,14 +8023,16 @@ export const MemberUpdateWithoutOrganizationInputSchema: z.ZodType<Prisma.Member
   role: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutMembersNestedInputSchema).optional(),
-  teachingClasses: z.lazy(() => ClassUpdateManyWithoutTeacherNestedInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassUpdateManyWithoutTeacherNestedInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackUpdateManyWithoutTeacherNestedInputSchema).optional()
 }).strict();
 
 export const MemberUncheckedUpdateWithoutOrganizationInputSchema: z.ZodType<Prisma.MemberUncheckedUpdateWithoutOrganizationInput> = z.object({
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   role: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  teachingClasses: z.lazy(() => ClassUncheckedUpdateManyWithoutTeacherNestedInputSchema).optional()
+  teachingClasses: z.lazy(() => ClassUncheckedUpdateManyWithoutTeacherNestedInputSchema).optional(),
+  ChildFeedback: z.lazy(() => ChildFeedbackUncheckedUpdateManyWithoutTeacherNestedInputSchema).optional()
 }).strict();
 
 export const MemberUncheckedUpdateManyWithoutOrganizationInputSchema: z.ZodType<Prisma.MemberUncheckedUpdateManyWithoutOrganizationInput> = z.object({
@@ -6722,7 +8098,9 @@ export const ChildUpdateWithoutNurseryInputSchema: z.ZodType<Prisma.ChildUpdateW
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   classes: z.lazy(() => ChildClassUpdateManyWithoutChildNestedInputSchema).optional(),
-  parent: z.lazy(() => UserUpdateOneRequiredWithoutChildrenNestedInputSchema).optional()
+  parent: z.lazy(() => UserUpdateOneRequiredWithoutChildrenNestedInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUpdateManyWithoutChildNestedInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUpdateManyWithoutChildNestedInputSchema).optional()
 }).strict();
 
 export const ChildUncheckedUpdateWithoutNurseryInputSchema: z.ZodType<Prisma.ChildUncheckedUpdateWithoutNurseryInput> = z.object({
@@ -6732,7 +8110,9 @@ export const ChildUncheckedUpdateWithoutNurseryInputSchema: z.ZodType<Prisma.Chi
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   parentId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  classes: z.lazy(() => ChildClassUncheckedUpdateManyWithoutChildNestedInputSchema).optional()
+  classes: z.lazy(() => ChildClassUncheckedUpdateManyWithoutChildNestedInputSchema).optional(),
+  badges: z.lazy(() => ChildBadgeUncheckedUpdateManyWithoutChildNestedInputSchema).optional(),
+  feedbacks: z.lazy(() => ChildFeedbackUncheckedUpdateManyWithoutChildNestedInputSchema).optional()
 }).strict();
 
 export const ChildUncheckedUpdateManyWithoutNurseryInputSchema: z.ZodType<Prisma.ChildUncheckedUpdateManyWithoutNurseryInput> = z.object({
@@ -6751,6 +8131,15 @@ export const ClassCreateManyTeacherInputSchema: z.ZodType<Prisma.ClassCreateMany
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   organizationId: z.string()
+}).strict();
+
+export const ChildFeedbackCreateManyTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackCreateManyTeacherInput> = z.object({
+  id: z.string().optional(),
+  content: z.string(),
+  rating: z.number().int().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  childId: z.string()
 }).strict();
 
 export const ClassUpdateWithoutTeacherInputSchema: z.ZodType<Prisma.ClassUpdateWithoutTeacherInput> = z.object({
@@ -6777,6 +8166,30 @@ export const ClassUncheckedUpdateManyWithoutTeacherInputSchema: z.ZodType<Prisma
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   organizationId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildFeedbackUpdateWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateWithoutTeacherInput> = z.object({
+  content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  child: z.lazy(() => ChildUpdateOneRequiredWithoutFeedbacksNestedInputSchema).optional()
+}).strict();
+
+export const ChildFeedbackUncheckedUpdateWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateWithoutTeacherInput> = z.object({
+  content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildFeedbackUncheckedUpdateManyWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateManyWithoutTeacherInput> = z.object({
+  content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const ChildClassCreateManyClassInputSchema: z.ZodType<Prisma.ChildClassCreateManyClassInput> = z.object({
@@ -6806,6 +8219,21 @@ export const ChildClassCreateManyChildInputSchema: z.ZodType<Prisma.ChildClassCr
   joinedAt: z.coerce.date().optional()
 }).strict();
 
+export const ChildBadgeCreateManyChildInputSchema: z.ZodType<Prisma.ChildBadgeCreateManyChildInput> = z.object({
+  id: z.string().optional(),
+  badgeId: z.string(),
+  awardedAt: z.coerce.date().optional()
+}).strict();
+
+export const ChildFeedbackCreateManyChildInputSchema: z.ZodType<Prisma.ChildFeedbackCreateManyChildInput> = z.object({
+  id: z.string().optional(),
+  content: z.string(),
+  rating: z.number().int().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  teacherId: z.string()
+}).strict();
+
 export const ChildClassUpdateWithoutChildInputSchema: z.ZodType<Prisma.ChildClassUpdateWithoutChildInput> = z.object({
   joinedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   class: z.lazy(() => ClassUpdateOneRequiredWithoutChildrenNestedInputSchema).optional()
@@ -6819,6 +8247,66 @@ export const ChildClassUncheckedUpdateWithoutChildInputSchema: z.ZodType<Prisma.
 export const ChildClassUncheckedUpdateManyWithoutChildInputSchema: z.ZodType<Prisma.ChildClassUncheckedUpdateManyWithoutChildInput> = z.object({
   classId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   joinedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildBadgeUpdateWithoutChildInputSchema: z.ZodType<Prisma.ChildBadgeUpdateWithoutChildInput> = z.object({
+  awardedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  badge: z.lazy(() => BadgeUpdateOneRequiredWithoutChildrenNestedInputSchema).optional()
+}).strict();
+
+export const ChildBadgeUncheckedUpdateWithoutChildInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedUpdateWithoutChildInput> = z.object({
+  badgeId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  awardedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildBadgeUncheckedUpdateManyWithoutChildInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedUpdateManyWithoutChildInput> = z.object({
+  badgeId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  awardedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildFeedbackUpdateWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateWithoutChildInput> = z.object({
+  content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  teacher: z.lazy(() => MemberUpdateOneRequiredWithoutChildFeedbackNestedInputSchema).optional()
+}).strict();
+
+export const ChildFeedbackUncheckedUpdateWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateWithoutChildInput> = z.object({
+  content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  teacherId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildFeedbackUncheckedUpdateManyWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateManyWithoutChildInput> = z.object({
+  content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  teacherId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildBadgeCreateManyBadgeInputSchema: z.ZodType<Prisma.ChildBadgeCreateManyBadgeInput> = z.object({
+  id: z.string().optional(),
+  childId: z.string(),
+  awardedAt: z.coerce.date().optional()
+}).strict();
+
+export const ChildBadgeUpdateWithoutBadgeInputSchema: z.ZodType<Prisma.ChildBadgeUpdateWithoutBadgeInput> = z.object({
+  awardedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  child: z.lazy(() => ChildUpdateOneRequiredWithoutBadgesNestedInputSchema).optional()
+}).strict();
+
+export const ChildBadgeUncheckedUpdateWithoutBadgeInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedUpdateWithoutBadgeInput> = z.object({
+  childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  awardedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ChildBadgeUncheckedUpdateManyWithoutBadgeInputSchema: z.ZodType<Prisma.ChildBadgeUncheckedUpdateManyWithoutBadgeInput> = z.object({
+  childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  awardedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 /////////////////////////////////////////
@@ -7683,6 +9171,192 @@ export const ChildClassFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.ChildClassF
   where: ChildClassWhereUniqueInputSchema,
 }).strict() ;
 
+export const BadgeFindFirstArgsSchema: z.ZodType<Prisma.BadgeFindFirstArgs> = z.object({
+  select: BadgeSelectSchema.optional(),
+  include: BadgeIncludeSchema.optional(),
+  where: BadgeWhereInputSchema.optional(),
+  orderBy: z.union([ BadgeOrderByWithRelationInputSchema.array(),BadgeOrderByWithRelationInputSchema ]).optional(),
+  cursor: BadgeWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ BadgeScalarFieldEnumSchema,BadgeScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const BadgeFindFirstOrThrowArgsSchema: z.ZodType<Prisma.BadgeFindFirstOrThrowArgs> = z.object({
+  select: BadgeSelectSchema.optional(),
+  include: BadgeIncludeSchema.optional(),
+  where: BadgeWhereInputSchema.optional(),
+  orderBy: z.union([ BadgeOrderByWithRelationInputSchema.array(),BadgeOrderByWithRelationInputSchema ]).optional(),
+  cursor: BadgeWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ BadgeScalarFieldEnumSchema,BadgeScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const BadgeFindManyArgsSchema: z.ZodType<Prisma.BadgeFindManyArgs> = z.object({
+  select: BadgeSelectSchema.optional(),
+  include: BadgeIncludeSchema.optional(),
+  where: BadgeWhereInputSchema.optional(),
+  orderBy: z.union([ BadgeOrderByWithRelationInputSchema.array(),BadgeOrderByWithRelationInputSchema ]).optional(),
+  cursor: BadgeWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ BadgeScalarFieldEnumSchema,BadgeScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const BadgeAggregateArgsSchema: z.ZodType<Prisma.BadgeAggregateArgs> = z.object({
+  where: BadgeWhereInputSchema.optional(),
+  orderBy: z.union([ BadgeOrderByWithRelationInputSchema.array(),BadgeOrderByWithRelationInputSchema ]).optional(),
+  cursor: BadgeWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const BadgeGroupByArgsSchema: z.ZodType<Prisma.BadgeGroupByArgs> = z.object({
+  where: BadgeWhereInputSchema.optional(),
+  orderBy: z.union([ BadgeOrderByWithAggregationInputSchema.array(),BadgeOrderByWithAggregationInputSchema ]).optional(),
+  by: BadgeScalarFieldEnumSchema.array(),
+  having: BadgeScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const BadgeFindUniqueArgsSchema: z.ZodType<Prisma.BadgeFindUniqueArgs> = z.object({
+  select: BadgeSelectSchema.optional(),
+  include: BadgeIncludeSchema.optional(),
+  where: BadgeWhereUniqueInputSchema,
+}).strict() ;
+
+export const BadgeFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.BadgeFindUniqueOrThrowArgs> = z.object({
+  select: BadgeSelectSchema.optional(),
+  include: BadgeIncludeSchema.optional(),
+  where: BadgeWhereUniqueInputSchema,
+}).strict() ;
+
+export const ChildBadgeFindFirstArgsSchema: z.ZodType<Prisma.ChildBadgeFindFirstArgs> = z.object({
+  select: ChildBadgeSelectSchema.optional(),
+  include: ChildBadgeIncludeSchema.optional(),
+  where: ChildBadgeWhereInputSchema.optional(),
+  orderBy: z.union([ ChildBadgeOrderByWithRelationInputSchema.array(),ChildBadgeOrderByWithRelationInputSchema ]).optional(),
+  cursor: ChildBadgeWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ ChildBadgeScalarFieldEnumSchema,ChildBadgeScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const ChildBadgeFindFirstOrThrowArgsSchema: z.ZodType<Prisma.ChildBadgeFindFirstOrThrowArgs> = z.object({
+  select: ChildBadgeSelectSchema.optional(),
+  include: ChildBadgeIncludeSchema.optional(),
+  where: ChildBadgeWhereInputSchema.optional(),
+  orderBy: z.union([ ChildBadgeOrderByWithRelationInputSchema.array(),ChildBadgeOrderByWithRelationInputSchema ]).optional(),
+  cursor: ChildBadgeWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ ChildBadgeScalarFieldEnumSchema,ChildBadgeScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const ChildBadgeFindManyArgsSchema: z.ZodType<Prisma.ChildBadgeFindManyArgs> = z.object({
+  select: ChildBadgeSelectSchema.optional(),
+  include: ChildBadgeIncludeSchema.optional(),
+  where: ChildBadgeWhereInputSchema.optional(),
+  orderBy: z.union([ ChildBadgeOrderByWithRelationInputSchema.array(),ChildBadgeOrderByWithRelationInputSchema ]).optional(),
+  cursor: ChildBadgeWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ ChildBadgeScalarFieldEnumSchema,ChildBadgeScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const ChildBadgeAggregateArgsSchema: z.ZodType<Prisma.ChildBadgeAggregateArgs> = z.object({
+  where: ChildBadgeWhereInputSchema.optional(),
+  orderBy: z.union([ ChildBadgeOrderByWithRelationInputSchema.array(),ChildBadgeOrderByWithRelationInputSchema ]).optional(),
+  cursor: ChildBadgeWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const ChildBadgeGroupByArgsSchema: z.ZodType<Prisma.ChildBadgeGroupByArgs> = z.object({
+  where: ChildBadgeWhereInputSchema.optional(),
+  orderBy: z.union([ ChildBadgeOrderByWithAggregationInputSchema.array(),ChildBadgeOrderByWithAggregationInputSchema ]).optional(),
+  by: ChildBadgeScalarFieldEnumSchema.array(),
+  having: ChildBadgeScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const ChildBadgeFindUniqueArgsSchema: z.ZodType<Prisma.ChildBadgeFindUniqueArgs> = z.object({
+  select: ChildBadgeSelectSchema.optional(),
+  include: ChildBadgeIncludeSchema.optional(),
+  where: ChildBadgeWhereUniqueInputSchema,
+}).strict() ;
+
+export const ChildBadgeFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.ChildBadgeFindUniqueOrThrowArgs> = z.object({
+  select: ChildBadgeSelectSchema.optional(),
+  include: ChildBadgeIncludeSchema.optional(),
+  where: ChildBadgeWhereUniqueInputSchema,
+}).strict() ;
+
+export const ChildFeedbackFindFirstArgsSchema: z.ZodType<Prisma.ChildFeedbackFindFirstArgs> = z.object({
+  select: ChildFeedbackSelectSchema.optional(),
+  include: ChildFeedbackIncludeSchema.optional(),
+  where: ChildFeedbackWhereInputSchema.optional(),
+  orderBy: z.union([ ChildFeedbackOrderByWithRelationInputSchema.array(),ChildFeedbackOrderByWithRelationInputSchema ]).optional(),
+  cursor: ChildFeedbackWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ ChildFeedbackScalarFieldEnumSchema,ChildFeedbackScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const ChildFeedbackFindFirstOrThrowArgsSchema: z.ZodType<Prisma.ChildFeedbackFindFirstOrThrowArgs> = z.object({
+  select: ChildFeedbackSelectSchema.optional(),
+  include: ChildFeedbackIncludeSchema.optional(),
+  where: ChildFeedbackWhereInputSchema.optional(),
+  orderBy: z.union([ ChildFeedbackOrderByWithRelationInputSchema.array(),ChildFeedbackOrderByWithRelationInputSchema ]).optional(),
+  cursor: ChildFeedbackWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ ChildFeedbackScalarFieldEnumSchema,ChildFeedbackScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const ChildFeedbackFindManyArgsSchema: z.ZodType<Prisma.ChildFeedbackFindManyArgs> = z.object({
+  select: ChildFeedbackSelectSchema.optional(),
+  include: ChildFeedbackIncludeSchema.optional(),
+  where: ChildFeedbackWhereInputSchema.optional(),
+  orderBy: z.union([ ChildFeedbackOrderByWithRelationInputSchema.array(),ChildFeedbackOrderByWithRelationInputSchema ]).optional(),
+  cursor: ChildFeedbackWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ ChildFeedbackScalarFieldEnumSchema,ChildFeedbackScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const ChildFeedbackAggregateArgsSchema: z.ZodType<Prisma.ChildFeedbackAggregateArgs> = z.object({
+  where: ChildFeedbackWhereInputSchema.optional(),
+  orderBy: z.union([ ChildFeedbackOrderByWithRelationInputSchema.array(),ChildFeedbackOrderByWithRelationInputSchema ]).optional(),
+  cursor: ChildFeedbackWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const ChildFeedbackGroupByArgsSchema: z.ZodType<Prisma.ChildFeedbackGroupByArgs> = z.object({
+  where: ChildFeedbackWhereInputSchema.optional(),
+  orderBy: z.union([ ChildFeedbackOrderByWithAggregationInputSchema.array(),ChildFeedbackOrderByWithAggregationInputSchema ]).optional(),
+  by: ChildFeedbackScalarFieldEnumSchema.array(),
+  having: ChildFeedbackScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const ChildFeedbackFindUniqueArgsSchema: z.ZodType<Prisma.ChildFeedbackFindUniqueArgs> = z.object({
+  select: ChildFeedbackSelectSchema.optional(),
+  include: ChildFeedbackIncludeSchema.optional(),
+  where: ChildFeedbackWhereUniqueInputSchema,
+}).strict() ;
+
+export const ChildFeedbackFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.ChildFeedbackFindUniqueOrThrowArgs> = z.object({
+  select: ChildFeedbackSelectSchema.optional(),
+  include: ChildFeedbackIncludeSchema.optional(),
+  where: ChildFeedbackWhereUniqueInputSchema,
+}).strict() ;
+
 export const UserCreateArgsSchema: z.ZodType<Prisma.UserCreateArgs> = z.object({
   select: UserSelectSchema.optional(),
   include: UserIncludeSchema.optional(),
@@ -8260,5 +9934,131 @@ export const ChildClassUpdateManyArgsSchema: z.ZodType<Prisma.ChildClassUpdateMa
 
 export const ChildClassDeleteManyArgsSchema: z.ZodType<Prisma.ChildClassDeleteManyArgs> = z.object({
   where: ChildClassWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const BadgeCreateArgsSchema: z.ZodType<Prisma.BadgeCreateArgs> = z.object({
+  select: BadgeSelectSchema.optional(),
+  include: BadgeIncludeSchema.optional(),
+  data: z.union([ BadgeCreateInputSchema,BadgeUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const BadgeUpsertArgsSchema: z.ZodType<Prisma.BadgeUpsertArgs> = z.object({
+  select: BadgeSelectSchema.optional(),
+  include: BadgeIncludeSchema.optional(),
+  where: BadgeWhereUniqueInputSchema,
+  create: z.union([ BadgeCreateInputSchema,BadgeUncheckedCreateInputSchema ]),
+  update: z.union([ BadgeUpdateInputSchema,BadgeUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const BadgeCreateManyArgsSchema: z.ZodType<Prisma.BadgeCreateManyArgs> = z.object({
+  data: z.union([ BadgeCreateManyInputSchema,BadgeCreateManyInputSchema.array() ]),
+}).strict() ;
+
+export const BadgeDeleteArgsSchema: z.ZodType<Prisma.BadgeDeleteArgs> = z.object({
+  select: BadgeSelectSchema.optional(),
+  include: BadgeIncludeSchema.optional(),
+  where: BadgeWhereUniqueInputSchema,
+}).strict() ;
+
+export const BadgeUpdateArgsSchema: z.ZodType<Prisma.BadgeUpdateArgs> = z.object({
+  select: BadgeSelectSchema.optional(),
+  include: BadgeIncludeSchema.optional(),
+  data: z.union([ BadgeUpdateInputSchema,BadgeUncheckedUpdateInputSchema ]),
+  where: BadgeWhereUniqueInputSchema,
+}).strict() ;
+
+export const BadgeUpdateManyArgsSchema: z.ZodType<Prisma.BadgeUpdateManyArgs> = z.object({
+  data: z.union([ BadgeUpdateManyMutationInputSchema,BadgeUncheckedUpdateManyInputSchema ]),
+  where: BadgeWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const BadgeDeleteManyArgsSchema: z.ZodType<Prisma.BadgeDeleteManyArgs> = z.object({
+  where: BadgeWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const ChildBadgeCreateArgsSchema: z.ZodType<Prisma.ChildBadgeCreateArgs> = z.object({
+  select: ChildBadgeSelectSchema.optional(),
+  include: ChildBadgeIncludeSchema.optional(),
+  data: z.union([ ChildBadgeCreateInputSchema,ChildBadgeUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const ChildBadgeUpsertArgsSchema: z.ZodType<Prisma.ChildBadgeUpsertArgs> = z.object({
+  select: ChildBadgeSelectSchema.optional(),
+  include: ChildBadgeIncludeSchema.optional(),
+  where: ChildBadgeWhereUniqueInputSchema,
+  create: z.union([ ChildBadgeCreateInputSchema,ChildBadgeUncheckedCreateInputSchema ]),
+  update: z.union([ ChildBadgeUpdateInputSchema,ChildBadgeUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const ChildBadgeCreateManyArgsSchema: z.ZodType<Prisma.ChildBadgeCreateManyArgs> = z.object({
+  data: z.union([ ChildBadgeCreateManyInputSchema,ChildBadgeCreateManyInputSchema.array() ]),
+}).strict() ;
+
+export const ChildBadgeDeleteArgsSchema: z.ZodType<Prisma.ChildBadgeDeleteArgs> = z.object({
+  select: ChildBadgeSelectSchema.optional(),
+  include: ChildBadgeIncludeSchema.optional(),
+  where: ChildBadgeWhereUniqueInputSchema,
+}).strict() ;
+
+export const ChildBadgeUpdateArgsSchema: z.ZodType<Prisma.ChildBadgeUpdateArgs> = z.object({
+  select: ChildBadgeSelectSchema.optional(),
+  include: ChildBadgeIncludeSchema.optional(),
+  data: z.union([ ChildBadgeUpdateInputSchema,ChildBadgeUncheckedUpdateInputSchema ]),
+  where: ChildBadgeWhereUniqueInputSchema,
+}).strict() ;
+
+export const ChildBadgeUpdateManyArgsSchema: z.ZodType<Prisma.ChildBadgeUpdateManyArgs> = z.object({
+  data: z.union([ ChildBadgeUpdateManyMutationInputSchema,ChildBadgeUncheckedUpdateManyInputSchema ]),
+  where: ChildBadgeWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const ChildBadgeDeleteManyArgsSchema: z.ZodType<Prisma.ChildBadgeDeleteManyArgs> = z.object({
+  where: ChildBadgeWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const ChildFeedbackCreateArgsSchema: z.ZodType<Prisma.ChildFeedbackCreateArgs> = z.object({
+  select: ChildFeedbackSelectSchema.optional(),
+  include: ChildFeedbackIncludeSchema.optional(),
+  data: z.union([ ChildFeedbackCreateInputSchema,ChildFeedbackUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const ChildFeedbackUpsertArgsSchema: z.ZodType<Prisma.ChildFeedbackUpsertArgs> = z.object({
+  select: ChildFeedbackSelectSchema.optional(),
+  include: ChildFeedbackIncludeSchema.optional(),
+  where: ChildFeedbackWhereUniqueInputSchema,
+  create: z.union([ ChildFeedbackCreateInputSchema,ChildFeedbackUncheckedCreateInputSchema ]),
+  update: z.union([ ChildFeedbackUpdateInputSchema,ChildFeedbackUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const ChildFeedbackCreateManyArgsSchema: z.ZodType<Prisma.ChildFeedbackCreateManyArgs> = z.object({
+  data: z.union([ ChildFeedbackCreateManyInputSchema,ChildFeedbackCreateManyInputSchema.array() ]),
+}).strict() ;
+
+export const ChildFeedbackDeleteArgsSchema: z.ZodType<Prisma.ChildFeedbackDeleteArgs> = z.object({
+  select: ChildFeedbackSelectSchema.optional(),
+  include: ChildFeedbackIncludeSchema.optional(),
+  where: ChildFeedbackWhereUniqueInputSchema,
+}).strict() ;
+
+export const ChildFeedbackUpdateArgsSchema: z.ZodType<Prisma.ChildFeedbackUpdateArgs> = z.object({
+  select: ChildFeedbackSelectSchema.optional(),
+  include: ChildFeedbackIncludeSchema.optional(),
+  data: z.union([ ChildFeedbackUpdateInputSchema,ChildFeedbackUncheckedUpdateInputSchema ]),
+  where: ChildFeedbackWhereUniqueInputSchema,
+}).strict() ;
+
+export const ChildFeedbackUpdateManyArgsSchema: z.ZodType<Prisma.ChildFeedbackUpdateManyArgs> = z.object({
+  data: z.union([ ChildFeedbackUpdateManyMutationInputSchema,ChildFeedbackUncheckedUpdateManyInputSchema ]),
+  where: ChildFeedbackWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const ChildFeedbackDeleteManyArgsSchema: z.ZodType<Prisma.ChildFeedbackDeleteManyArgs> = z.object({
+  where: ChildFeedbackWhereInputSchema.optional(),
   limit: z.number().optional(),
 }).strict() ;
