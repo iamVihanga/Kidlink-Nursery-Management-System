@@ -2,12 +2,10 @@ import * as AWS from "@aws-sdk/client-s3";
 import { env } from "@/lib/env";
 
 const config = {
-  region: env.NEXT_PUBLIC_AWS_REGION || "ap-south-1",
-  bucket: env.NEXT_PUBLIC_AWS_S3_BUCKET || "kidlink",
-  accessKeyId: env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID || "AKIAXNGUVP5C25APRB7G",
-  secretAccessKey:
-    env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY ||
-    "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"
+  region: env.NEXT_PUBLIC_AWS_REGION,
+  bucket: env.NEXT_PUBLIC_AWS_S3_BUCKET,
+  accessKeyId: env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+  secretAccessKey: env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY
 };
 
 export const s3Config = {
