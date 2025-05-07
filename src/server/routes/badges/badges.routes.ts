@@ -111,6 +111,7 @@ export const update = createRoute({
   tags,
   path: "/{id}",
   method: "patch",
+  middleware: [serverAuthMiddleware],
   request: {
     params: IdParamsSchema,
     body: jsonContentRequired(
@@ -139,6 +140,7 @@ export const remove = createRoute({
   tags,
   path: "/{id}",
   method: "delete",
+  middleware: [serverAuthMiddleware],
   request: {
     params: IdParamsSchema
   },
@@ -167,13 +169,14 @@ export const assign = createRoute({
   description: "Assign badge to specific child.",
   path: "/{id}",
   method: "put",
+  middleware: [serverAuthMiddleware],
   request: {
     params: IdParamsSchema,
     body: jsonContentRequired(
       z.object({
-        badgeId: z.string()
+        childId: z.string()
       }),
-      "Badge details to assign"
+      "Child id to assign"
     )
   },
   responses: {

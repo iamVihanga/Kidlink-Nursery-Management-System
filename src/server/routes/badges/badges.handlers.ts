@@ -129,7 +129,7 @@ export const assign: AppRouteHandler<AssignRoute> = async (c) => {
   const params = c.req.valid("param");
 
   await prisma.childBadge.create({
-    data: { childId: params.id, badgeId: body.badgeId }
+    data: { childId: body.childId, badgeId: params.id }
   });
 
   return c.json({ message: `Badge assigned to child !` }, 200);
