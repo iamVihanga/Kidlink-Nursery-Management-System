@@ -8,7 +8,8 @@ import type {
   UpdateRoute,
   RemoveRoute,
   AssignRoute,
-  BadgesRoute
+  BadgesRoute,
+  FeedbacksRoute
 } from "@/server/routes/children/children.routes";
 import { AppRouteHandler } from "@/types/server";
 import { ChildWithBadges } from "@/features/children/schemas/child-with-badges";
@@ -307,4 +308,31 @@ export const badges: AppRouteHandler<BadgesRoute> = async (c) => {
   };
 
   return c.json(transformedData, HttpStatusCodes.OK);
+};
+
+// ------------ Get Child with Feedbacks ------------
+export const feedbacks: AppRouteHandler<FeedbacksRoute> = async (c) => {
+  const user = c.get("user");
+
+  if (!user) {
+    return c.json(
+      { message: "Unauthenticated access" },
+      HttpStatusCodes.UNAUTHORIZED
+    );
+  }
+
+  const params = c.req.valid("param");
+
+  const childWithFeedbacks = await prisma.child.findUnique({
+    where: { id: params.id },
+    include: {
+      feedbacks: true
+    }
+  });
+
+  if (!childWithFeedbacks) {
+    return c.json({ message: "Child not found" }, HttpStatusCodes.NOT_FOUND);
+  }
+
+  return c.json(childWithFeedbacks, HttpStatusCodes.OK);
 };

@@ -56,8 +56,8 @@ export default function FeedbacksPage() {
     <PageContainer scrollable={false}>
       <div className="flex flex-1 flex-col space-y-4">
         <AppPageShell
-          title="Manage Badges"
-          description={`Manage badges in "${activeOrgData.name}"`}
+          title="Manage Feedbacks"
+          description={`Manage feedbacks in "${activeOrgData.name}"`}
           actionComponent={<AddNewFeedback />}
         />
 

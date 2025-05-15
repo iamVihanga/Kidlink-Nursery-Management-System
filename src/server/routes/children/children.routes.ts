@@ -10,6 +10,7 @@ import { updateChildSchema } from "@/features/children/schemas/update-child";
 import { childWithClassesSchema } from "@/features/children/schemas/child-with-classes";
 import { childWithBadgesSchema } from "@/features/children/schemas/child-with-badges";
 import { assignToClassSchema } from "@/features/children/schemas/assign-to-class";
+import { childWithFeedbacksSchema } from "@/features/children/schemas/child-with-feedbacks";
 
 const tags = ["Children"];
 
@@ -215,6 +216,34 @@ export const badges = createRoute({
   }
 });
 
+export const feedbacks = createRoute({
+  tags,
+  path: "/{id}/feedbacks",
+  method: "get",
+  middleware: [serverAuthMiddleware],
+  request: {
+    params: IdParamsSchema
+  },
+  responses: {
+    [HttpStatusCodes.OK]: jsonContent(
+      childWithFeedbacksSchema,
+      "The child with feedbacks"
+    ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      z.object({ message: z.string() }),
+      "Unauthenticated request"
+    ),
+    [HttpStatusCodes.FORBIDDEN]: jsonContent(
+      z.object({ message: z.string() }),
+      "Access Forbidden"
+    ),
+    [HttpStatusCodes.NOT_FOUND]: jsonContent(
+      z.object({ message: z.string() }),
+      "Child not found"
+    )
+  }
+});
+
 export type ListRoute = typeof list;
 export type CreateRoute = typeof create;
 export type FindOneRoute = typeof findOne;
@@ -222,3 +251,4 @@ export type UpdateRoute = typeof update;
 export type RemoveRoute = typeof remove;
 export type AssignRoute = typeof assign;
 export type BadgesRoute = typeof badges;
+export type FeedbacksRoute = typeof feedbacks;
