@@ -102,6 +102,7 @@ model Organization {
   nurseryDetails NurseryDetails?
   classes        Class[]
   children       Child[]
+  payments       Payment[] // Add this relation to Organization model
 
   @@unique([slug])
   @@map("organization")
@@ -117,6 +118,7 @@ model Member {
   createdAt       DateTime
   teachingClasses Class[]
   ChildFeedback   ChildFeedback[]
+  payments        Payment[] // Add this relation to Member model
 
   @@map("member")
 }
@@ -267,4 +269,26 @@ model ChildFeedback {
   teacher   Member   @relation(fields: [teacherId], references: [id])
 
   @@map("childFeedback")
+}
+
+// Payment model for tracking payments from members to organizations
+model Payment {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  amount        Float
+  currency      String
+  status        String // e.g., "pending", "completed", "failed"
+  paymentMethod String? // e.g., "credit_card", "bank_transfer"
+  description   String?
+  paymentDate   DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id])
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("payment")
 }
