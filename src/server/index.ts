@@ -17,6 +17,7 @@ import childrenRoute from "@/server/routes/children/children.index";
 import classesRoute from "@/server/routes/classes/classes.index";
 import badgesRoute from "@/server/routes/badges/badges.index";
 import feedbacksRoute from "@/server/routes/feedbacks/feedbacks.index";
+import paymentsRoute from "@/server/routes/payments/payments.index";
 
 const app = createApp();
 
@@ -37,7 +38,8 @@ const routes = app
   .route("/children", childrenRoute)
   .route("/classes", classesRoute)
   .route("/badges", badgesRoute)
-  .route("/feedbacks", feedbacksRoute);
+  .route("/feedbacks", feedbacksRoute)
+  .route("/payments", paymentsRoute);
 
 export type AppType = typeof routes;
 
