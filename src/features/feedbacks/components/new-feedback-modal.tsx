@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
@@ -25,7 +25,6 @@ import {
   FormLabel,
   FormMessage
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   createFeedbackSchema,
   type CreateFeedbackSchema
@@ -36,7 +35,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { ChildrenDropdown } from "@/features/children/components/children-dropdown";
 
-export function AddNewFeedback() {
+interface AddNewFeedbackProps {
+  childId?: string;
+}
+
+export function AddNewFeedback({ childId }: AddNewFeedbackProps) {
   const { data: session, isPending: sessionPending } = authClient.useSession();
 
   const { isPending, mutate } = useCreateFeedback();
@@ -46,12 +49,18 @@ export function AddNewFeedback() {
   const form = useForm<CreateFeedbackSchema>({
     resolver: zodResolver(createFeedbackSchema),
     defaultValues: {
-      childId: "",
+      childId: childId || "",
       content: "",
       rating: 0,
       teacherId: ""
     }
   });
+
+  useEffect(() => {
+    if (childId) {
+      form.setValue("childId", childId);
+    }
+  }, []);
 
   const onSubmit = async (values: CreateFeedbackSchema) => {
     const member = await authClient.organization.getActiveMember();
@@ -60,6 +69,8 @@ export function AddNewFeedback() {
       return;
     }
 
+    // Ensure rating is a number
+    values.rating = Number(values.rating);
     values.teacherId = member.data.id;
 
     mutate(
@@ -115,28 +126,6 @@ export function AddNewFeedback() {
                     <FormLabel>Content</FormLabel>
                     <FormControl>
                       <Textarea {...field} placeholder="Lorem ipsum" />
-                    </FormControl>
-
-                    <FormMessage {...field} />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="rating"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Rating</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        value={field.value!}
-                        type="number"
-                        placeholder="Enter rating (Between 1 - 5)"
-                        min={1}
-                        max={5}
-                      />
                     </FormControl>
 
                     <FormMessage {...field} />

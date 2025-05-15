@@ -11,6 +11,7 @@ const router = createRouter()
   .openapi(routes.update, handlers.update)
   .openapi(routes.remove, handlers.remove)
   .openapi(routes.assign, handlers.assign)
-  .openapi(routes.badges, handlers.badges);
+  .openapi(routes.badges, handlers.badges)
+  .openapi(routes.feedbacks, handlers.feedbacks);
 
 export default router;

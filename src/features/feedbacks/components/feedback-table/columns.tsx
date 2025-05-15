@@ -20,7 +20,7 @@ export const columns: ColumnDef<ChildFeedback>[] = [
     cell: ({ row }) => {
       return (
         <Button asChild size={"sm"} variant={"link"}>
-          <Link href={`/dashboard/child/${row.original.childId}`}>
+          <Link href={`/dashboard/children/${row.original.childId}`}>
             View Child
           </Link>
         </Button>
