@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ListTodoIcon, Loader } from "lucide-react";
 
 import PageContainer from "@/components/layouts/page-container";
@@ -13,7 +13,19 @@ import { BadgesListing } from "@/features/badges/components/badges-listing";
 import { BadgesTableActions } from "@/features/badges/components/badges-table/badges-table-actions";
 import { AddNewBadge } from "@/features/badges/components/add-new-badge-modal";
 
+// Get user preference from localStorage if available, default to grid
+const getUserViewPreference = (): "grid" | "list" => {
+  if (typeof window === "undefined") return "grid";
+  return (localStorage.getItem("badgesViewMode") as "grid" | "list") || "grid";
+};
+
 export default function BadgesPage() {
+  const [viewMode, setViewMode] = useState<"grid" | "list">(getUserViewPreference());
+
+  useEffect(() => {
+    localStorage.setItem("badgesViewMode", viewMode);
+  }, [viewMode]);
+
   const {
     data: activeOrgData,
     error: activeOrgErr,
@@ -62,9 +74,12 @@ export default function BadgesPage() {
 
         <Separator />
 
-        <BadgesTableActions />
+        <BadgesTableActions
+          currentView={viewMode}
+          onViewChange={setViewMode}
+        />
 
-        <BadgesListing />
+        <BadgesListing viewMode={viewMode} />
       </div>
     </PageContainer>
   );
