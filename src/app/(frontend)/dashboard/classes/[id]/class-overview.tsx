@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useParams } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
@@ -9,36 +10,70 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Users, Calendar, Book, Clock, MapPin, User, Building, Edit } from 'lucide-react';
 import Link from 'next/link';
-import { useGetClass } from '@/features/classes/api/use-get-class-by-id';
-import { useGetClassStudents } from '@/features/classes/api/use-get-class-students';
-import { format } from 'date-fns';
 
 interface ClassOverviewProps {
   classId: string;
 }
 
 export function ClassOverview({ classId }: ClassOverviewProps) {
-  // Fetch the class data using the real API endpoint
-  const { data: classData, isPending: loading, error } = useGetClass({ id: classId });
-  
-  // Fetch students count separately if not included in class data
-  const { data: studentsData } = useGetClassStudents({ classId });
-  
+  // In a real implementation, you would fetch class data from your API
+  const [loading, setLoading] = React.useState(true);
+  const [classDetails, setClassDetails] = React.useState({
+    id: classId,
+    name: '',
+    description: '',
+    teacher: '',
+    schedule: '',
+    time: '',
+    location: '',
+    studentsCount: 0,
+    capacity: 0,
+    nurseryId: '',
+    nurseryName: '',
+    subjects: [] as string[],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  });
+
+  React.useEffect(() => {
+    // Simulate API call
+    const timer = setTimeout(() => {
+      setClassDetails({
+        id: classId,
+        name: `Kindergarten ${classId}`,
+        description: 'A fun and engaging class for young learners focused on basic literacy, numeracy, and social skills development.',
+        teacher: 'Jane Smith',
+        schedule: 'Mon-Fri',
+        time: '9:00 AM - 12:00 PM',
+        location: 'Room 102',
+        studentsCount: 15,
+        capacity: 20,
+        nurseryId: '1',
+        nurseryName: 'Sunshine Nursery',
+        subjects: ['Literacy', 'Numeracy', 'Art', 'Physical Development'],
+        createdAt: '2023-09-01T10:00:00Z',
+        updatedAt: '2023-09-15T14:30:00Z'
+      });
+      setLoading(false);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, [classId]);
+
   const getInitials = (name: string) => {
     return name
-      ? name.split(' ')
-          .map(part => part[0])
-          .join('')
-          .toUpperCase()
-      : '';
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .toUpperCase();
   };
 
   const formatDate = (dateString: string) => {
-    try {
-      return format(new Date(dateString), 'MMM d, yyyy');
-    } catch (error) {
-      return 'Invalid date';
-    }
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   };
 
   if (loading) {
@@ -63,53 +98,20 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
     );
   }
 
-  if (error || !classData) {
-    return (
-      <Card className="w-full h-full overflow-hidden border-none shadow-md bg-background dark:bg-background/20">
-        <div className="p-4 flex items-center justify-center h-full">
-          <div className="text-center">
-            <h3 className="text-lg font-medium">Failed to load class data</h3>
-            <p className="text-muted-foreground mt-2">
-              {error?.message || "Could not retrieve class information"}
-            </p>
-          </div>
-        </div>
-      </Card>
-    );
-  }
-
-  // Extract values from the real data
-  const {
-    name,
-    description,
-    schedule,
-    timeSlot,
-    location,
-    capacity,
-    leadTeacher,
-    subjects = [],
-    nursery,
-    createdAt,
-    updatedAt
-  } = classData;
-
-  // Get students count either from class data or separate request
-  const studentsCount = classData.studentCount || studentsData?.students?.length || 0;
-
   return (
     <Card className="w-full h-full overflow-hidden border-none shadow-md bg-background dark:bg-background/20">
       <div className="p-4 border-b flex items-center gap-4">
         <Avatar className="h-14 w-14 border-2 border-primary/20">
           <AvatarFallback className="bg-primary text-primary-foreground text-lg">
-            {getInitials(name)}
+            {getInitials(classDetails.name)}
           </AvatarFallback>
         </Avatar>
         <div>
-          <h1 className="text-base font-semibold leading-tight">{name}</h1>
+          <h1 className="text-base font-semibold leading-tight">{classDetails.name}</h1>
           <div className="flex mt-1 gap-1.5">
             <Badge variant="outline" className="text-xs px-1.5 h-5">Class</Badge>
             <Badge className="bg-primary/20 text-primary text-xs px-1.5 h-5">
-              <Users className="w-3 h-3 mr-1" /> {studentsCount} Students
+              <Users className="w-3 h-3 mr-1" /> {classDetails.studentsCount} Students
             </Badge>
           </div>
         </div>
@@ -119,20 +121,18 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
         <ScrollArea className="h-[calc(100vh-266px)]">
           <div className="p-4 space-y-3">
             {/* Description */}
-            {description && (
-              <div className="py-1.5">
-                <p className="text-sm text-muted-foreground">
-                  {description}
-                </p>
-              </div>
-            )}
+            <div className="py-1.5">
+              <p className="text-sm text-muted-foreground">
+                {classDetails.description}
+              </p>
+            </div>
 
             {/* Schedule Information */}
             <div className="flex items-center gap-3 py-1.5">
               <Calendar className="w-4 h-4 text-primary/80" />
               <span className="text-sm text-muted-foreground">Schedule:</span>
               <span className="text-sm font-medium ml-auto">
-                {schedule || "Not specified"}
+                {classDetails.schedule}
               </span>
             </div>
 
@@ -141,7 +141,7 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
               <Clock className="w-4 h-4 text-primary/80" />
               <span className="text-sm text-muted-foreground">Time:</span>
               <span className="text-sm font-medium ml-auto">
-                {timeSlot || "Not specified"}
+                {classDetails.time}
               </span>
             </div>
 
@@ -150,7 +150,7 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
               <MapPin className="w-4 h-4 text-primary/80" />
               <span className="text-sm text-muted-foreground">Location:</span>
               <span className="text-sm font-medium ml-auto">
-                {location || "Not specified"}
+                {classDetails.location}
               </span>
             </div>
 
@@ -159,7 +159,7 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
               <Users className="w-4 h-4 text-primary/80" />
               <span className="text-sm text-muted-foreground">Capacity:</span>
               <span className="text-sm font-medium ml-auto">
-                {studentsCount}/{capacity || "∞"}
+                {classDetails.studentsCount}/{classDetails.capacity}
               </span>
             </div>
 
@@ -167,66 +167,52 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
             <div className="flex items-center gap-3 py-1.5">
               <User className="w-4 h-4 text-primary/80" />
               <span className="text-sm text-muted-foreground">Lead Teacher:</span>
-              {leadTeacher?.id ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="ml-auto h-7 px-2.5 text-sm gap-1"
-                  asChild
-                >
-                  <Link href={`/dashboard/staff/${leadTeacher.id}`}>
-                    {leadTeacher.name}
-                  </Link>
-                </Button>
-              ) : (
-                <span className="text-sm font-medium ml-auto text-muted-foreground">
-                  Not assigned
-                </span>
-              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="ml-auto h-7 px-2.5 text-sm gap-1"
+                asChild
+              >
+                <Link href={`/dashboard/staff/1`}>
+                  {classDetails.teacher}
+                </Link>
+              </Button>
             </div>
 
             {/* Subjects */}
-            {subjects && subjects.length > 0 && (
-              <div className="py-1.5">
-                <div className="flex items-center gap-3 mb-2">
-                  <Book className="w-4 h-4 text-primary/80" />
-                  <span className="text-sm text-muted-foreground">Learning Areas:</span>
-                </div>
-                
-                <div className="flex flex-wrap gap-1.5 mt-1 ml-7">
-                  {subjects.map((subject, index) => (
-                    <Badge 
-                      key={index} 
-                      variant="outline"
-                      className="bg-background"
-                    >
-                      {subject}
-                    </Badge>
-                  ))}
-                </div>
+            <div className="py-1.5">
+              <div className="flex items-center gap-3 mb-2">
+                <Book className="w-4 h-4 text-primary/80" />
+                <span className="text-sm text-muted-foreground">Learning Areas:</span>
               </div>
-            )}
+              
+              <div className="flex flex-wrap gap-1.5 mt-1 ml-7">
+                {classDetails.subjects.map((subject, index) => (
+                  <Badge 
+                    key={index} 
+                    variant="outline"
+                    className="bg-background"
+                  >
+                    {subject}
+                  </Badge>
+                ))}
+              </div>
+            </div>
 
             {/* Nursery */}
             <div className="flex items-center gap-3 py-1.5">
               <Building className="w-4 h-4 text-primary/80" />
               <span className="text-sm text-muted-foreground">Nursery:</span>
-              {nursery?.id ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="ml-auto h-7 px-2.5 text-sm gap-1"
-                  asChild
-                >
-                  <Link href={`/dashboard/nurseries/${nursery.id}`}>
-                    {nursery.name}
-                  </Link>
-                </Button>
-              ) : (
-                <span className="text-sm font-medium ml-auto text-muted-foreground">
-                  Not assigned
-                </span>
-              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="ml-auto h-7 px-2.5 text-sm gap-1"
+                asChild
+              >
+                <Link href={`/dashboard/nurseries/${classDetails.nurseryId}`}>
+                  {classDetails.nurseryName}
+                </Link>
+              </Button>
             </div>
 
             {/* Edit Button */}
@@ -247,11 +233,11 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
             <div className="text-xs text-muted-foreground pt-3 border-t border-border/50 mt-4">
               <div className="flex justify-between">
                 <span>Created:</span>
-                <span>{formatDate(createdAt)}</span>
+                <span>{formatDate(classDetails.createdAt)}</span>
               </div>
               <div className="flex justify-between mt-1">
                 <span>Updated:</span>
-                <span>{formatDate(updatedAt)}</span>
+                <span>{formatDate(classDetails.updatedAt)}</span>
               </div>
             </div>
           </div>
