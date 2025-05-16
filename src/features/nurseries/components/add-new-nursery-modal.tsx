@@ -3,8 +3,7 @@ import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { ImageIcon, Upload, PlusIcon, ChevronDown } from "lucide-react";
-import { HexColorPicker } from "react-colorful";
+import { ImageIcon, Upload, PlusIcon } from "lucide-react";
 
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
@@ -36,71 +35,65 @@ import {
 
 import { useCreateNursery } from "../api/use-create-nursery";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger
-} from "@/components/ui/collapsible";
+import { Label } from "@/components/ui/label";
 
-// Compact color picker component
-function CompactColorPicker({ value, onChange }: { value: string, onChange: (color: string) => void }) {
-  const [isOpen, setIsOpen] = useState(false);
-  
+// Simple color picker component
+function SimpleColorPicker({ value, onChange }: { value: string, onChange: (color: string) => void }) {
   const presetColors = [
     "#FF6B6B", "#FFC107", "#4CAF50", "#2196F3", "#9B59B6",
     "#E91E63", "#673AB7", "#3F51B5", "#00BCD4", "#8BC34A"
   ];
 
   return (
-    <div className="space-y-2">
-      {/* Color input and preview */}
-      <div className="flex items-center gap-2">
+    <div className="space-y-4">
+      {/* Color preview and value */}
+      <div className="flex items-center gap-4">
         <div
-          className="h-8 w-8 rounded-full border"
+          className="h-10 w-10 rounded-full border border-gray-200 dark:border-gray-800"
           style={{ backgroundColor: value }}
         />
-        <Input
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="flex-1"
-          placeholder="#FFFFFF"
-        />
+        <span className="text-sm font-medium">
+          {value}
+        </span>
       </div>
 
-      {/* Collapsible color picker */}
-      <Collapsible
-        open={isOpen}
-        onOpenChange={setIsOpen}
-        className="border rounded-md"
-      >
-        <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 text-sm text-left">
-          <span>Color Picker</span>
-          <ChevronDown className="h-4 w-4" style={{ transform: isOpen ? 'rotate(180deg)' : '' }} />
-        </CollapsibleTrigger>
-        <CollapsibleContent className="px-3 pb-3">
-          {/* Color wheel */}
-          <div className="mb-2 mt-1">
-            <HexColorPicker
-              color={value}
-              onChange={onChange}
-              style={{ width: "100%", height: "120px" }}
-            />
-          </div>
-          
-          {/* Preset colors */}
-          <div className="grid grid-cols-5 gap-2 mt-2">
-            {presetColors.map((color) => (
-              <button
-                key={color}
-                type="button"
-                className="h-6 w-6 rounded-full border"
-                style={{ backgroundColor: color }}
-                onClick={() => onChange(color)}
-              />
-            ))}
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
+      {/* Color palette */}
+      <div className="grid grid-cols-5 gap-3">
+        {presetColors.map((color) => (
+          <button
+            key={color}
+            type="button"
+            className="h-10 w-10 rounded-full border hover:scale-110 transition-transform"
+            style={{ backgroundColor: color }}
+            onClick={() => onChange(color)}
+          />
+        ))}
+      </div>
+
+      {/* Custom color input */}
+      <div className="mt-4">
+        <Label htmlFor="custom-color">Custom Color</Label>
+        <div className="flex items-center gap-2 mt-1.5">
+          <Input
+            id="custom-color"
+            type="text"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="#FFFFFF"
+            className="flex-1"
+          />
+          <Button
+            type="button"
+            size="sm"
+            onClick={() => {
+              // Ensure the value is applied (mostly for visual feedback)
+              onChange(value);
+            }}
+          >
+            Apply
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -283,7 +276,7 @@ export function AddNewNursery() {
                     <FormItem>
                       <FormLabel>Theme Color</FormLabel>
                       <FormControl>
-                        <CompactColorPicker 
+                        <SimpleColorPicker 
                           value={field.value || colorPreview} 
                           onChange={(color) => {
                             field.onChange(color);
