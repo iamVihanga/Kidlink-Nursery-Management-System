@@ -18,9 +18,10 @@ const getUserViewPreference = (): "grid" | "list" => {
 
 interface BadgesListingProps {
   viewMode: "grid" | "list";
+  setViewMode?: (view: "grid" | "list") => void;
 }
 
-export function BadgesListing({ viewMode }: BadgesListingProps) {
+export function BadgesListing({ viewMode, setViewMode }: BadgesListingProps) {
   const { page, limit, searchQuery } = useBadgesTableFilters();
 
   const { data, error, isPending } = useGetBadges({
@@ -35,7 +36,7 @@ export function BadgesListing({ viewMode }: BadgesListingProps) {
   }, [viewMode]);
 
   const handleViewChange = (view: "grid" | "list") => {
-    setViewMode(view);
+    if (setViewMode) setViewMode(view);
   };
 
   if (isPending) {
