@@ -113,7 +113,7 @@ export function ClassCard({ _class, authContext }: Props) {
       <CardFooter className="flex justify-between text-xs text-foreground/60 pt-0">
         <span>Created {formattedDate}</span>
         <Button variant="secondary" size="sm" className="px-2" asChild>
-          <Link href={`/dashboard/classes/${_class.id}`}>Open</Link>
+          <Link href={`/dashboard/classes/${_class.id}`}>Manage Class</Link>
         </Button>
       </CardFooter>
     </Card>
