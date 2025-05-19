@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as HttpStatusCodes from "stoker/http-status-codes";
 
 import { prisma } from "@/server/prisma/client";
@@ -100,7 +101,7 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
 
   // Filter out records where user doesn't match search criteria
   const filteredOwners = search
-    ? owners.filter((owner) =>
+    ? owners.filter((owner: any) =>
         owner.user?.name?.toLowerCase().includes(search.toLowerCase())
       )
     : owners;
