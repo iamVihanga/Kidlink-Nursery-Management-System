@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 4000",
     "lint": "next lint",
     "prisma:generate": "prisma generate --schema src/server/prisma/schema.prisma",
     "prisma:studio": "prisma studio --schema src/server/prisma/schema.prisma"
