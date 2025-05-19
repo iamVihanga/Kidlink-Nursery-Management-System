@@ -20,24 +20,26 @@ generator zod {
 }
 
 model User {
-  id               String       @id @map("_id")
-  name             String
-  email            String
-  emailVerified    Boolean
-  image            String?
-  createdAt        DateTime
-  updatedAt        DateTime
-  twoFactorEnabled Boolean?
-  role             String?
-  banned           Boolean?
-  banReason        String?
-  banExpires       DateTime?
-  sessions         Session[]
-  accounts         Account[]
-  members          Member[]
-  invitations      Invitation[]
-  twofactors       TwoFactor[]
-  children         Child[] // Added this relation
+  id                    String                  @id @map("_id")
+  name                  String
+  email                 String
+  emailVerified         Boolean
+  image                 String?
+  createdAt             DateTime
+  updatedAt             DateTime
+  twoFactorEnabled      Boolean?
+  role                  String?
+  banned                Boolean?
+  banReason             String?
+  banExpires            DateTime?
+  sessions              Session[]
+  accounts              Account[]
+  members               Member[]
+  invitations           Invitation[]
+  twofactors            TwoFactor[]
+  children              Child[] // Added this relation
+  sentNotifications     Notification[]          @relation("SentNotifications") // Added relation for sent notifications
+  receivedNotifications NotificationRecipient[] // Added relation for received notifications
 
   @@unique([email])
   @@map("user")
@@ -291,4 +293,62 @@ model Payment {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@map("payment")
+}
+
+// New NotificationTag model
+model NotificationTag {
+  id            String                         @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  createdAt     DateTime                       @default(now())
+  updatedAt     DateTime                       @updatedAt
+  notifications NotificationTag_Notification[]
+
+  @@unique([name])
+  @@map("notificationTag")
+}
+
+// New Notification model
+model Notification {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Sender relation
+  senderId String
+  sender   User   @relation("SentNotifications", fields: [senderId], references: [id], onDelete: Cascade)
+
+  // Recipients relation
+  recipients NotificationRecipient[]
+
+  // Tags relation
+  tags NotificationTag_Notification[]
+
+  @@map("notification")
+}
+
+// Junction table for Notification and NotificationTag (many-to-many)
+model NotificationTag_Notification {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  notificationId    String          @db.ObjectId
+  notification      Notification    @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  notificationTagId String          @db.ObjectId
+  notificationTag   NotificationTag @relation(fields: [notificationTagId], references: [id], onDelete: Cascade)
+
+  @@unique([notificationId, notificationTagId])
+  @@map("notificationTag_Notification")
+}
+
+// Junction table for Notification and User recipients (many-to-many)
+model NotificationRecipient {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  notificationId String       @db.ObjectId
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  recipientId    String
+  recipient      User         @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+  readAt         DateTime? // To track when a specific recipient read the notification
+
+  @@unique([notificationId, recipientId])
+  @@map("notificationRecipient")
 }
