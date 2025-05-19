@@ -2,15 +2,9 @@
 
 import React from "react";
 import { formatDistanceToNow } from "date-fns";
-import { EditIcon, MoreHorizontal, TrashIcon } from "lucide-react";
-
+import { EditIcon, MoreVertical, TrashIcon } from "lucide-react";
 import { Class } from "@/types/schema-types/index";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,7 +12,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-
 import { useDeleteClass } from "@/features/classes/api/use-delete-class";
 import { ClassesAuthContext } from "../classes-auth-context";
 import { useClassesGridFilters } from "./classes-grid/use-classes-grid-filters";
@@ -33,89 +26,70 @@ type Props = {
 export function ClassCard({ _class, authContext }: Props) {
   const role = "error" in authContext ? null : authContext.activeMember?.role;
   const permissions = "error" in authContext ? null : authContext.permissions;
-
   const { setUpdateId } = useClassesGridFilters();
   const { mutate: deleteMutate } = useDeleteClass();
   const { name, description, createdAt } = _class;
-
-  // Format the date using date-fns
-  const formattedDate = formatDistanceToNow(new Date(createdAt), {
-    addSuffix: true
-  });
-
-  const handleEdit = () => {
-    setUpdateId(_class.id.toString());
-  };
-
-  const handleDelete = () => {
-    deleteMutate({ id: _class.id });
-  };
+  const formattedDate = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
 
   return (
-    <Card className="w-full h-fit max-w-sm hover:shadow-md dark:bg-secondary/10 transition-shadow duration-300">
-      <CardHeader className="relative pb-0">
+    <Card className="w-full max-w-xs hover:shadow-sm dark:bg-secondary/10 transition-shadow duration-300 p-3">
+      <div className="relative">
         {role !== "member" && (
-          <div className="absolute right-4 -top-4 z-10">
+          <div className="absolute right-1 top-1 z-10">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 bg-background border rounded-full"
-                >
-                  <MoreHorizontal className="h-4 w-4 text-foreground" />
+                <Button variant="ghost" size="icon" className="h-6 w-6 bg-background/70 rounded-full">
+                  <MoreVertical className="h-3.5 w-3.5" />
                   <span className="sr-only">Actions</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="w-28">
                 {permissions?.update && (
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={handleEdit}
-                  >
-                    <EditIcon className="size-4" /> Edit Class
+                  <DropdownMenuItem className="cursor-pointer text-xs py-1" onClick={() => setUpdateId(_class.id.toString())}>
+                    <EditIcon className="size-3 mr-1.5" /> Edit
                   </DropdownMenuItem>
                 )}
                 {permissions?.delete && (
-                  <DropdownMenuItem
-                    className="text-red-500 cursor-pointer"
-                    onClick={handleDelete}
-                  >
-                    <TrashIcon className="size-4" />
-                    Delete
+                  <DropdownMenuItem className="text-destructive cursor-pointer text-xs py-1" onClick={() => deleteMutate({ id: _class.id })}>
+                    <TrashIcon className="size-3 mr-1.5" /> Delete
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         )}
-
-        <div className="aspect-video w-full overflow-hidden rounded-lg">
+        
+        <div className="aspect-video w-full overflow-hidden rounded-md mb-2">
           <Image
-            src={"/assets/class_thumbnail.jpg"}
-            alt={"class"}
-            width={400}
-            height={200}
+            src="/assets/class_thumbnail.jpg"
+            alt={name}
+            width={240}
+            height={135}
             className="h-full w-full object-cover"
           />
         </div>
-      </CardHeader>
+      </div>
 
-      <CardContent className="pt-4">
-        <h3 className="text-lg font-semibold line-clamp-1">{name}</h3>
-        {description && (
-          <p className="text-sm dark:text-foreground/40 text-foreground/60 mt-1 line-clamp-2">
-            {description}
-          </p>
-        )}
-      </CardContent>
-
-      <CardFooter className="flex justify-between text-xs text-foreground/60 pt-0">
-        <span>Created {formattedDate}</span>
-        <Button variant="secondary" size="sm" className="px-2" asChild>
-          <Link href={`/dashboard/classes/${_class.id}`}>Open</Link>
+      <Link href={`/dashboard/classes/${_class.id}`} className="block">
+        <h3 className="text-sm font-semibold line-clamp-1 hover:text-primary transition-colors">
+          {name}
+        </h3>
+      </Link>
+      
+      {description && (
+        <p className="text-xs text-muted-foreground line-clamp-1 mt-1">
+          {description}
+        </p>
+      )}
+      
+      <div className="flex items-center justify-between mt-2 pt-2 border-t text-xs">
+        <span className="text-muted-foreground truncate max-w-[130px]">
+          {formattedDate}
+        </span>
+        <Button variant="secondary" size="sm" className="h-7 px-2 text-xs" asChild>
+          <Link href={`/dashboard/classes/${_class.id}`}>Manage</Link>
         </Button>
-      </CardFooter>
+      </div>
     </Card>
   );
 }

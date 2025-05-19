@@ -2,9 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-
 import { Child } from "./cell-action";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export const columns: ColumnDef<Child>[] = [
@@ -12,7 +10,7 @@ export const columns: ColumnDef<Child>[] = [
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => {
-      return (
+      const content = (
         <div className="flex items-center gap-3">
           <div className="size-8 rounded-md bg-primary flex items-center justify-center text-sm text-primary-foreground">
             {row.original?.firstName?.slice(0, 1)}
@@ -23,16 +21,14 @@ export const columns: ColumnDef<Child>[] = [
           </p>
         </div>
       );
-    }
-  },
-  {
-    accessorKey: "id",
-    header: "Details",
-    cell: ({ row }) => {
+      
       return (
-        <Button asChild size={"sm"} variant={"link"}>
-          <Link href={`/dashboard/children/${row.original.id}`}>View</Link>
-        </Button>
+        <Link 
+          href={`/dashboard/children/${row.original.id}`}
+          className="hover:underline text-primary cursor-pointer"
+        >
+          {content}
+        </Link>
       );
     }
   },

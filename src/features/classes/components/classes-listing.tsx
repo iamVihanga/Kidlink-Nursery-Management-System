@@ -72,7 +72,7 @@ export function ClassesListing({ authContext }: Props) {
 
       <div className=" flex flex-col gap-8 flex-1">
         {data.pagination.total > 0 ? (
-          <div className="flex-1 grid grid-cols-3 gap-4">
+          <div className="flex-1 grid grid-cols-4 gap-3">
             {data.classes.map((classI) => (
               <ClassCard
                 key={classI.id}
