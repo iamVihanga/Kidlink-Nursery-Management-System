@@ -1,11 +1,16 @@
 "use client";
+
 import React from "react";
-
+import { Input } from "@/components/ui/input";
 import { useBadgesTableFilters } from "./use-badges-table-filters";
-import { DataTableSearch } from "@/components/table/data-table-search";
-import { DataTableResetFilter } from "@/components/table/data-table-reset-filter";
+import { BadgesViewToggle } from "../badges-view-toggle";
 
-export function BadgesTableActions() {
+interface BadgesTableActionsProps {
+  currentView: "grid" | "list";
+  onViewChange: (view: "grid" | "list") => void;
+}
+
+export function BadgesTableActions({ currentView, onViewChange }: BadgesTableActionsProps) {
   const {
     // Search
     searchQuery,
@@ -20,19 +25,14 @@ export function BadgesTableActions() {
   } = useBadgesTableFilters();
 
   return (
-    <div className="w-full flex items-center justify-between">
-      <div className="flex flex-1 flex-wrap items-center gap-4">
-        <DataTableSearch
-          searchKey="name"
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          setPage={setPage}
-        />
-        <DataTableResetFilter
-          isFilterActive={isAnyFilterActive}
-          onReset={resetFilters}
-        />
-      </div>
+    <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <Input
+        placeholder="Search badges..."
+        className="max-w-sm"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+      <BadgesViewToggle currentView={currentView} onViewChange={onViewChange} />
     </div>
   );
 }
