@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -38,10 +39,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Label } from "@/components/ui/label";
 
 // Simple color picker component
-function SimpleColorPicker({ value, onChange }: { value: string, onChange: (color: string) => void }) {
+function SimpleColorPicker({
+  value,
+  onChange
+}: {
+  value: string;
+  onChange: (color: string) => void;
+}) {
   const presetColors = [
-    "#FF6B6B", "#FFC107", "#4CAF50", "#2196F3", "#9B59B6",
-    "#E91E63", "#673AB7", "#3F51B5", "#00BCD4", "#8BC34A"
+    "#FF6B6B",
+    "#FFC107",
+    "#4CAF50",
+    "#2196F3",
+    "#9B59B6",
+    "#E91E63",
+    "#673AB7",
+    "#3F51B5",
+    "#00BCD4",
+    "#8BC34A"
   ];
 
   return (
@@ -52,9 +67,7 @@ function SimpleColorPicker({ value, onChange }: { value: string, onChange: (colo
           className="h-10 w-10 rounded-full border border-gray-200 dark:border-gray-800"
           style={{ backgroundColor: value }}
         />
-        <span className="text-sm font-medium">
-          {value}
-        </span>
+        <span className="text-sm font-medium">{value}</span>
       </div>
 
       {/* Color palette */}
@@ -276,12 +289,12 @@ export function AddNewNursery() {
                     <FormItem>
                       <FormLabel>Theme Color</FormLabel>
                       <FormControl>
-                        <SimpleColorPicker 
-                          value={field.value || colorPreview} 
+                        <SimpleColorPicker
+                          value={field.value || colorPreview}
                           onChange={(color) => {
                             field.onChange(color);
                             setColorPreview(color);
-                          }} 
+                          }}
                         />
                       </FormControl>
                       <FormMessage />

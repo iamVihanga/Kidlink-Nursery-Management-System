@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -43,7 +44,10 @@ export function BadgesListing({ viewMode, setViewMode }: BadgesListingProps) {
     return viewMode === "grid" ? (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="h-[280px] animate-pulse rounded-md bg-muted"></div>
+          <div
+            key={i}
+            className="h-[280px] animate-pulse rounded-md bg-muted"
+          ></div>
         ))}
       </div>
     ) : (
@@ -82,7 +86,9 @@ export function BadgesListing({ viewMode, setViewMode }: BadgesListingProps) {
 
 // Export a higher-order component that includes view state and toggle
 export function BadgesListingWithViewToggle() {
-  const [viewMode, setViewMode] = useState<"grid" | "list">(getUserViewPreference());
+  const [viewMode, setViewMode] = useState<"grid" | "list">(
+    getUserViewPreference()
+  );
 
   useEffect(() => {
     localStorage.setItem("badgesViewMode", viewMode);

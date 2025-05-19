@@ -4,13 +4,7 @@ import React from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
-import {
-  Calendar,
-  School,
-  Users,
-  BookOpen,
-  ExternalLink,
-} from "lucide-react";
+import { Calendar, School, Users, BookOpen, ExternalLink } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -28,13 +22,14 @@ export function Overview() {
   const formatDate = (dateString: string) => {
     try {
       return format(new Date(dateString), "MMM d, yyyy");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       return "Invalid date";
     }
   };
 
   const getInitials = (firstName: string, lastName: string) => {
-    return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
+    return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
   };
 
   return (
@@ -66,7 +61,9 @@ export function Overview() {
             <div>
               <h1 className="text-base font-semibold leading-tight">{`${data.firstName} ${data.lastName}`}</h1>
               <div className="flex mt-1 gap-1.5">
-                <Badge variant="outline" className="text-xs px-1.5 h-5">Child</Badge>
+                <Badge variant="outline" className="text-xs px-1.5 h-5">
+                  Child
+                </Badge>
                 {data.nurseryId && (
                   <Badge className="bg-primary/20 text-primary text-xs px-1.5 h-5">
                     <School className="w-3 h-3 mr-1" /> Enrolled
@@ -83,7 +80,9 @@ export function Overview() {
                 <div className="flex items-center gap-3 py-1.5">
                   <Calendar className="w-4 h-4 text-primary/80" />
                   <span className="text-sm text-muted-foreground">Born:</span>
-                  <span className="text-sm font-medium ml-auto">{formatDate(data.dateOfBirth)}</span>
+                  <span className="text-sm font-medium ml-auto">
+                    {formatDate(data.dateOfBirth)}
+                  </span>
                 </div>
 
                 {/* Parent Details */}
@@ -105,7 +104,9 @@ export function Overview() {
                 {/* Nursery Info */}
                 <div className="flex items-center gap-3 py-1.5">
                   <School className="w-4 h-4 text-primary/80" />
-                  <span className="text-sm text-muted-foreground">Nursery:</span>
+                  <span className="text-sm text-muted-foreground">
+                    Nursery:
+                  </span>
                   {data.nurseryId ? (
                     <Button
                       variant="ghost"
@@ -128,7 +129,9 @@ export function Overview() {
                 <div className="py-1.5">
                   <div className="flex items-center gap-3 mb-2">
                     <BookOpen className="w-4 h-4 text-primary/80" />
-                    <span className="text-sm text-muted-foreground">Classes:</span>
+                    <span className="text-sm text-muted-foreground">
+                      Classes:
+                    </span>
                     <span className="ml-auto text-sm font-medium">
                       {data.classes?.length || 0}
                     </span>
@@ -142,7 +145,9 @@ export function Overview() {
                           href={`/dashboard/classes/${cls.id}`}
                           className="flex items-center px-3 py-2 rounded hover:bg-primary/5 border border-border/50 text-sm"
                         >
-                          <span className="font-medium truncate">{cls.name}</span>
+                          <span className="font-medium truncate">
+                            {cls.name}
+                          </span>
                           <ExternalLink className="w-3.5 h-3.5 text-muted-foreground ml-auto" />
                         </Link>
                       ))}

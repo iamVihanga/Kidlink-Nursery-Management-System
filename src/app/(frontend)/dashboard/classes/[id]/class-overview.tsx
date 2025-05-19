@@ -1,15 +1,24 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useParams } from 'next/navigation';
-import { Card, CardContent } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Users, Calendar, Book, Clock, MapPin, User, Building, Edit } from 'lucide-react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
+import {
+  Users,
+  Calendar,
+  Book,
+  Clock,
+  MapPin,
+  User,
+  Building,
+  Edit
+} from "lucide-react";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface ClassOverviewProps {
   classId: string;
@@ -20,16 +29,16 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
   const [loading, setLoading] = React.useState(true);
   const [classDetails, setClassDetails] = React.useState({
     id: classId,
-    name: '',
-    description: '',
-    teacher: '',
-    schedule: '',
-    time: '',
-    location: '',
+    name: "",
+    description: "",
+    teacher: "",
+    schedule: "",
+    time: "",
+    location: "",
     studentsCount: 0,
     capacity: 0,
-    nurseryId: '',
-    nurseryName: '',
+    nurseryId: "",
+    nurseryName: "",
     subjects: [] as string[],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -41,38 +50,39 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
       setClassDetails({
         id: classId,
         name: `Kindergarten ${classId}`,
-        description: 'A fun and engaging class for young learners focused on basic literacy, numeracy, and social skills development.',
-        teacher: 'Jane Smith',
-        schedule: 'Mon-Fri',
-        time: '9:00 AM - 12:00 PM',
-        location: 'Room 102',
+        description:
+          "A fun and engaging class for young learners focused on basic literacy, numeracy, and social skills development.",
+        teacher: "Jane Smith",
+        schedule: "Mon-Fri",
+        time: "9:00 AM - 12:00 PM",
+        location: "Room 102",
         studentsCount: 15,
         capacity: 20,
-        nurseryId: '1',
-        nurseryName: 'Sunshine Nursery',
-        subjects: ['Literacy', 'Numeracy', 'Art', 'Physical Development'],
-        createdAt: '2023-09-01T10:00:00Z',
-        updatedAt: '2023-09-15T14:30:00Z'
+        nurseryId: "1",
+        nurseryName: "Sunshine Nursery",
+        subjects: ["Literacy", "Numeracy", "Art", "Physical Development"],
+        createdAt: "2023-09-01T10:00:00Z",
+        updatedAt: "2023-09-15T14:30:00Z"
       });
       setLoading(false);
     }, 1000);
-    
+
     return () => clearTimeout(timer);
   }, [classId]);
 
   const getInitials = (name: string) => {
     return name
-      .split(' ')
-      .map(part => part[0])
-      .join('')
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
       .toUpperCase();
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
     });
   };
 
@@ -107,11 +117,16 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
           </AvatarFallback>
         </Avatar>
         <div>
-          <h1 className="text-base font-semibold leading-tight">{classDetails.name}</h1>
+          <h1 className="text-base font-semibold leading-tight">
+            {classDetails.name}
+          </h1>
           <div className="flex mt-1 gap-1.5">
-            <Badge variant="outline" className="text-xs px-1.5 h-5">Class</Badge>
+            <Badge variant="outline" className="text-xs px-1.5 h-5">
+              Class
+            </Badge>
             <Badge className="bg-primary/20 text-primary text-xs px-1.5 h-5">
-              <Users className="w-3 h-3 mr-1" /> {classDetails.studentsCount} Students
+              <Users className="w-3 h-3 mr-1" /> {classDetails.studentsCount}{" "}
+              Students
             </Badge>
           </div>
         </div>
@@ -166,16 +181,16 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
             {/* Lead Teacher */}
             <div className="flex items-center gap-3 py-1.5">
               <User className="w-4 h-4 text-primary/80" />
-              <span className="text-sm text-muted-foreground">Lead Teacher:</span>
+              <span className="text-sm text-muted-foreground">
+                Lead Teacher:
+              </span>
               <Button
                 variant="ghost"
                 size="sm"
                 className="ml-auto h-7 px-2.5 text-sm gap-1"
                 asChild
               >
-                <Link href={`/dashboard/staff/1`}>
-                  {classDetails.teacher}
-                </Link>
+                <Link href={`/dashboard/staff/1`}>{classDetails.teacher}</Link>
               </Button>
             </div>
 
@@ -183,13 +198,15 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
             <div className="py-1.5">
               <div className="flex items-center gap-3 mb-2">
                 <Book className="w-4 h-4 text-primary/80" />
-                <span className="text-sm text-muted-foreground">Learning Areas:</span>
+                <span className="text-sm text-muted-foreground">
+                  Learning Areas:
+                </span>
               </div>
-              
+
               <div className="flex flex-wrap gap-1.5 mt-1 ml-7">
                 {classDetails.subjects.map((subject, index) => (
-                  <Badge 
-                    key={index} 
+                  <Badge
+                    key={index}
                     variant="outline"
                     className="bg-background"
                   >
@@ -217,12 +234,7 @@ export function ClassOverview({ classId }: ClassOverviewProps) {
 
             {/* Edit Button */}
             <div className="flex justify-center pt-2 mt-4">
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="w-full"
-                asChild
-              >
+              <Button variant="outline" size="sm" className="w-full" asChild>
                 <Link href={`/dashboard/classes/${classId}/edit`}>
                   <Edit className="w-3.5 h-3.5 mr-1" /> Edit Class Details
                 </Link>

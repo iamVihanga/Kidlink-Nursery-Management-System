@@ -6,12 +6,12 @@ import Link from "next/link";
 import { Badge } from "@/types/schema-types";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Edit, Eye, MoreHorizontal, Trash2 } from "lucide-react";
-import { 
+import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger 
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
 interface BadgesGridProps {
@@ -22,19 +22,22 @@ export function BadgesGrid({ data }: BadgesGridProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {data.map((badge) => (
-        <Card key={badge.id} className="border-none shadow-sm bg-background flex flex-col items-center p-4 hover:shadow-md transition-shadow">
-          <Link 
-            href={`/dashboard/badges/${badge.id}`} 
+        <Card
+          key={badge.id}
+          className="border-none shadow-sm bg-background flex flex-col items-center p-4 hover:shadow-md transition-shadow"
+        >
+          <Link
+            href={`/dashboard/badges/${badge.id}`}
             className="w-full flex justify-center"
           >
             <div className="relative w-32 h-32 mb-3">
               {badge.imageUrl ? (
                 <div className="w-full h-full rounded-full overflow-hidden border-4 border-primary/20 hover:border-primary/40 transition-colors shadow-sm">
-                  <Image 
-                    src={badge.imageUrl} 
-                    alt={badge.name} 
-                    fill 
-                    className="object-cover" 
+                  <Image
+                    src={badge.imageUrl}
+                    alt={badge.name}
+                    fill
+                    className="object-cover"
                   />
                 </div>
               ) : (
@@ -46,9 +49,9 @@ export function BadgesGrid({ data }: BadgesGridProps) {
               )}
             </div>
           </Link>
-          
+
           <CardContent className="p-0 text-center w-full">
-            <Link 
+            <Link
               href={`/dashboard/badges/${badge.id}`}
               className="text-lg font-medium hover:text-primary hover:underline transition-colors line-clamp-1 mt-2"
             >
@@ -58,7 +61,7 @@ export function BadgesGrid({ data }: BadgesGridProps) {
               {badge.description || "No description available"}
             </p>
           </CardContent>
-          
+
           <CardFooter className="flex justify-between w-full pt-4 mt-2 border-t">
             <div className="text-xs text-muted-foreground">
               {new Date(badge.createdAt).toLocaleDateString()}

@@ -10,18 +10,21 @@ interface BadgesTableActionsProps {
   onViewChange: (view: "grid" | "list") => void;
 }
 
-export function BadgesTableActions({ currentView, onViewChange }: BadgesTableActionsProps) {
+export function BadgesTableActions({
+  currentView,
+  onViewChange
+}: BadgesTableActionsProps) {
   const {
     // Search
     searchQuery,
-    setSearchQuery,
+    setSearchQuery
 
     // Pagination
-    setPage,
+    // setPage,
 
     // Reset
-    resetFilters,
-    isAnyFilterActive
+    // resetFilters,
+    // isAnyFilterActive
   } = useBadgesTableFilters();
 
   return (
