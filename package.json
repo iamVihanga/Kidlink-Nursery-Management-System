@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start -p 4000",
+    "build": "NODE_OPTIONS='--max-old-space-size=8000' next build",
+    "start": "next start",
     "lint": "next lint",
     "prisma:generate": "prisma generate --schema src/server/prisma/schema.prisma",
     "prisma:studio": "prisma studio --schema src/server/prisma/schema.prisma"
