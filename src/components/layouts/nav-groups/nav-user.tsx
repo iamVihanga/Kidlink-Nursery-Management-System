@@ -25,6 +25,7 @@ import {
   useSidebar
 } from "@/components/ui/sidebar";
 import { SignoutButton } from "@/features/auth/components/signout-button";
+import Link from "next/link";
 
 export function NavUser({
   user
@@ -94,9 +95,11 @@ export function NavUser({
                 <CreditCard />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/notifications" className="cursor-pointer flex items-center">
+                  <Bell className="mr-2 h-4 w-4" />
+                  Notifications
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
