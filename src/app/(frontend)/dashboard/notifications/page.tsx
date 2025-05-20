@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { 
-  Loader, Bell, Filter, Search, Check, X, ChevronRight, 
-  Plus, Users, Tag
+  Loader, Bell, Filter, Search, Plus
 } from "lucide-react";
 
 import { authClient } from "@/lib/auth-client";
@@ -16,22 +15,6 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,9 +22,9 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
-import { toast } from "sonner";
 import { NotificationSchema } from "@/types/schema-types";
 import { z } from "zod";
+import { AddNotificationModal } from "@/features/notifications/components/add-notification-modal";
 
 // Define the Notification type based on the schema
 type Notification = z.infer<typeof NotificationSchema>;
@@ -56,18 +39,11 @@ export default function NotificationsPage() {
   const { data: userData } = authClient.useSession();
   const isAdmin = userData?.user?.role === "ADMIN";
 
-  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = React.useState("");
   const [filterTag, setFilterTag] = React.useState<string | null>(null);
   
-  // State for new notification dialog
-  const [isNewNotificationOpen, setIsNewNotificationOpen] = useState(false);
-  const [newNotificationData, setNewNotificationData] = useState({
-    title: "",
-    message: "",
-    selectedTags: [] as string[],
-    selectedRecipients: [] as string[]
-  });
+  // State for add notification modal
+  const [isAddNotificationOpen, setIsAddNotificationOpen] = useState(false);
   
   // Fetch notifications
   const {
@@ -80,7 +56,6 @@ export default function NotificationsPage() {
       if (!activeOrgData?.id) return [];
       
       try {
-        // The API returns an array directly according to the handler
         const response = await client.api.notifications.$get();
         const data = await response.json();
         return data;
@@ -103,7 +78,6 @@ export default function NotificationsPage() {
     queryKey: ["notification-tags"],
     queryFn: async () => {
       try {
-        // Based on your API, this returns tags directly
         const response = await client.api.notifications.tag.$get();
         const data = await response.json();
         return data;
@@ -117,93 +91,6 @@ export default function NotificationsPage() {
 
   // Ensure tags is always an array
   const tags = Array.isArray(tagsResponse) ? tagsResponse : [];
-
-  // Fetch all users (for admin to select recipients)
-  const {
-    data: users = [],
-    isPending: usersLoading
-  } = useQuery({
-    queryKey: ["users", activeOrgData?.id],
-    queryFn: async () => {
-      if (!activeOrgData?.id || !isAdmin) return [];
-      
-      try {
-        // Assuming you have an API endpoint to get users
-        const response = await client.api.users.$get({
-          query: { organizationId: activeOrgData.id }
-        });
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        return [];
-      }
-    },
-    enabled: !!activeOrgData?.id && isAdmin
-  });
-  
-  // Send notification mutation
-  const sendNotificationMutation = useMutation({
-    mutationFn: async (data: {
-      title: string;
-      message: string;
-      recipients: string[];
-      tags: string[];
-    }) => {
-      return client.api.notifications.$post({
-        json: {
-          title: data.title,
-          message: data.message,
-          recipients: data.recipients,
-          tags: data.tags
-        }
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
-      toast.success("Notification sent successfully");
-      setIsNewNotificationOpen(false);
-      setNewNotificationData({
-        title: "",
-        message: "",
-        selectedTags: [],
-        selectedRecipients: []
-      });
-    },
-    onError: () => {
-      toast.error("Failed to send notification");
-    }
-  });
-
-  // Function to handle sending a new notification
-  const handleSendNotification = () => {
-    if (!newNotificationData.title.trim()) {
-      toast.error("Title is required");
-      return;
-    }
-    
-    if (!newNotificationData.message.trim()) {
-      toast.error("Message is required");
-      return;
-    }
-    
-    if (newNotificationData.selectedTags.length === 0) {
-      toast.error("At least one tag is required");
-      return;
-    }
-    
-    if (newNotificationData.selectedRecipients.length === 0) {
-      toast.error("At least one recipient is required");
-      return;
-    }
-    
-    sendNotificationMutation.mutate({
-      title: newNotificationData.title,
-      message: newNotificationData.message,
-      recipients: newNotificationData.selectedRecipients,
-      tags: newNotificationData.selectedTags
-    });
-  };
 
   const filteredNotifications = notifications.filter(notification => {
     const matchesSearch = 
@@ -283,7 +170,7 @@ export default function NotificationsPage() {
               <div className="flex gap-2">
                 <Button
                   size="sm" 
-                  onClick={() => setIsNewNotificationOpen(true)}
+                  onClick={() => setIsAddNotificationOpen(true)}
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   New Notification
@@ -401,141 +288,14 @@ export default function NotificationsPage() {
         </Card>
       </div>
 
-      {/* New Notification Dialog */}
-      <Dialog open={isNewNotificationOpen} onOpenChange={setIsNewNotificationOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Create New Notification</DialogTitle>
-            <DialogDescription>
-              Create a notification to send to users in your organization.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <label htmlFor="title" className="text-sm font-medium">Title</label>
-              <Input 
-                id="title" 
-                value={newNotificationData.title}
-                onChange={(e) => setNewNotificationData({
-                  ...newNotificationData,
-                  title: e.target.value
-                })}
-                placeholder="Notification title"
-              />
-            </div>
-            
-            <div className="grid gap-2">
-              <label htmlFor="message" className="text-sm font-medium">Message</label>
-              <Textarea 
-                id="message" 
-                value={newNotificationData.message}
-                onChange={(e) => setNewNotificationData({
-                  ...newNotificationData,
-                  message: e.target.value
-                })}
-                placeholder="Enter notification message"
-                rows={3}
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <label className="text-sm font-medium flex items-center gap-2">
-                <Tag className="h-4 w-4" /> Tags
-              </label>
-              <Select 
-                value={newNotificationData.selectedTags.join(',')}
-                onValueChange={(value) => {
-                  setNewNotificationData({
-                    ...newNotificationData,
-                    selectedTags: value ? value.split(',') : []
-                  });
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select tags" />
-                </SelectTrigger>
-                <SelectContent>
-                    {tagsLoading ? (
-                        <div className="flex items-center justify-center p-2">
-                        <Loader className="h-4 w-4 mr-2 animate-spin" />
-                        Loading tags...
-                        </div>
-                    ) : (
-                        // Ensure tags is an array before mapping
-                        Array.isArray(tags) ? 
-                        tags.map(tag => (
-                            <SelectItem key={tag.id} value={tag.id}>
-                            {tag.name}
-                            </SelectItem>
-                        ))
-                        : (
-                        <SelectItem disabled value="">
-                            No tags available
-                        </SelectItem>
-                        )
-                    )}
-                    </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="grid gap-2">
-              <label className="text-sm font-medium flex items-center gap-2">
-                <Users className="h-4 w-4" /> Recipients
-              </label>
-              <Select 
-                value={newNotificationData.selectedRecipients.join(',')}
-                onValueChange={(value) => {
-                  setNewNotificationData({
-                    ...newNotificationData,
-                    selectedRecipients: value ? value.split(',') : []
-                  });
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select recipients" />
-                </SelectTrigger>
-                <SelectContent>
-                  {usersLoading ? (
-                    <div className="flex items-center justify-center p-2">
-                      <Loader className="h-4 w-4 mr-2 animate-spin" />
-                      Loading users...
-                    </div>
-                  ) : (
-                    users.map(user => (
-                      <SelectItem key={user.id} value={user.id}>
-                        {user.name || user.email}
-                      </SelectItem>
-                    ))
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          
-          <DialogFooter>
-            <Button 
-              variant="outline" 
-              onClick={() => setIsNewNotificationOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleSendNotification}
-              disabled={sendNotificationMutation.isPending}
-            >
-              {sendNotificationMutation.isPending ? (
-                <>
-                  <Loader className="mr-2 h-4 w-4 animate-spin" />
-                  Sending...
-                </>
-              ) : (
-                <>Send Notification</>
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Add Notification Modal - Only rendered when needed */}
+      {isAdmin && (
+        <AddNotificationModal 
+          open={isAddNotificationOpen}
+          onOpenChange={setIsAddNotificationOpen}
+          organizationId={activeOrgData?.id}
+        />
+      )}
     </PageContainer>
   );
 }
