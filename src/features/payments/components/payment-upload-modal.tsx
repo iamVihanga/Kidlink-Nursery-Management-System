@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader, FileUp, Calendar, Info, Check } from "lucide-react";
-
+import { Loader, Calendar } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { authClient } from "@/lib/auth-client";
 import { client } from "@/lib/rpc";
+
 import {
   Dialog,
   DialogContent,
@@ -26,295 +27,274 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 
+// These should match the status values in your comment in schema.prisma
 enum PaymentStatus {
-  PENDING = "PENDING",
-  APPROVED = "APPROVED",
-  REJECTED = "REJECTED"
+  PENDING = "pending",
+  COMPLETED = "completed",
+  FAILED = "failed"
 }
 
-enum PaymentType {
-  MONTHLY_FEE = "MONTHLY_FEE",
-  REGISTRATION = "REGISTRATION",
-  SPECIAL_ACTIVITY = "SPECIAL_ACTIVITY",
-  OTHER = "OTHER"
+// These should match the payment methods in your comment in schema.prisma
+enum PaymentMethod {
+  CREDIT_CARD = "credit_card",
+  BANK_TRANSFER = "bank_transfer",
+  CASH = "cash",
+  OTHER = "other"
 }
 
 interface PaymentUploadModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  userId?: string;
-  organizationId?: string;
+  onSubmit?: (payment: any) => void;
 }
 
 export function PaymentUploadModal({
   open,
   onOpenChange,
-  userId,
-  organizationId
+  onSubmit
 }: PaymentUploadModalProps) {
-  const queryClient = useQueryClient();
-
-  const [paymentData, setPaymentData] = useState({
+  const { data: session } = authClient.useSession();
+  const { data: activeOrg } = authClient.useActiveOrganization();
+  
+  const [payment, setPayment] = useState({
     amount: "",
+    currency: "USD",
+    status: PaymentStatus.PENDING,
+    paymentMethod: PaymentMethod.BANK_TRANSFER,
     description: "",
-    paymentType: PaymentType.MONTHLY_FEE,
     paymentDate: new Date().toISOString().split("T")[0],
-    paymentSlipUrl: "",
-    childId: "",
-    parentId: userId || "",
-    status: PaymentStatus.PENDING
+    memberId: "",
+    organizationId: ""
   });
-  const [uploadingFile, setUploadingFile] = useState(false);
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Get all children related to the parent
-  const { data: childrenData, isPending: childrenLoading } = useQuery({
-    queryKey: ["children", userId],
+  // Fetch user's parent ID for the current organization
+  const { data: parentData, isError: isParentError } = useQuery({
+    queryKey: ["parent", session?.user?.id, activeOrg?.id],
     queryFn: async () => {
-      if (!userId) return { children: [] };
-
+      if (!session?.user?.id || !activeOrg?.id) {
+        return { parents: [] };
+      }
+      
       try {
-        const response = await client.api.children.$get({
-          query: { parentId: userId }
+        // Use the parents endpoint instead of members
+        const response = await client.api.parents.$get({
+          query: { 
+            search: session.user.id, // Search for the current user
+            limit: "1"              // We only need one result
+          }
         });
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch parent data");
+        }
+        
         const data = await response.json();
         return data;
       } catch (error) {
-        console.error("Error fetching children:", error);
-        return { children: [] };
+        console.error("Error fetching parent:", error);
+        return { parents: [] };
       }
     },
-    enabled: !!userId && !!organizationId && open
-  });
-
-  // Upload payment slip file (mock implementation)
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    try {
-      setUploadingFile(true);
-
-      // Example file upload implementation
-      // In a real implementation, you would upload to your storage service
-      // For now we're just simulating the process
-
-      // Mock upload delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Mock successful upload with fake URL
-      const fakeUploadedUrl = `https://storage.example.com/payments/${Date.now()}-${file.name}`;
-
-      setPaymentData({
-        ...paymentData,
-        paymentSlipUrl: fakeUploadedUrl
-      });
-
-      toast.success("Payment slip uploaded successfully");
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      toast.error("Failed to upload payment slip");
-    } finally {
-      setUploadingFile(false);
+    enabled: !!session?.user?.id && !!activeOrg?.id,
+    onSuccess: (data) => {
+      // Get the first parent that matches the user
+      const parent = data.parents?.[0];
+      if (parent?.id) {
+        setPayment(prev => ({
+          ...prev,
+          // Use parentId instead of memberId if that's what your schema expects
+          // If your schema expects memberId, just use parent.id here
+          memberId: parent.id,
+          organizationId: activeOrg?.id || ""
+        }));
+      }
+      console.log("Parent API response:", data);
     }
-  };
+  });
 
   // Create payment mutation
   const createPaymentMutation = useMutation({
-    mutationFn: async (data: typeof paymentData) => {
-      return client.api.payments.$post({
-        json: data
+    mutationFn: async (data: typeof payment) => {
+      const response = await client.api.payments.$post({
+        json: {
+          amount: parseFloat(data.amount),
+          currency: data.currency,
+          status: data.status,
+          paymentMethod: data.paymentMethod,
+          description: data.description,
+          paymentDate: new Date(data.paymentDate),
+          memberId: data.memberId,
+          organizationId: data.organizationId
+        }
       });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to create payment");
+      }
+      
+      return response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["payments"] });
-      toast.success("Payment added successfully");
-      onOpenChange(false);
-      resetPaymentForm();
+    onSuccess: (data) => {
+      toast.success("Payment submitted successfully");
+      
+      if (onSubmit) {
+        onSubmit(data);
+      }
+      
+      handleClose();
     },
-    onError: () => {
-      toast.error("Failed to add payment");
+    onError: (error) => {
+      console.error("Payment error:", error);
+      toast.error("Failed to add payment: " + (error instanceof Error ? error.message : "Unknown error"));
+      setIsSubmitting(false);
     }
   });
 
-  const resetPaymentForm = () => {
-    setPaymentData({
-      amount: "",
-      description: "",
-      paymentType: PaymentType.MONTHLY_FEE,
-      paymentDate: new Date().toISOString().split("T")[0],
-      paymentSlipUrl: "",
-      childId: "",
-      parentId: userId || "",
-      status: PaymentStatus.PENDING
-    });
-  };
-
-  const handleSubmitPayment = () => {
-    // Validate form
-    if (!paymentData.amount || parseFloat(paymentData.amount) <= 0) {
+  const handleSubmit = () => {
+    // Form validation
+    if (!payment.amount || parseFloat(payment.amount) <= 0) {
       toast.error("Please enter a valid amount");
       return;
     }
 
-    if (!paymentData.childId) {
-      toast.error("Please select a child");
+    if (!payment.currency) {
+      toast.error("Please select a currency");
       return;
     }
 
-    if (!paymentData.paymentSlipUrl) {
-      toast.error("Please upload a payment slip");
+    if (!payment.memberId) {
+      toast.error("Could not identify your parent record in this organization");
       return;
     }
 
-    // Submit the payment
-    createPaymentMutation.mutate(paymentData);
+    if (!payment.organizationId) {
+      toast.error("Could not identify the organization");
+      return;
+    }
+
+    setIsSubmitting(true);
+    createPaymentMutation.mutate(payment);
   };
 
   const handleClose = () => {
     onOpenChange(false);
     // Reset form with a slight delay to avoid visual glitches
-    setTimeout(resetPaymentForm, 200);
+    setTimeout(() => {
+      setPayment({
+        amount: "",
+        currency: "USD",
+        status: PaymentStatus.PENDING,
+        paymentMethod: PaymentMethod.BANK_TRANSFER,
+        description: "",
+        paymentDate: new Date().toISOString().split("T")[0],
+        // Use the parent ID from the query if available
+        memberId: parentData?.parents?.[0]?.id || "",
+        organizationId: activeOrg?.id || ""
+      });
+    }, 200);
   };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Upload Payment</DialogTitle>
+          <DialogTitle>Add Payment</DialogTitle>
           <DialogDescription>
-            Upload proof of payment for tuition or other fees.
+            Enter the details of your payment.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="amount">Amount ($)</Label>
+              <Label htmlFor="payment-amount">Amount*</Label>
               <Input
-                id="amount"
+                id="payment-amount"
                 type="number"
                 placeholder="0.00"
-                value={paymentData.amount}
-                onChange={(e) => setPaymentData({ ...paymentData, amount: e.target.value })}
+                value={payment.amount}
+                onChange={(e) => setPayment({ 
+                  ...payment, 
+                  amount: e.target.value 
+                })}
+                autoFocus
               />
             </div>
-
+            
+            <div className="grid gap-2">
+              <Label htmlFor="payment-currency">Currency*</Label>
+              <Select
+                value={payment.currency}
+                onValueChange={(value) => setPayment({ 
+                  ...payment, 
+                  currency: value 
+                })}
+              >
+                <SelectTrigger id="payment-currency">
+                  <SelectValue placeholder="Select currency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="USD">USD</SelectItem>
+                  <SelectItem value="EUR">EUR</SelectItem>
+                  <SelectItem value="GBP">GBP</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="payment-method">Payment Method</Label>
+              <Select
+                value={payment.paymentMethod}
+                onValueChange={(value) => setPayment({ 
+                  ...payment, 
+                  paymentMethod: value 
+                })}
+              >
+                <SelectTrigger id="payment-method">
+                  <SelectValue placeholder="Select method" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={PaymentMethod.BANK_TRANSFER}>Bank Transfer</SelectItem>
+                  <SelectItem value={PaymentMethod.CREDIT_CARD}>Credit Card</SelectItem>
+                  <SelectItem value={PaymentMethod.CASH}>Cash</SelectItem>
+                  <SelectItem value={PaymentMethod.OTHER}>Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
             <div className="grid gap-2">
               <Label htmlFor="payment-date">Payment Date</Label>
               <div className="relative">
                 <Input
                   id="payment-date"
                   type="date"
-                  value={paymentData.paymentDate}
-                  onChange={(e) => setPaymentData({ ...paymentData, paymentDate: e.target.value })}
+                  value={payment.paymentDate}
+                  onChange={(e) => setPayment({ 
+                    ...payment, 
+                    paymentDate: e.target.value 
+                  })}
                 />
                 <Calendar className="h-4 w-4 absolute right-3 top-3 text-muted-foreground" />
               </div>
             </div>
           </div>
-
+          
           <div className="grid gap-2">
-            <Label htmlFor="payment-type">Payment Type</Label>
-            <Select
-              value={paymentData.paymentType}
-              onValueChange={(value) => setPaymentData({ ...paymentData, paymentType: value as PaymentType })}
-            >
-              <SelectTrigger id="payment-type">
-                <SelectValue placeholder="Select payment type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={PaymentType.MONTHLY_FEE}>Monthly Fee</SelectItem>
-                <SelectItem value={PaymentType.REGISTRATION}>Registration</SelectItem>
-                <SelectItem value={PaymentType.SPECIAL_ACTIVITY}>Special Activity</SelectItem>
-                <SelectItem value={PaymentType.OTHER}>Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="child">Child</Label>
-            <Select
-              value={paymentData.childId}
-              onValueChange={(value) => setPaymentData({ ...paymentData, childId: value })}
-            >
-              <SelectTrigger id="child">
-                <SelectValue placeholder="Select child" />
-              </SelectTrigger>
-              <SelectContent>
-                {childrenLoading ? (
-                  <div className="flex items-center justify-center p-2">
-                    <Loader className="h-4 w-4 mr-2 animate-spin" />
-                    Loading children...
-                  </div>
-                ) : childrenData?.children?.length > 0 ? (
-                  childrenData.children.map((child) => (
-                    <SelectItem key={child.id} value={child.id}>
-                      {child.firstName} {child.lastName}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <div className="p-2 text-center text-muted-foreground text-sm">
-                    No children found
-                  </div>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="description">Notes</Label>
+            <Label htmlFor="payment-description">Description</Label>
             <Textarea
-              id="description"
-              placeholder="Any additional information about this payment"
-              value={paymentData.description}
-              onChange={(e) => setPaymentData({ ...paymentData, description: e.target.value })}
+              id="payment-description"
+              placeholder="Details about this payment"
+              value={payment.description}
+              onChange={(e) => setPayment({ 
+                ...payment, 
+                description: e.target.value 
+              })}
             />
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="payment-slip">Upload Receipt</Label>
-            <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                onClick={() => document.getElementById('payment-slip')?.click()}
-                disabled={uploadingFile}
-                className="w-full"
-              >
-                {uploadingFile ? (
-                  <>
-                    <Loader className="mr-2 h-4 w-4 animate-spin" />
-                    Uploading...
-                  </>
-                ) : (
-                  <>
-                    <FileUp className="mr-2 h-4 w-4" />
-                    Select File
-                  </>
-                )}
-              </Button>
-              <Input
-                id="payment-slip"
-                type="file"
-                accept="image/*,application/pdf"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-            </div>
-
-            {paymentData.paymentSlipUrl && (
-              <div className="text-sm text-muted-foreground flex items-center gap-2 mt-1">
-                <Check className="h-4 w-4 text-green-600" />
-                Receipt uploaded successfully
-              </div>
-            )}
-          </div>
-
-          <div className="bg-muted p-3 rounded-lg flex items-start gap-2 text-sm">
-            <Info className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-            <p>
-              Please make sure the payment receipt is clear and includes all relevant details.
-              The school administration will review your submission.
-            </p>
           </div>
         </div>
 
@@ -322,14 +302,15 @@ export function PaymentUploadModal({
           <Button
             variant="outline"
             onClick={handleClose}
+            disabled={isSubmitting}
           >
             Cancel
           </Button>
           <Button
-            onClick={handleSubmitPayment}
-            disabled={createPaymentMutation.isPending}
+            onClick={handleSubmit}
+            disabled={isSubmitting}
           >
-            {createPaymentMutation.isPending ? (
+            {isSubmitting ? (
               <>
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
                 Submitting...
