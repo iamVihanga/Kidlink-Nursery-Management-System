@@ -286,6 +286,7 @@ model Payment {
   paymentDate   DateTime @default(now())
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  receiptURL    String
 
   // Relations
   memberId String
