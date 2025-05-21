@@ -293,10 +293,6 @@ export default function PaymentsPage() {
         
         <div className="flex justify-between items-center pt-4 text-sm text-muted-foreground">
           <div>Showing {payments.length} of {mockPayments.length} payments</div>
-          <Button variant="outline" size="sm">
-            <Download className="h-3.5 w-3.5 mr-1" />
-            Export
-          </Button>
         </div>
       </>
     );

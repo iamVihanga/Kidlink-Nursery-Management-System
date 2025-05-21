@@ -110,7 +110,6 @@ export function PaymentUploadModal({
           organizationId: activeOrg?.id || ""
         }));
       }
-      console.log("Parent API response:", data);
     }
   });
 
