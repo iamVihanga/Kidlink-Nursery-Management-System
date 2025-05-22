@@ -188,7 +188,8 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                         type="number" 
                         step="0.01"
                         {...field} 
-                        onChange={e => field.onChange(parseFloat(e.target.value))}
+                        value={field.value ?? ''}
+                        onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
                         placeholder="0.00" 
                       />
                     </FormControl>
