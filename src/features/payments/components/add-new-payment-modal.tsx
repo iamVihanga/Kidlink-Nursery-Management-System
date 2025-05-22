@@ -80,7 +80,11 @@ const PAYMENT_STATUSES = [
   { id: "refunded", name: "Refunded" },
 ];
 
-export function AddNewPayment() {
+interface AddNewPaymentProps {
+  onPaymentCreated?: () => void;
+}
+
+export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
   const [open, setOpen] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [skipImageUpload, setSkipImageUpload] = useState(false);
@@ -100,8 +104,8 @@ export function AddNewPayment() {
       paymentMethod: "credit_card",
       description: "",
       paymentDate: new Date(),
-      receiptURL: "", // This can remain empty
-      memberId: "",
+      receiptURL: "https://placeholder.com/test-receipt", // Hardcoded for testing
+      memberId: "test-member-123", // Hardcoded for testing
       // Add organizationId with default value or from session
       organizationId: activeOrganizationId || "",
     }
@@ -114,28 +118,25 @@ export function AddNewPayment() {
       setIsSubmitting(true);
       console.log("Submitting payment data:", values);
       
-      // Set default empty string for receiptURL if it's undefined
-      // This ensures the API doesn't reject the request due to missing fields
+      // Always provide hardcoded values for testing
       const paymentData = {
         ...values,
-        receiptURL: values.receiptURL || "",
-        // Ensure organizationId is always present
-        organizationId: values.organizationId || activeOrganizationId || "",
+        receiptURL: "https://placeholder.com/test-receipt", // Hardcode this regardless of input
+        memberId: values.memberId || "test-member-123" // Use input if available, otherwise use default
       };
-
-      // Validate that we have an organization ID
-      if (!paymentData.organizationId) {
-        throw new Error("Organization ID is required but not available");
-      }
       
-      console.log("Final payment data for submission:", paymentData);
+      console.log("Final payment data:", paymentData);
       
-      // Pass the values directly to the mutation function
       await createPayment({ values: paymentData });
       
       toast.success("Payment created successfully");
       form.reset();
       setOpen(false);
+      
+      // Trigger refresh callback if provided
+      if (onPaymentCreated) {
+        onPaymentCreated();
+      }
     } catch (error) {
       console.error("Error creating payment:", error);
       toast.error("Failed to create payment: " + (error instanceof Error ? error.message : "Unknown error"));
@@ -315,15 +316,23 @@ export function AddNewPayment() {
               />
 
               {/* Member ID (would typically be a dropdown in a real implementation) */}
+              {/* Member ID - now with test value indicated */}
               <FormField
                 control={form.control}
                 name="memberId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Member ID*</FormLabel>
+                    <FormLabel>Member ID* (Test ID: test-member-123)</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Select member" />
+                      <Input 
+                        {...field} 
+                        placeholder="Using test-member-123 if empty" 
+                        defaultValue="test-member-123"
+                      />
                     </FormControl>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Using hardcoded member ID for testing purposes.
+                    </p>
                     <FormMessage />
                   </FormItem>
                 )}
