@@ -6,7 +6,7 @@ import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
 import { serverAuthMiddleware } from "@/server/middlewares/auth-middleware";
 import {
   NotificationSchema,
-  NotificationTagSchema
+  NotificationTagSchema,
 } from "@/types/schema-types/index";
 import { sendNotificationSchema } from "@/features/notifications/schemas/send-notification";
 import { createNotificationTag } from "@/features/notifications/schemas/create-tag";
@@ -31,8 +31,8 @@ export const get = createRoute({
     [HttpStatusCodes.FORBIDDEN]: jsonContent(
       z.object({ message: z.string() }),
       "Access Forbidden"
-    )
-  }
+    ),
+  },
 });
 
 // ------------ Send Notification ------------
@@ -45,7 +45,7 @@ export const send = createRoute({
     body: jsonContentRequired(
       sendNotificationSchema,
       "The notification information to send"
-    )
+    ),
   },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
@@ -59,8 +59,8 @@ export const send = createRoute({
     [HttpStatusCodes.FORBIDDEN]: jsonContent(
       z.object({ message: z.string() }),
       "Access Forbidden"
-    )
-  }
+    ),
+  },
 });
 
 // ------------ Get Tags ------------
@@ -81,8 +81,8 @@ export const getTags = createRoute({
     [HttpStatusCodes.FORBIDDEN]: jsonContent(
       z.object({ message: z.string() }),
       "Access Forbidden"
-    )
-  }
+    ),
+  },
 });
 
 // ------------ Create Tag ------------
@@ -95,7 +95,7 @@ export const createTag = createRoute({
     body: jsonContentRequired(
       createNotificationTag,
       "The notification tag information to create"
-    )
+    ),
   },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
@@ -109,8 +109,8 @@ export const createTag = createRoute({
     [HttpStatusCodes.FORBIDDEN]: jsonContent(
       z.object({ message: z.string() }),
       "Access Forbidden"
-    )
-  }
+    ),
+  },
 });
 
 export type GetRoute = typeof get;

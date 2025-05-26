@@ -13,7 +13,7 @@ export const useGetChildFeedbacks = (params: FilterParams) => {
     queryKey: ["feedbacks", { childId }],
     queryFn: async () => {
       const response = await client.api.children[":id"].feedbacks.$get({
-        param: { id: childId }
+        param: { id: childId },
       });
 
       if (!response.ok) {
@@ -25,7 +25,7 @@ export const useGetChildFeedbacks = (params: FilterParams) => {
       const data = await response.json();
 
       return data;
-    }
+    },
   });
 
   return query;

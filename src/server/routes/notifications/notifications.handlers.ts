@@ -5,7 +5,7 @@ import type {
   GetRoute,
   SendRoute,
   CreateTagRoute,
-  GetTagsRoute
+  GetTagsRoute,
 } from "@/server/routes/notifications/notifications.routes";
 import { AppRouteHandler } from "@/types/server";
 
@@ -23,10 +23,10 @@ export const get: AppRouteHandler<GetRoute> = async (c) => {
     where: {
       recipients: {
         some: {
-          recipientId: user.id
-        }
-      }
-    }
+          recipientId: user.id,
+        },
+      },
+    },
   });
 
   return c.json(notifications, HttpStatusCodes.OK);
@@ -48,24 +48,28 @@ export const send: AppRouteHandler<SendRoute> = async (c) => {
   const notification = await prisma.notification.create({
     data: {
       content: body.content,
-      senderId: user.id
-    }
+      senderId: user.id,
+    },
   });
 
   // Assign tags to the notification
   await prisma.notificationTag_Notification.createMany({
     data: body.tags.map((tagId: string) => ({
       notificationId: notification.id,
-      notificationTagId: tagId
-    }))
+      notificationTagId: tagId,
+    })),
   });
+
+  console.log("📨 Notification created:", notification);
+  console.log("👥 Recipients:", body.recipients);
+  console.log("🏷️ Tags:", body.tags);
 
   // Send the notification to each recipient
   await prisma.notificationRecipient.createMany({
     data: body.recipients.map((recipientId: string) => ({
       notificationId: notification.id,
-      recipientId
-    }))
+      recipientId,
+    })),
   });
 
   return c.json(notification, HttpStatusCodes.OK);
@@ -101,7 +105,7 @@ export const createTag: AppRouteHandler<CreateTagRoute> = async (c) => {
   const body = c.req.valid("json");
 
   const createTag = await prisma.notificationTag.create({
-    data: { name: body.name }
+    data: { name: body.name },
   });
 
   return c.json(createTag, HttpStatusCodes.OK);
