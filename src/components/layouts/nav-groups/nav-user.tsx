@@ -25,6 +25,7 @@ import {
   useSidebar
 } from "@/components/ui/sidebar";
 import { SignoutButton } from "@/features/auth/components/signout-button";
+import Link from "next/link";
 
 export function NavUser({
   user
@@ -78,25 +79,29 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
+            {/* <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Sparkles />
                 Upgrade to Pro
               </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+            </DropdownMenuGroup> */}
+            {/* <DropdownMenuSeparator /> */}
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+              {/* <DropdownMenuItem asChild>
+                <Link href="/dashboard/billing" className="cursor-pointer flex items-center">
+                  <CreditCard className="mr-2 h-4 w-4" />
+                  Billing
+                </Link>
+              </DropdownMenuItem> */}
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/notifications" className="cursor-pointer flex items-center">
+                  <Bell className="mr-2 h-4 w-4" />
+                  Notifications
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

@@ -120,7 +120,8 @@ model Member {
   createdAt       DateTime
   teachingClasses Class[]
   ChildFeedback   ChildFeedback[]
-  payments        Payment[] // Add this relation to Member model
+  payments        Payment[]
+  lessonPlans     LessonPlan[]
 
   @@map("member")
 }
@@ -198,6 +199,7 @@ model Class {
   teacherId      String
   teacher        Member       @relation(fields: [teacherId], references: [id])
   children       ChildClass[]
+  lessonPlans    LessonPlan[]
 
   @@map("class")
 }
@@ -276,14 +278,15 @@ model ChildFeedback {
 // Payment model for tracking payments from members to organizations
 model Payment {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  amount        Float
-  currency      String
-  status        String // e.g., "pending", "completed", "failed"
+  amount        Float?
+  currency      String?
+  status        String? // e.g., "pending", "completed", "failed"
   paymentMethod String? // e.g., "credit_card", "bank_transfer"
   description   String?
   paymentDate   DateTime @default(now())
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  receiptURL    String?
 
   // Relations
   memberId String
@@ -351,4 +354,22 @@ model NotificationRecipient {
 
   @@unique([notificationId, recipientId])
   @@map("notificationRecipient")
+}
+
+model LessonPlan {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  description    String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // Relation to the teacher who created it
+  teacherId      String
+  teacher        Member   @relation(fields: [teacherId], references: [id])
+  
+  // Relation to the class it belongs to
+  classId        String   @db.ObjectId
+  class          Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@map("lessonPlan")
 }

@@ -5,7 +5,8 @@ export const sendNotificationSchema = NotificationSchema.omit({
   senderId: true,
   createdAt: true,
   updatedAt: true,
-  id: true
+  id: true,
+  read: true
 }).extend({
   recipients: z
     .array(z.string())

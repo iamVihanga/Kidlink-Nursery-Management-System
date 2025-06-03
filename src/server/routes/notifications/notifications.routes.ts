@@ -19,6 +19,9 @@ export const get = createRoute({
   path: "/",
   method: "get",
   middleware: [serverAuthMiddleware],
+  request: {
+    query: z.object({ filter: z.string().optional() })
+  },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       z.array(NotificationSchema),
@@ -113,7 +116,42 @@ export const createTag = createRoute({
   }
 });
 
+// ------------ Mark Notification as Read ------------
+export const markAsRead = createRoute({
+  tags,
+  path: "/read",
+  method: "patch",
+  middleware: [serverAuthMiddleware],
+  request: {
+    body: jsonContentRequired(
+      z.object({
+        id: z.string().describe("Notification ID to mark as read")
+      }),
+      "The notification to mark as read"
+    )
+  },
+  responses: {
+    [HttpStatusCodes.OK]: jsonContent(
+      z.object({ success: z.boolean() }),
+      "Operation result"
+    ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      z.object({ message: z.string() }),
+      "Unauthenticated request"
+    ),
+    [HttpStatusCodes.FORBIDDEN]: jsonContent(
+      z.object({ message: z.string() }),
+      "Access Forbidden"
+    ),
+    [HttpStatusCodes.NOT_FOUND]: jsonContent(
+      z.object({ message: z.string() }),
+      "Notification not found"
+    )
+  }
+});
+
 export type GetRoute = typeof get;
 export type SendRoute = typeof send;
 export type GetTagsRoute = typeof getTags;
 export type CreateTagRoute = typeof createTag;
+export type MarkAsReadRoute = typeof markAsRead;

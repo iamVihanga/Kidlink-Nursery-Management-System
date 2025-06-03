@@ -147,7 +147,7 @@ export function TabView() {
                     {feedbacks.feedbacks?.map((feedback) => (
                       <div
                         key={feedback.id}
-                        className="bg-background rounded border border-border/50 p-3 hover:shadow-sm transition-shadow"
+                        className="bg-yellow-50 rounded border border-border/50 p-3 hover:shadow-sm transition-shadow"
                       >
                         <div className="flex justify-between items-start">
                           <h4 className="font-medium text-sm line-clamp-1">

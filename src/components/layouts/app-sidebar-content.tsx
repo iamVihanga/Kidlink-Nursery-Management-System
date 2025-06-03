@@ -16,7 +16,8 @@ import {
   SmileIcon,
   School,
   FileBadge2Icon,
-  BadgeAlert
+  BadgeAlert,
+  CreditCard
 } from "lucide-react";
 
 import { type Session } from "@/lib/auth";
@@ -115,6 +116,12 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
         url: "/dashboard/feedbacks",
         icon: BadgeAlert,
         roles: ["owner", "admin"]
+      },
+      {
+        title: "Payments",
+        url: "/dashboard/payments",
+        icon: CreditCard,
+        roles: ["owner", "member"]
       }
       // {
       //   title: "Materials",

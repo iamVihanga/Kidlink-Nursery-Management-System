@@ -20,7 +20,7 @@ export default function RootLayout({
       className={`${fontSans.variable} ${fontHeading.variable}`}
       suppressHydrationWarning
     >
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased" suppressHydrationWarning={true}>
         <Providers>{children}</Providers>
       </body>
     </html>
