@@ -6,11 +6,12 @@ export const sendNotificationSchema = NotificationSchema.omit({
   createdAt: true,
   updatedAt: true,
   id: true,
+  read: true
 }).extend({
   recipients: z
     .array(z.string())
     .nonempty("At least one recipient is required"),
-  tags: z.array(z.string()).nonempty("At least one tag is required"),
+  tags: z.array(z.string()).nonempty("At least one tag is required")
 });
 
 export type SendNotification = z.infer<typeof sendNotificationSchema>;

@@ -2,7 +2,15 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader, School, Users, UserRound, Smile, ShieldCheck, ListTodo } from "lucide-react";
+import {
+  Loader,
+  School,
+  Users,
+  UserRound,
+  Smile,
+  ShieldCheck,
+  ListTodo
+} from "lucide-react";
 
 import { authClient } from "@/lib/auth-client";
 import { client } from "@/lib/rpc";
@@ -24,9 +32,14 @@ export default function DashboardPage() {
     queryKey: ["admins", activeOrgData?.id],
     queryFn: async () => {
       if (!activeOrgData?.id) return { admins: [], pagination: { total: 0 } };
-      
+
       try {
-        const response = await client.api.admins.$get();
+        const response = await client.api.admins.$get({
+          query: {
+            page: "1",
+            limit: "10"
+          }
+        });
         const data = await response.json();
         return data;
       } catch (error) {
@@ -42,9 +55,14 @@ export default function DashboardPage() {
     queryKey: ["teachers", activeOrgData?.id],
     queryFn: async () => {
       if (!activeOrgData?.id) return { teachers: [], pagination: { total: 0 } };
-      
+
       try {
-        const response = await client.api.teachers.$get();
+        const response = await client.api.teachers.$get({
+          query: {
+            page: "1",
+            limit: "10"
+          }
+        });
         const data = await response.json();
         return data;
       } catch (error) {
@@ -60,9 +78,14 @@ export default function DashboardPage() {
     queryKey: ["parents", activeOrgData?.id],
     queryFn: async () => {
       if (!activeOrgData?.id) return { parents: [], pagination: { total: 0 } };
-      
+
       try {
-        const response = await client.api.parents.$get();
+        const response = await client.api.parents.$get({
+          query: {
+            page: "1",
+            limit: "10"
+          }
+        });
         const data = await response.json();
         return data;
       } catch (error) {
@@ -78,9 +101,14 @@ export default function DashboardPage() {
     queryKey: ["children", activeOrgData?.id],
     queryFn: async () => {
       if (!activeOrgData?.id) return { children: [], pagination: { total: 0 } };
-      
+
       try {
-        const response = await client.api.children.$get();
+        const response = await client.api.children.$get({
+          query: {
+            page: "1",
+            limit: "10"
+          }
+        });
         const data = await response.json();
         return data;
       } catch (error) {
@@ -96,7 +124,7 @@ export default function DashboardPage() {
     queryKey: ["classes", activeOrgData?.id],
     queryFn: async () => {
       if (!activeOrgData?.id) return { classes: [], pagination: { total: 0 } };
-      
+
       try {
         const response = await client.api.classes.$get();
         const data = await response.json();
@@ -110,7 +138,13 @@ export default function DashboardPage() {
   });
 
   // Combine loading states
-  const statsLoading = adminsLoading || teachersLoading || parentsLoading || childrenLoading || classesLoading;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const statsLoading =
+    adminsLoading ||
+    teachersLoading ||
+    parentsLoading ||
+    childrenLoading ||
+    classesLoading;
 
   if (activeOrgPending) {
     return (
@@ -131,7 +165,8 @@ export default function DashboardPage() {
             Select a nursery to view dashboard
           </h1>
           <p className="text-xs mt-1 text-foreground/60">
-            You can select nursery with sidebar nursery switcher or following dropdown
+            You can select nursery with sidebar nursery switcher or following
+            dropdown
           </p>
 
           <div className="mt-4 w-96">
@@ -159,7 +194,7 @@ export default function DashboardPage() {
 
         {/* Stats summary */}
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Summary</h2>
+          <h2 className="text-xl font-semibold mb-2">Summary</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {/* Admins Card */}
             <LargeStatCard
@@ -175,7 +210,9 @@ export default function DashboardPage() {
             <LargeStatCard
               icon={<UserRound className="size-10 text-blue-500" />}
               title="Teachers"
-              value={teachersLoading ? "..." : teachersData?.pagination?.total || 0}
+              value={
+                teachersLoading ? "..." : teachersData?.pagination?.total || 0
+              }
               loading={teachersLoading}
               color="bg-blue-50 dark:bg-blue-950/30"
               link="/dashboard/teachers"
@@ -185,7 +222,9 @@ export default function DashboardPage() {
             <LargeStatCard
               icon={<Users className="size-10 text-green-500" />}
               title="Parents"
-              value={parentsLoading ? "..." : parentsData?.pagination?.total || 0}
+              value={
+                parentsLoading ? "..." : parentsData?.pagination?.total || 0
+              }
               loading={parentsLoading}
               color="bg-green-50 dark:bg-green-950/30"
               link="/dashboard/parents"
@@ -195,7 +234,9 @@ export default function DashboardPage() {
             <LargeStatCard
               icon={<Smile className="size-10 text-purple-500" />}
               title="Children"
-              value={childrenLoading ? "..." : childrenData?.pagination?.total || 0}
+              value={
+                childrenLoading ? "..." : childrenData?.pagination?.total || 0
+              }
               loading={childrenLoading}
               color="bg-purple-50 dark:bg-purple-950/30"
               link="/dashboard/children"
@@ -205,7 +246,9 @@ export default function DashboardPage() {
             <LargeStatCard
               icon={<School className="size-10 text-indigo-500" />}
               title="Classes"
-              value={classesLoading ? "..." : classesData?.pagination?.total || 0}
+              value={
+                classesLoading ? "..." : classesData?.pagination?.total || 0
+              }
               loading={classesLoading}
               color="bg-indigo-50 dark:bg-indigo-950/30"
               link="/dashboard/classes"
@@ -243,7 +286,14 @@ interface StatCardProps {
   link: string;
 }
 
-function LargeStatCard({ icon, title, value, loading, color, link }: StatCardProps) {
+function LargeStatCard({
+  icon,
+  title,
+  value,
+  loading,
+  color,
+  link
+}: StatCardProps) {
   return (
     <Card className={`hover:shadow-md transition-shadow ${color} h-full`}>
       <a href={link} className="no-underline">

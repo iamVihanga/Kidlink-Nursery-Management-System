@@ -8,6 +8,7 @@ const router = createRouter()
   .openapi(routes.get, handlers.get)
   .openapi(routes.send, handlers.send)
   .openapi(routes.getTags, handlers.getTags)
-  .openapi(routes.createTag, handlers.createTag);
+  .openapi(routes.createTag, handlers.createTag)
+  .openapi(routes.markAsRead, handlers.markAsRead);
 
 export default router;
