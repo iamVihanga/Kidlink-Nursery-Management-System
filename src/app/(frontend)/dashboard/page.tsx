@@ -126,7 +126,12 @@ export default function DashboardPage() {
       if (!activeOrgData?.id) return { classes: [], pagination: { total: 0 } };
 
       try {
-        const response = await client.api.classes.$get();
+        const response = await client.api.classes.$get({
+          query: {
+            page: "1",
+            limit: "10"
+          }
+        });
         const data = await response.json();
         return data;
       } catch (error) {
