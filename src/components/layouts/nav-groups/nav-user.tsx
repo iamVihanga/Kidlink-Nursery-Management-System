@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  Sparkles
-} from "lucide-react";
+import { BadgeCheck, Bell, ChevronsUpDown } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -98,7 +92,10 @@ export function NavUser({
                 </Link>
               </DropdownMenuItem> */}
               <DropdownMenuItem asChild>
-                <Link href="/dashboard/notifications" className="cursor-pointer flex items-center">
+                <Link
+                  href="/dashboard/notifications"
+                  className="cursor-pointer flex items-center"
+                >
                   <Bell className="mr-2 h-4 w-4" />
                   Notifications
                 </Link>
