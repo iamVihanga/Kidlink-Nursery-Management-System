@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon, CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -32,52 +31,41 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
+  PopoverTrigger
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 
-import { createPaymentSchema, type CreatePaymentSchema } from "../schemas/create-payment";
+import {
+  createPaymentSchema,
+  type CreatePaymentSchema
+} from "../schemas/create-payment";
 import { useCreatePayment } from "../api/use-create-payment";
-import { Skeleton } from "@/components/ui/skeleton";
 
 import { MediaUploader } from "@/modules/media/components/MediaUploader";
 import { MediaUploadPaths } from "@/modules/media/types";
-
-import "next-auth";
-
-declare module "next-auth" {
-  interface Session {
-    activeOrganizationId?: string;
-    user: {
-      id: string;
-      name?: string | null;
-      email?: string | null;
-      image?: string | null;
-    };
-  }
-}
+import { authClient } from "@/lib/auth-client";
 
 const PAYMENT_METHODS = [
   { id: "credit_card", name: "Credit Card" },
   { id: "bank_transfer", name: "Bank Transfer" },
   { id: "cash", name: "Cash" },
   { id: "debit_card", name: "Debit Card" },
-  { id: "mobile_payment", name: "Mobile Payment" },
+  { id: "mobile_payment", name: "Mobile Payment" }
 ];
 
 const PAYMENT_STATUSES = [
   { id: "pending", name: "Pending" },
   { id: "completed", name: "Completed" },
   { id: "failed", name: "Failed" },
-  { id: "refunded", name: "Refunded" },
+  { id: "refunded", name: "Refunded" }
 ];
 
 interface AddNewPaymentProps {
@@ -90,7 +78,8 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
   const [skipImageUpload, setSkipImageUpload] = useState(false);
 
   // Get active organization ID from session
-  const activeOrganizationId = "test-organization-id"; // Temporary value for testing
+  const { data: session } = authClient.useSession();
+  const { data: activeOrg } = authClient.useActiveOrganization();
 
   // Use the real API hook
   const { mutateAsync: createPayment } = useCreatePayment();
@@ -104,52 +93,61 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
       paymentMethod: "credit_card",
       description: "",
       paymentDate: new Date(),
-      receiptURL: "https://placeholder.com/test-receipt", // Hardcoded for testing
-      memberId: "test-member-123", // Hardcoded for testing
+      receiptURL: "",
+      memberId: "",
       // Add organizationId with default value or from session
-      organizationId: activeOrganizationId || "",
+      organizationId: ""
     }
   });
 
   const onSubmit = async (values: CreatePaymentSchema) => {
     if (isSubmitting) return;
-    
+
     try {
       setIsSubmitting(true);
       console.log("Submitting payment data:", values);
-      
+
       // Always provide hardcoded values for testing
       const paymentData = {
         ...values,
-        receiptURL: "https://placeholder.com/test-receipt", // Hardcode this regardless of input
+        receiptURL: "", // Hardcode this regardless of input
         memberId: values.memberId || "test-member-123" // Use input if available, otherwise use default
       };
-      
+
       console.log("Final payment data:", paymentData);
-      
+
       await createPayment({ values: paymentData });
-      
+
       toast.success("Payment created successfully");
       form.reset();
       setOpen(false);
-      
+
       // Trigger refresh callback if provided
       if (onPaymentCreated) {
         onPaymentCreated();
       }
     } catch (error) {
       console.error("Error creating payment:", error);
-      toast.error("Failed to create payment: " + (error instanceof Error ? error.message : "Unknown error"));
+      toast.error(
+        "Failed to create payment: " +
+          (error instanceof Error ? error.message : "Unknown error")
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   React.useEffect(() => {
-    if (activeOrganizationId) {
-      form.setValue("organizationId", activeOrganizationId);
+    if (activeOrg && session) {
+      form.setValue(
+        "memberId",
+        activeOrg?.members.filter(
+          (member) => member.id === session?.user?.id
+        )[0]?.id
+      );
+      form.setValue("organizationId", activeOrg.id);
     }
-  }, [activeOrganizationId, form]);
+  }, [activeOrg, session, form]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -184,13 +182,15 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                   <FormItem>
                     <FormLabel>Amount*</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="number" 
+                      <Input
+                        type="number"
                         step="0.01"
-                        {...field} 
-                        value={field.value ?? ''}
-                        onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
-                        placeholder="0.00" 
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
+                        placeholder="0.00"
                       />
                     </FormControl>
                     <FormMessage />
@@ -205,7 +205,10 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Currency*</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value || undefined}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value || undefined}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select currency" />
@@ -231,14 +234,17 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status*</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value || undefined}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value || undefined}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {PAYMENT_STATUSES.map(status => (
+                        {PAYMENT_STATUSES.map((status) => (
                           <SelectItem key={status.id} value={status.id}>
                             {status.name}
                           </SelectItem>
@@ -257,14 +263,17 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Payment Method</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value || undefined}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value || undefined}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select method" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {PAYMENT_METHODS.map(method => (
+                        {PAYMENT_METHODS.map((method) => (
                           <SelectItem key={method.id} value={method.id}>
                             {method.name}
                           </SelectItem>
@@ -325,9 +334,9 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                   <FormItem>
                     <FormLabel>Member ID* (Test ID: test-member-123)</FormLabel>
                     <FormControl>
-                      <Input 
-                        {...field} 
-                        placeholder="Using test-member-123 if empty" 
+                      <Input
+                        {...field}
+                        placeholder="Using test-member-123 if empty"
                         defaultValue="test-member-123"
                       />
                     </FormControl>
@@ -347,9 +356,9 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                   <FormItem className="col-span-2">
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea 
-                        {...field} 
-                        value={field.value || ''}
+                      <Textarea
+                        {...field}
+                        value={field.value || ""}
                         placeholder="Payment details, purpose, etc."
                         className="resize-none"
                       />
@@ -375,12 +384,15 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                           onChange={() => setSkipImageUpload(!skipImageUpload)}
                           className="rounded border-gray-300 text-primary focus:ring-primary"
                         />
-                        <label htmlFor="skip-upload" className="text-sm text-muted-foreground">
+                        <label
+                          htmlFor="skip-upload"
+                          className="text-sm text-muted-foreground"
+                        >
                           Skip image upload (for testing)
                         </label>
                       </div>
                     </div>
-                    
+
                     {!skipImageUpload ? (
                       <FormControl>
                         <MediaUploader
@@ -390,7 +402,9 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                           }}
                           onError={(err) => {
                             console.error("Upload error details:", err);
-                            toast.error(`Failed to upload receipt: ${err.message || "Unknown error"}`);
+                            toast.error(
+                              `Failed to upload receipt: ${err.message || "Unknown error"}`
+                            );
                           }}
                           acceptedTypes={["image", "document"]}
                           path={MediaUploadPaths.PAYMENTS}
@@ -409,9 +423,9 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                           />
                         </FormControl>
                         {field.value && (
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             type="button"
                             className="ml-2"
                             onClick={() => field.onChange("")}
@@ -421,9 +435,10 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                         )}
                       </div>
                     )}
-                    
+
                     <p className="text-xs text-muted-foreground mt-1">
-                      You can skip uploading a receipt for testing purposes. The payment will still be created.
+                      You can skip uploading a receipt for testing purposes. The
+                      payment will still be created.
                     </p>
                     <FormMessage />
                   </FormItem>
@@ -435,10 +450,10 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                 control={form.control}
                 name="organizationId"
                 render={({ field }) => (
-                  <input 
-                    type="hidden" 
-                    {...field} 
-                    value={activeOrganizationId || field.value}
+                  <input
+                    type="hidden"
+                    {...field}
+                    value={activeOrg?.id || field.value}
                   />
                 )}
               />
@@ -452,8 +467,8 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isSubmitting}
                 onClick={() => {
                   // Add debugging for form values

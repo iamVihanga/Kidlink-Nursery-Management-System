@@ -264,7 +264,8 @@ model ChildBadge {
 model ChildFeedback {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   content   String
-  rating    Int? // Optional rating (e.g., 1-5)
+  rating    Int?
+  image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   childId   String   @db.ObjectId
@@ -300,8 +301,9 @@ model Payment {
 
 // New NotificationTag model
 model NotificationTag {
-  id            String                         @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+
   createdAt     DateTime                       @default(now())
   updatedAt     DateTime                       @updatedAt
   notifications NotificationTag_Notification[]
@@ -314,6 +316,7 @@ model NotificationTag {
 model Notification {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   content   String
+  image     String?
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -357,19 +360,19 @@ model NotificationRecipient {
 }
 
 model LessonPlan {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  title          String
-  description    String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
   // Relation to the teacher who created it
-  teacherId      String
-  teacher        Member   @relation(fields: [teacherId], references: [id])
-  
+  teacherId String
+  teacher   Member @relation(fields: [teacherId], references: [id])
+
   // Relation to the class it belongs to
-  classId        String   @db.ObjectId
-  class          Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  classId String @db.ObjectId
+  class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
 
   @@map("lessonPlan")
 }

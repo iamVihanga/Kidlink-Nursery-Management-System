@@ -34,6 +34,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { useSendNotification } from "../api/use-send-notification";
+import { MediaUploader } from "@/modules/media/components/MediaUploader";
+import { MediaUploadPaths } from "@/modules/media/types";
+import { toast } from "sonner";
 
 // Import our new components
 import { RecipientsDropdown } from "./recipients-dropdown";
@@ -71,6 +74,7 @@ export function NewNotificationModal() {
     resolver: zodResolver(sendNotificationSchema),
     defaultValues: {
       content: "",
+      image: "",
       tags: [],
       recipients: []
     }
@@ -159,6 +163,31 @@ export function NewNotificationModal() {
                         placeholder="Type your message here..."
                         className="min-h-[120px]"
                         {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Attachment (Optional)</FormLabel>
+                    <FormControl>
+                      <MediaUploader
+                        acceptedTypes={["image"]}
+                        path={MediaUploadPaths.ORGANIZATIONS}
+                        onUpload={(file) => {
+                          field.onChange(file.url);
+                        }}
+                        onError={(error) => {
+                          toast.error("Failed to upload image", {
+                            description: error.message
+                          });
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
