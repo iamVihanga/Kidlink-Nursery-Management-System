@@ -34,6 +34,9 @@ import { useCreateFeedback } from "../api/use-create-feedback";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { ChildrenDropdown } from "@/features/children/components/children-dropdown";
+import { MediaUploader } from "@/modules/media/components/MediaUploader";
+import { MediaUploadPaths } from "@/modules/media/types";
+import { toast } from "sonner";
 
 interface AddNewFeedbackProps {
   childId?: string;
@@ -52,7 +55,8 @@ export function AddNewFeedback({ childId }: AddNewFeedbackProps) {
       childId: childId || "",
       content: "",
       rating: 0,
-      teacherId: ""
+      teacherId: "",
+      image: ""
     }
   });
 
@@ -60,7 +64,7 @@ export function AddNewFeedback({ childId }: AddNewFeedbackProps) {
     if (childId) {
       form.setValue("childId", childId);
     }
-  }, []);
+  }, [childId, form]);
 
   const onSubmit = async (values: CreateFeedbackSchema) => {
     const member = await authClient.organization.getActiveMember();
@@ -147,6 +151,31 @@ export function AddNewFeedback({ childId }: AddNewFeedbackProps) {
                     </FormControl>
 
                     <FormMessage {...field} />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Attachment (Optional)</FormLabel>
+                    <FormControl>
+                      <MediaUploader
+                        acceptedTypes={["image"]}
+                        path={MediaUploadPaths.FEEDBACKS}
+                        onUpload={(file) => {
+                          field.onChange(file.url);
+                        }}
+                        onError={(error) => {
+                          toast.error("Failed to upload image", {
+                            description: error.message
+                          });
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

@@ -42,13 +42,13 @@ export const BadgeScalarFieldEnumSchema = z.enum(['id','name','description','ima
 
 export const ChildBadgeScalarFieldEnumSchema = z.enum(['id','childId','badgeId','awardedAt']);
 
-export const ChildFeedbackScalarFieldEnumSchema = z.enum(['id','content','rating','createdAt','updatedAt','childId','teacherId']);
+export const ChildFeedbackScalarFieldEnumSchema = z.enum(['id','content','rating','image','createdAt','updatedAt','childId','teacherId']);
 
 export const PaymentScalarFieldEnumSchema = z.enum(['id','amount','currency','status','paymentMethod','description','paymentDate','createdAt','updatedAt','receiptURL','memberId','organizationId']);
 
 export const NotificationTagScalarFieldEnumSchema = z.enum(['id','name','createdAt','updatedAt']);
 
-export const NotificationScalarFieldEnumSchema = z.enum(['id','content','read','createdAt','updatedAt','senderId']);
+export const NotificationScalarFieldEnumSchema = z.enum(['id','content','image','read','createdAt','updatedAt','senderId']);
 
 export const NotificationTag_NotificationScalarFieldEnumSchema = z.enum(['id','notificationId','notificationTagId']);
 
@@ -329,6 +329,7 @@ export const ChildFeedbackSchema = z.object({
   id: z.string(),
   content: z.string(),
   rating: z.number().int().nullable(),
+  image: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   childId: z.string(),
@@ -378,6 +379,7 @@ export type NotificationTag = z.infer<typeof NotificationTagSchema>
 export const NotificationSchema = z.object({
   id: z.string(),
   content: z.string(),
+  image: z.string().nullable(),
   read: z.boolean(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -889,6 +891,7 @@ export const ChildFeedbackSelectSchema: z.ZodType<Prisma.ChildFeedbackSelect> = 
   id: z.boolean().optional(),
   content: z.boolean().optional(),
   rating: z.boolean().optional(),
+  image: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
   childId: z.boolean().optional(),
@@ -976,6 +979,7 @@ export const NotificationCountOutputTypeSelectSchema: z.ZodType<Prisma.Notificat
 export const NotificationSelectSchema: z.ZodType<Prisma.NotificationSelect> = z.object({
   id: z.boolean().optional(),
   content: z.boolean().optional(),
+  image: z.boolean().optional(),
   read: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
@@ -2301,6 +2305,7 @@ export const ChildFeedbackWhereInputSchema: z.ZodType<Prisma.ChildFeedbackWhereI
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   content: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   rating: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  image: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   childId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
@@ -2313,6 +2318,7 @@ export const ChildFeedbackOrderByWithRelationInputSchema: z.ZodType<Prisma.Child
   id: z.lazy(() => SortOrderSchema).optional(),
   content: z.lazy(() => SortOrderSchema).optional(),
   rating: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   childId: z.lazy(() => SortOrderSchema).optional(),
@@ -2331,6 +2337,7 @@ export const ChildFeedbackWhereUniqueInputSchema: z.ZodType<Prisma.ChildFeedback
   NOT: z.union([ z.lazy(() => ChildFeedbackWhereInputSchema),z.lazy(() => ChildFeedbackWhereInputSchema).array() ]).optional(),
   content: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   rating: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
+  image: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   childId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
@@ -2343,6 +2350,7 @@ export const ChildFeedbackOrderByWithAggregationInputSchema: z.ZodType<Prisma.Ch
   id: z.lazy(() => SortOrderSchema).optional(),
   content: z.lazy(() => SortOrderSchema).optional(),
   rating: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   childId: z.lazy(() => SortOrderSchema).optional(),
@@ -2361,6 +2369,7 @@ export const ChildFeedbackScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   content: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   rating: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
+  image: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   childId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
@@ -2533,6 +2542,7 @@ export const NotificationWhereInputSchema: z.ZodType<Prisma.NotificationWhereInp
   NOT: z.union([ z.lazy(() => NotificationWhereInputSchema),z.lazy(() => NotificationWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   content: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  image: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   read: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -2545,6 +2555,7 @@ export const NotificationWhereInputSchema: z.ZodType<Prisma.NotificationWhereInp
 export const NotificationOrderByWithRelationInputSchema: z.ZodType<Prisma.NotificationOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   content: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   read: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -2563,6 +2574,7 @@ export const NotificationWhereUniqueInputSchema: z.ZodType<Prisma.NotificationWh
   OR: z.lazy(() => NotificationWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => NotificationWhereInputSchema),z.lazy(() => NotificationWhereInputSchema).array() ]).optional(),
   content: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  image: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   read: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -2575,6 +2587,7 @@ export const NotificationWhereUniqueInputSchema: z.ZodType<Prisma.NotificationWh
 export const NotificationOrderByWithAggregationInputSchema: z.ZodType<Prisma.NotificationOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   content: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   read: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -2590,6 +2603,7 @@ export const NotificationScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.
   NOT: z.union([ z.lazy(() => NotificationScalarWhereWithAggregatesInputSchema),z.lazy(() => NotificationScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   content: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  image: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   read: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
@@ -3951,6 +3965,7 @@ export const ChildFeedbackCreateInputSchema: z.ZodType<Prisma.ChildFeedbackCreat
   id: z.string().optional(),
   content: z.string(),
   rating: z.number().int().optional().nullable(),
+  image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   child: z.lazy(() => ChildCreateNestedOneWithoutFeedbacksInputSchema),
@@ -3961,6 +3976,7 @@ export const ChildFeedbackUncheckedCreateInputSchema: z.ZodType<Prisma.ChildFeed
   id: z.string().optional(),
   content: z.string(),
   rating: z.number().int().optional().nullable(),
+  image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   childId: z.string(),
@@ -3970,6 +3986,7 @@ export const ChildFeedbackUncheckedCreateInputSchema: z.ZodType<Prisma.ChildFeed
 export const ChildFeedbackUpdateInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   child: z.lazy(() => ChildUpdateOneRequiredWithoutFeedbacksNestedInputSchema).optional(),
@@ -3979,6 +3996,7 @@ export const ChildFeedbackUpdateInputSchema: z.ZodType<Prisma.ChildFeedbackUpdat
 export const ChildFeedbackUncheckedUpdateInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3989,6 +4007,7 @@ export const ChildFeedbackCreateManyInputSchema: z.ZodType<Prisma.ChildFeedbackC
   id: z.string().optional(),
   content: z.string(),
   rating: z.number().int().optional().nullable(),
+  image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   childId: z.string(),
@@ -3998,6 +4017,7 @@ export const ChildFeedbackCreateManyInputSchema: z.ZodType<Prisma.ChildFeedbackC
 export const ChildFeedbackUpdateManyMutationInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateManyMutationInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -4005,6 +4025,7 @@ export const ChildFeedbackUpdateManyMutationInputSchema: z.ZodType<Prisma.ChildF
 export const ChildFeedbackUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateManyInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4162,6 +4183,7 @@ export const NotificationTagUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Not
 export const NotificationCreateInputSchema: z.ZodType<Prisma.NotificationCreateInput> = z.object({
   id: z.string().optional(),
   content: z.string(),
+  image: z.string().optional().nullable(),
   read: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -4173,6 +4195,7 @@ export const NotificationCreateInputSchema: z.ZodType<Prisma.NotificationCreateI
 export const NotificationUncheckedCreateInputSchema: z.ZodType<Prisma.NotificationUncheckedCreateInput> = z.object({
   id: z.string().optional(),
   content: z.string(),
+  image: z.string().optional().nullable(),
   read: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -4183,6 +4206,7 @@ export const NotificationUncheckedCreateInputSchema: z.ZodType<Prisma.Notificati
 
 export const NotificationUpdateInputSchema: z.ZodType<Prisma.NotificationUpdateInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   read: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4193,6 +4217,7 @@ export const NotificationUpdateInputSchema: z.ZodType<Prisma.NotificationUpdateI
 
 export const NotificationUncheckedUpdateInputSchema: z.ZodType<Prisma.NotificationUncheckedUpdateInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   read: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4204,6 +4229,7 @@ export const NotificationUncheckedUpdateInputSchema: z.ZodType<Prisma.Notificati
 export const NotificationCreateManyInputSchema: z.ZodType<Prisma.NotificationCreateManyInput> = z.object({
   id: z.string().optional(),
   content: z.string(),
+  image: z.string().optional().nullable(),
   read: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -4212,6 +4238,7 @@ export const NotificationCreateManyInputSchema: z.ZodType<Prisma.NotificationCre
 
 export const NotificationUpdateManyMutationInputSchema: z.ZodType<Prisma.NotificationUpdateManyMutationInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   read: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4219,6 +4246,7 @@ export const NotificationUpdateManyMutationInputSchema: z.ZodType<Prisma.Notific
 
 export const NotificationUncheckedUpdateManyInputSchema: z.ZodType<Prisma.NotificationUncheckedUpdateManyInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   read: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5208,6 +5236,7 @@ export const ChildFeedbackCountOrderByAggregateInputSchema: z.ZodType<Prisma.Chi
   id: z.lazy(() => SortOrderSchema).optional(),
   content: z.lazy(() => SortOrderSchema).optional(),
   rating: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   childId: z.lazy(() => SortOrderSchema).optional(),
@@ -5222,6 +5251,7 @@ export const ChildFeedbackMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Child
   id: z.lazy(() => SortOrderSchema).optional(),
   content: z.lazy(() => SortOrderSchema).optional(),
   rating: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   childId: z.lazy(() => SortOrderSchema).optional(),
@@ -5232,6 +5262,7 @@ export const ChildFeedbackMinOrderByAggregateInputSchema: z.ZodType<Prisma.Child
   id: z.lazy(() => SortOrderSchema).optional(),
   content: z.lazy(() => SortOrderSchema).optional(),
   rating: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   childId: z.lazy(() => SortOrderSchema).optional(),
@@ -5375,6 +5406,7 @@ export const NotificationTagMinOrderByAggregateInputSchema: z.ZodType<Prisma.Not
 export const NotificationCountOrderByAggregateInputSchema: z.ZodType<Prisma.NotificationCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   content: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   read: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -5384,6 +5416,7 @@ export const NotificationCountOrderByAggregateInputSchema: z.ZodType<Prisma.Noti
 export const NotificationMaxOrderByAggregateInputSchema: z.ZodType<Prisma.NotificationMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   content: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   read: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -5393,6 +5426,7 @@ export const NotificationMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Notifi
 export const NotificationMinOrderByAggregateInputSchema: z.ZodType<Prisma.NotificationMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   content: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   read: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -7485,6 +7519,7 @@ export const ChildCreateManyParentInputEnvelopeSchema: z.ZodType<Prisma.ChildCre
 export const NotificationCreateWithoutSenderInputSchema: z.ZodType<Prisma.NotificationCreateWithoutSenderInput> = z.object({
   id: z.string().optional(),
   content: z.string(),
+  image: z.string().optional().nullable(),
   read: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7495,6 +7530,7 @@ export const NotificationCreateWithoutSenderInputSchema: z.ZodType<Prisma.Notifi
 export const NotificationUncheckedCreateWithoutSenderInputSchema: z.ZodType<Prisma.NotificationUncheckedCreateWithoutSenderInput> = z.object({
   id: z.string().optional(),
   content: z.string(),
+  image: z.string().optional().nullable(),
   read: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7733,6 +7769,7 @@ export const NotificationScalarWhereInputSchema: z.ZodType<Prisma.NotificationSc
   NOT: z.union([ z.lazy(() => NotificationScalarWhereInputSchema),z.lazy(() => NotificationScalarWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   content: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  image: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   read: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -8420,6 +8457,7 @@ export const ChildFeedbackCreateWithoutTeacherInputSchema: z.ZodType<Prisma.Chil
   id: z.string().optional(),
   content: z.string(),
   rating: z.number().int().optional().nullable(),
+  image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   child: z.lazy(() => ChildCreateNestedOneWithoutFeedbacksInputSchema)
@@ -8429,6 +8467,7 @@ export const ChildFeedbackUncheckedCreateWithoutTeacherInputSchema: z.ZodType<Pr
   id: z.string().optional(),
   content: z.string(),
   rating: z.number().int().optional().nullable(),
+  image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   childId: z.string()
@@ -8636,6 +8675,7 @@ export const ChildFeedbackScalarWhereInputSchema: z.ZodType<Prisma.ChildFeedback
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   content: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   rating: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  image: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   childId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
@@ -9501,6 +9541,7 @@ export const ChildFeedbackCreateWithoutChildInputSchema: z.ZodType<Prisma.ChildF
   id: z.string().optional(),
   content: z.string(),
   rating: z.number().int().optional().nullable(),
+  image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   teacher: z.lazy(() => MemberCreateNestedOneWithoutChildFeedbackInputSchema)
@@ -9510,6 +9551,7 @@ export const ChildFeedbackUncheckedCreateWithoutChildInputSchema: z.ZodType<Pris
   id: z.string().optional(),
   content: z.string(),
   rating: z.number().int().optional().nullable(),
+  image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   teacherId: z.string()
@@ -10422,6 +10464,7 @@ export const NotificationTag_NotificationUpdateManyWithWhereWithoutNotificationI
 export const NotificationCreateWithoutTagsInputSchema: z.ZodType<Prisma.NotificationCreateWithoutTagsInput> = z.object({
   id: z.string().optional(),
   content: z.string(),
+  image: z.string().optional().nullable(),
   read: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -10432,6 +10475,7 @@ export const NotificationCreateWithoutTagsInputSchema: z.ZodType<Prisma.Notifica
 export const NotificationUncheckedCreateWithoutTagsInputSchema: z.ZodType<Prisma.NotificationUncheckedCreateWithoutTagsInput> = z.object({
   id: z.string().optional(),
   content: z.string(),
+  image: z.string().optional().nullable(),
   read: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -10476,6 +10520,7 @@ export const NotificationUpdateToOneWithWhereWithoutTagsInputSchema: z.ZodType<P
 
 export const NotificationUpdateWithoutTagsInputSchema: z.ZodType<Prisma.NotificationUpdateWithoutTagsInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   read: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -10485,6 +10530,7 @@ export const NotificationUpdateWithoutTagsInputSchema: z.ZodType<Prisma.Notifica
 
 export const NotificationUncheckedUpdateWithoutTagsInputSchema: z.ZodType<Prisma.NotificationUncheckedUpdateWithoutTagsInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   read: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -10518,6 +10564,7 @@ export const NotificationTagUncheckedUpdateWithoutNotificationsInputSchema: z.Zo
 export const NotificationCreateWithoutRecipientsInputSchema: z.ZodType<Prisma.NotificationCreateWithoutRecipientsInput> = z.object({
   id: z.string().optional(),
   content: z.string(),
+  image: z.string().optional().nullable(),
   read: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -10528,6 +10575,7 @@ export const NotificationCreateWithoutRecipientsInputSchema: z.ZodType<Prisma.No
 export const NotificationUncheckedCreateWithoutRecipientsInputSchema: z.ZodType<Prisma.NotificationUncheckedCreateWithoutRecipientsInput> = z.object({
   id: z.string().optional(),
   content: z.string(),
+  image: z.string().optional().nullable(),
   read: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -10602,6 +10650,7 @@ export const NotificationUpdateToOneWithWhereWithoutRecipientsInputSchema: z.Zod
 
 export const NotificationUpdateWithoutRecipientsInputSchema: z.ZodType<Prisma.NotificationUpdateWithoutRecipientsInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   read: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -10611,6 +10660,7 @@ export const NotificationUpdateWithoutRecipientsInputSchema: z.ZodType<Prisma.No
 
 export const NotificationUncheckedUpdateWithoutRecipientsInputSchema: z.ZodType<Prisma.NotificationUncheckedUpdateWithoutRecipientsInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   read: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -10849,6 +10899,7 @@ export const ChildCreateManyParentInputSchema: z.ZodType<Prisma.ChildCreateManyP
 export const NotificationCreateManySenderInputSchema: z.ZodType<Prisma.NotificationCreateManySenderInput> = z.object({
   id: z.string().optional(),
   content: z.string(),
+  image: z.string().optional().nullable(),
   read: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -11035,6 +11086,7 @@ export const ChildUncheckedUpdateManyWithoutParentInputSchema: z.ZodType<Prisma.
 
 export const NotificationUpdateWithoutSenderInputSchema: z.ZodType<Prisma.NotificationUpdateWithoutSenderInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   read: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -11044,6 +11096,7 @@ export const NotificationUpdateWithoutSenderInputSchema: z.ZodType<Prisma.Notifi
 
 export const NotificationUncheckedUpdateWithoutSenderInputSchema: z.ZodType<Prisma.NotificationUncheckedUpdateWithoutSenderInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   read: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -11053,6 +11106,7 @@ export const NotificationUncheckedUpdateWithoutSenderInputSchema: z.ZodType<Pris
 
 export const NotificationUncheckedUpdateManyWithoutSenderInputSchema: z.ZodType<Prisma.NotificationUncheckedUpdateManyWithoutSenderInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   read: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -11285,6 +11339,7 @@ export const ChildFeedbackCreateManyTeacherInputSchema: z.ZodType<Prisma.ChildFe
   id: z.string().optional(),
   content: z.string(),
   rating: z.number().int().optional().nullable(),
+  image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   childId: z.string()
@@ -11344,6 +11399,7 @@ export const ClassUncheckedUpdateManyWithoutTeacherInputSchema: z.ZodType<Prisma
 export const ChildFeedbackUpdateWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateWithoutTeacherInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   child: z.lazy(() => ChildUpdateOneRequiredWithoutFeedbacksNestedInputSchema).optional()
@@ -11352,6 +11408,7 @@ export const ChildFeedbackUpdateWithoutTeacherInputSchema: z.ZodType<Prisma.Chil
 export const ChildFeedbackUncheckedUpdateWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateWithoutTeacherInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -11360,6 +11417,7 @@ export const ChildFeedbackUncheckedUpdateWithoutTeacherInputSchema: z.ZodType<Pr
 export const ChildFeedbackUncheckedUpdateManyWithoutTeacherInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateManyWithoutTeacherInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   childId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -11498,6 +11556,7 @@ export const ChildFeedbackCreateManyChildInputSchema: z.ZodType<Prisma.ChildFeed
   id: z.string().optional(),
   content: z.string(),
   rating: z.number().int().optional().nullable(),
+  image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   teacherId: z.string()
@@ -11536,6 +11595,7 @@ export const ChildBadgeUncheckedUpdateManyWithoutChildInputSchema: z.ZodType<Pri
 export const ChildFeedbackUpdateWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackUpdateWithoutChildInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   teacher: z.lazy(() => MemberUpdateOneRequiredWithoutChildFeedbackNestedInputSchema).optional()
@@ -11544,6 +11604,7 @@ export const ChildFeedbackUpdateWithoutChildInputSchema: z.ZodType<Prisma.ChildF
 export const ChildFeedbackUncheckedUpdateWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateWithoutChildInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   teacherId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -11552,6 +11613,7 @@ export const ChildFeedbackUncheckedUpdateWithoutChildInputSchema: z.ZodType<Pris
 export const ChildFeedbackUncheckedUpdateManyWithoutChildInputSchema: z.ZodType<Prisma.ChildFeedbackUncheckedUpdateManyWithoutChildInput> = z.object({
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   rating: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   teacherId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),

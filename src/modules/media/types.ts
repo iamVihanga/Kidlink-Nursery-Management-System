@@ -20,4 +20,5 @@ export enum MediaUploadPaths {
   PROFILE_IMAGES = "profile_images",
   BADGES = "badges",
   PAYMENTS = "payments",
+  FEEDBACKS = "feedbacks"
 }

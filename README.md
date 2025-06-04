@@ -106,3 +106,19 @@ Let me know if you encounter issues or need clarification!
 - Parent
   email: parent@kidlink.app
   password: kidlinkParent
+
+---
+
+1. add profile pic child create/update forms same as logo
+2. ⁠feedback add image upload
+3. ⁠payment receipt upload option for payment module
+4. ⁠Notification also add image same as logo
+5. ⁠create teacher add profile pic same as logo
+6. Notification feature fine tune (super admin can send multiple nursery admins, nursery admin can send teachers and parents, teachers can send to parents) , optimize ui and add image attribute too
+7. ⁠optimize class card ui
+8. ⁠ class create ui, add multiple teachers for class, add children
+9. ⁠Badge delete option
+10. ⁠parent create form hide role dropdown and set default role related to parent
+11. When teacher check parent profile get error
+12. ⁠child create form add field to assign parent
+13. manage feedback include delete option for teacher
