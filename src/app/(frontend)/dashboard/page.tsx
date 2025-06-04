@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import {
   Loader,
   School,
@@ -9,7 +9,8 @@ import {
   UserRound,
   Smile,
   ShieldCheck,
-  ListTodo
+  ListTodo,
+  AlertCircle
 } from "lucide-react";
 
 import { authClient } from "@/lib/auth-client";
@@ -19,6 +20,19 @@ import { AppPageShell } from "@/components/layouts/page-shell";
 import { Card } from "@/components/ui/card";
 import { NurserySwitcher } from "@/features/nurseries/components/nursery-switcher";
 import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+// Define types for all API responses
+
+interface StatCardProps {
+  icon: React.ReactNode;
+  title: string;
+  value: number | string;
+  loading: boolean;
+  color: string;
+  link: string;
+  error?: boolean;
+}
 
 export default function DashboardPage() {
   const {
@@ -27,133 +41,99 @@ export default function DashboardPage() {
     isPending: activeOrgPending
   } = authClient.useActiveOrganization();
 
-  // Fetch admins - using the correct endpoint
-  const { data: adminsData, isPending: adminsLoading } = useQuery({
-    queryKey: ["admins", activeOrgData?.id],
-    queryFn: async () => {
-      if (!activeOrgData?.id) return { admins: [], pagination: { total: 0 } };
+  // Common fetch function for all data types
+  const fetchData = async (
+    endpoint: "admins" | "teachers" | "parents" | "children" | "classes"
+  ) => {
+    if (!activeOrgData?.id) {
+      throw new Error("No active organization");
+    }
 
-      try {
-        const response = await client.api.admins.$get({
-          query: {
-            page: "1",
-            limit: "10"
-          }
-        });
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error("Error fetching admins:", error);
-        return { admins: [], pagination: { total: 0 } };
+    const response = await client.api[endpoint].$get({
+      query: {
+        page: "1",
+        limit: "10"
       }
-    },
-    enabled: !!activeOrgData?.id
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${endpoint}`);
+    }
+
+    return response.json();
+  };
+
+  // Use useQueries for parallel data fetching with strong typing
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ["admins", activeOrgData?.id],
+        queryFn: () => fetchData("admins"),
+        enabled: !!activeOrgData?.id,
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        retry: 1
+      },
+      {
+        queryKey: ["teachers", activeOrgData?.id],
+        queryFn: () => fetchData("teachers"),
+        enabled: !!activeOrgData?.id,
+        staleTime: 5 * 60 * 1000,
+        retry: 1
+      },
+      {
+        queryKey: ["parents", activeOrgData?.id],
+        queryFn: () => fetchData("parents"),
+        enabled: !!activeOrgData?.id,
+        staleTime: 5 * 60 * 1000,
+        retry: 1
+      },
+      {
+        queryKey: ["children", activeOrgData?.id],
+        queryFn: () => fetchData("children"),
+        enabled: !!activeOrgData?.id,
+        staleTime: 5 * 60 * 1000,
+        retry: 1
+      },
+      {
+        queryKey: ["classes", activeOrgData?.id],
+        queryFn: () => fetchData("classes"),
+        enabled: !!activeOrgData?.id,
+        staleTime: 5 * 60 * 1000,
+        retry: 1
+      }
+    ]
   });
 
-  // Fetch teachers - using the correct endpoint
-  const { data: teachersData, isPending: teachersLoading } = useQuery({
-    queryKey: ["teachers", activeOrgData?.id],
-    queryFn: async () => {
-      if (!activeOrgData?.id) return { teachers: [], pagination: { total: 0 } };
+  // Destructure results for easier access
+  const [
+    { data: adminsData, isPending: adminsLoading, error: adminsError },
+    { data: teachersData, isPending: teachersLoading, error: teachersError },
+    { data: parentsData, isPending: parentsLoading, error: parentsError },
+    { data: childrenData, isPending: childrenLoading, error: childrenError },
+    { data: classesData, isPending: classesLoading, error: classesError }
+  ] = results;
 
-      try {
-        const response = await client.api.teachers.$get({
-          query: {
-            page: "1",
-            limit: "10"
-          }
-        });
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error("Error fetching teachers:", error);
-        return { teachers: [], pagination: { total: 0 } };
-      }
-    },
-    enabled: !!activeOrgData?.id
-  });
+  // Check if there are any data fetch errors
+  const hasErrors =
+    adminsError ||
+    teachersError ||
+    parentsError ||
+    childrenError ||
+    classesError;
 
-  // Fetch parents - using the correct endpoint
-  const { data: parentsData, isPending: parentsLoading } = useQuery({
-    queryKey: ["parents", activeOrgData?.id],
-    queryFn: async () => {
-      if (!activeOrgData?.id) return { parents: [], pagination: { total: 0 } };
-
-      try {
-        const response = await client.api.parents.$get({
-          query: {
-            page: "1",
-            limit: "10"
-          }
-        });
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error("Error fetching parents:", error);
-        return { parents: [], pagination: { total: 0 } };
-      }
-    },
-    enabled: !!activeOrgData?.id
-  });
-
-  // Fetch children - using the correct endpoint
-  const { data: childrenData, isPending: childrenLoading } = useQuery({
-    queryKey: ["children", activeOrgData?.id],
-    queryFn: async () => {
-      if (!activeOrgData?.id) return { children: [], pagination: { total: 0 } };
-
-      try {
-        const response = await client.api.children.$get({
-          query: {
-            page: "1",
-            limit: "10"
-          }
-        });
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error("Error fetching children:", error);
-        return { children: [], pagination: { total: 0 } };
-      }
-    },
-    enabled: !!activeOrgData?.id
-  });
-
-  // Fetch classes - using the correct endpoint
-  const { data: classesData, isPending: classesLoading } = useQuery({
-    queryKey: ["classes", activeOrgData?.id],
-    queryFn: async () => {
-      if (!activeOrgData?.id) return { classes: [], pagination: { total: 0 } };
-
-      try {
-        const response = await client.api.classes.$get();
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error("Error fetching classes:", error);
-        return { classes: [], pagination: { total: 0 } };
-      }
-    },
-    enabled: !!activeOrgData?.id
-  });
-
-  // Combine loading states
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const statsLoading =
-    adminsLoading ||
-    teachersLoading ||
-    parentsLoading ||
-    childrenLoading ||
-    classesLoading;
-
+  // Handle organization loading state
   if (activeOrgPending) {
     return (
       <div className="flex-1 flex items-center justify-center w-full h-full">
-        <Loader className="size-6 animate-spin" />
+        <div className="text-center">
+          <Loader className="size-8 animate-spin mx-auto mb-3" />
+          <p className="text-muted-foreground">Loading organization data...</p>
+        </div>
       </div>
     );
   }
 
+  // Handle organization error or missing org data
   if (!activeOrgData || activeOrgErr) {
     return (
       <div className="px-5 pb-5 flex-1 flex items-center justify-center w-full h-full">
@@ -192,16 +172,29 @@ export default function DashboardPage() {
 
         <Separator />
 
+        {/* Display global error alert if there are any fetch failures */}
+        {hasErrors && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              There was a problem loading some dashboard data. Please try
+              refreshing the page.
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Stats summary */}
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-2">Summary</h2>
+          <h2 className="text-xl font-semibold mb-4">Summary</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {/* Admins Card */}
             <LargeStatCard
               icon={<ShieldCheck className="size-10 text-yellow-500" />}
               title="Admins"
-              value={adminsLoading ? "..." : adminsData?.pagination?.total || 0}
+              value={adminsData?.pagination?.total || 0}
               loading={adminsLoading}
+              error={!!adminsError}
               color="bg-yellow-50 dark:bg-yellow-950/30"
               link="/dashboard/admins"
             />
@@ -210,10 +203,9 @@ export default function DashboardPage() {
             <LargeStatCard
               icon={<UserRound className="size-10 text-blue-500" />}
               title="Teachers"
-              value={
-                teachersLoading ? "..." : teachersData?.pagination?.total || 0
-              }
+              value={teachersData?.pagination?.total || 0}
               loading={teachersLoading}
+              error={!!teachersError}
               color="bg-blue-50 dark:bg-blue-950/30"
               link="/dashboard/teachers"
             />
@@ -222,10 +214,9 @@ export default function DashboardPage() {
             <LargeStatCard
               icon={<Users className="size-10 text-green-500" />}
               title="Parents"
-              value={
-                parentsLoading ? "..." : parentsData?.pagination?.total || 0
-              }
+              value={parentsData?.pagination?.total || 0}
               loading={parentsLoading}
+              error={!!parentsError}
               color="bg-green-50 dark:bg-green-950/30"
               link="/dashboard/parents"
             />
@@ -234,10 +225,9 @@ export default function DashboardPage() {
             <LargeStatCard
               icon={<Smile className="size-10 text-purple-500" />}
               title="Children"
-              value={
-                childrenLoading ? "..." : childrenData?.pagination?.total || 0
-              }
+              value={childrenData?.pagination?.total || 0}
               loading={childrenLoading}
+              error={!!childrenError}
               color="bg-purple-50 dark:bg-purple-950/30"
               link="/dashboard/children"
             />
@@ -246,44 +236,65 @@ export default function DashboardPage() {
             <LargeStatCard
               icon={<School className="size-10 text-indigo-500" />}
               title="Classes"
-              value={
-                classesLoading ? "..." : classesData?.pagination?.total || 0
-              }
+              value={classesData?.pagination?.total || 0}
               loading={classesLoading}
+              error={!!classesError}
               color="bg-indigo-50 dark:bg-indigo-950/30"
               link="/dashboard/classes"
             />
           </div>
         </Card>
 
-        {/* Key statistics  */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Activity Summary Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Recent Activities</h2>
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <ListTodo className="size-5" /> Recent Activities
+            </h2>
             <div className="space-y-4 min-h-48 flex items-center justify-center">
-              <p className="text-muted-foreground">No recent activities to display</p>
+              <p className="text-muted-foreground">
+                No recent activities to display
+              </p>
             </div>
           </Card>
 
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <Calendar className="size-5" /> Upcoming Events
+            </h2>
             <div className="space-y-4 min-h-48 flex items-center justify-center">
-              <p className="text-muted-foreground">No upcoming events scheduled</p>
+              <p className="text-muted-foreground">
+                No upcoming events scheduled
+              </p>
             </div>
           </Card>
-        </div> */}
+        </div>
       </div>
     </PageContainer>
   );
 }
 
-interface StatCardProps {
-  icon: React.ReactNode;
-  title: string;
-  value: number | string;
-  loading: boolean;
-  color: string;
-  link: string;
+// Adds missing Calendar component import
+function Calendar(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+      <line x1="16" x2="16" y1="2" y2="6" />
+      <line x1="8" x2="8" y1="2" y2="6" />
+      <line x1="3" x2="21" y1="10" y2="10" />
+    </svg>
+  );
 }
 
 function LargeStatCard({
@@ -291,6 +302,7 @@ function LargeStatCard({
   title,
   value,
   loading,
+  error,
   color,
   link
 }: StatCardProps) {
@@ -302,15 +314,29 @@ function LargeStatCard({
             {icon}
           </div>
           <h3 className="text-lg font-medium mb-2">{title}</h3>
-          <p className="text-4xl font-bold">
-            {loading ? (
+
+          {/* Display states based on loading/error/value */}
+          {loading ? (
+            <div className="flex flex-col items-center">
               <Loader className="size-7 animate-spin text-muted-foreground" />
-            ) : (
-              value
-            )}
-          </p>
-          {!loading && value === 0 && (
-            <p className="text-sm text-muted-foreground mt-1">None yet</p>
+              <span className="text-xs text-muted-foreground mt-2">
+                Loading...
+              </span>
+            </div>
+          ) : error ? (
+            <div className="flex flex-col items-center">
+              <AlertCircle className="size-7 text-destructive" />
+              <span className="text-xs text-destructive mt-1">
+                Error loading data
+              </span>
+            </div>
+          ) : (
+            <>
+              <p className="text-4xl font-bold">{value}</p>
+              {value === 0 && (
+                <p className="text-sm text-muted-foreground mt-1">None yet</p>
+              )}
+            </>
           )}
         </div>
       </a>
