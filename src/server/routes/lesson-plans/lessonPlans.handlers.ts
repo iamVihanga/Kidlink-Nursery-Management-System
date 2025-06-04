@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as HttpStatusCodes from "stoker/http-status-codes";
 
 import { prisma } from "@/server/prisma/client";
@@ -6,7 +7,7 @@ import type {
   CreateRoute,
   FindOneRoute,
   UpdateRoute,
-  RemoveRoute,
+  RemoveRoute
 } from "./lessonPlans.routes";
 import { AppRouteHandler } from "@/types/server";
 
@@ -31,7 +32,7 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
     page = "1",
     limit = "10",
     search = "",
-    classId,
+    classId
   } = c.req.query() as QueryParams;
 
   // Convert to numbers and validate
@@ -49,7 +50,7 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
 
   // Count query for total number of records
   const totalLessonPlans = await prisma.lessonPlan.count({
-    where: whereCondition,
+    where: whereCondition
   });
 
   // Main query with pagination
@@ -61,23 +62,23 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
           id: true,
           user: {
             select: {
-              name: true,
-            },
-          },
-        },
+              name: true
+            }
+          }
+        }
       },
       class: {
         select: {
           id: true,
-          name: true,
-        },
-      },
+          name: true
+        }
+      }
     },
     skip: offset,
     take: limitNum,
     orderBy: {
-      createdAt: "desc",
-    },
+      createdAt: "desc"
+    }
   });
 
   // Filter by search term if provided
@@ -96,8 +97,8 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
         total: totalLessonPlans,
         page: pageNum,
         limit: limitNum,
-        totalPages: Math.ceil(totalLessonPlans / limitNum),
-      },
+        totalPages: Math.ceil(totalLessonPlans / limitNum)
+      }
     },
     HttpStatusCodes.OK
   );
@@ -120,8 +121,8 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
     const member = await prisma.member.findFirst({
       where: {
         userId: user.id,
-        role: { in: ["ADMIN", "TEACHER"] }, // Make sure user is an admin or teacher
-      },
+        role: { in: ["ADMIN", "TEACHER"] } // Make sure user is an admin or teacher
+      }
     });
 
     if (!member) {
@@ -135,8 +136,8 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
     const lessonPlan = await prisma.lessonPlan.create({
       data: {
         ...body,
-        teacherId: member.id,
-      },
+        teacherId: member.id
+      }
     });
 
     return c.json(lessonPlan, HttpStatusCodes.OK);
@@ -170,18 +171,18 @@ export const findOne: AppRouteHandler<FindOneRoute> = async (c) => {
             id: true,
             user: {
               select: {
-                name: true,
-              },
-            },
-          },
+                name: true
+              }
+            }
+          }
         },
         class: {
           select: {
             id: true,
-            name: true,
-          },
-        },
-      },
+            name: true
+          }
+        }
+      }
     });
 
     if (!lessonPlan) {
@@ -219,8 +220,8 @@ export const update: AppRouteHandler<UpdateRoute> = async (c) => {
     const existingLessonPlan = await prisma.lessonPlan.findUnique({
       where: { id },
       include: {
-        teacher: true,
-      },
+        teacher: true
+      }
     });
 
     if (!existingLessonPlan) {
@@ -233,8 +234,8 @@ export const update: AppRouteHandler<UpdateRoute> = async (c) => {
     // Check if user is the creator or an admin
     const member = await prisma.member.findFirst({
       where: {
-        userId: user.id,
-      },
+        userId: user.id
+      }
     });
 
     if (!member) {
@@ -257,7 +258,7 @@ export const update: AppRouteHandler<UpdateRoute> = async (c) => {
     // Update the lesson plan
     const updatedLessonPlan = await prisma.lessonPlan.update({
       where: { id },
-      data: updates,
+      data: updates
     });
 
     return c.json(updatedLessonPlan, HttpStatusCodes.OK);
@@ -287,8 +288,8 @@ export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
     const existingLessonPlan = await prisma.lessonPlan.findUnique({
       where: { id },
       include: {
-        teacher: true,
-      },
+        teacher: true
+      }
     });
 
     if (!existingLessonPlan) {
@@ -301,8 +302,8 @@ export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
     // Check if user is the creator or an admin
     const member = await prisma.member.findFirst({
       where: {
-        userId: user.id,
-      },
+        userId: user.id
+      }
     });
 
     if (!member) {
@@ -324,7 +325,7 @@ export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
 
     // Delete the lesson plan
     await prisma.lessonPlan.delete({
-      where: { id },
+      where: { id }
     });
 
     return c.json(

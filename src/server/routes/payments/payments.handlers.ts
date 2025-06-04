@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as HttpStatusCodes from "stoker/http-status-codes";
 
 import { prisma } from "@/server/prisma/client";
 import type {
   ListRoute,
   CreateRoute,
-  UpdateRoute,
+  UpdateRoute
 } from "@/server/routes/payments/payments.routes";
 import { AppRouteHandler } from "@/types/server";
 
@@ -29,7 +30,7 @@ const formatPayment = (payment: any) => {
     updatedAt:
       payment.updatedAt instanceof Date
         ? payment.updatedAt.toISOString()
-        : payment.updatedAt,
+        : payment.updatedAt
   };
 };
 
@@ -54,7 +55,7 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
   const {
     page = "1",
     limit = "10",
-    search = "",
+    search = ""
   } = c.req.query() as QueryParams;
 
   // Convert to numbers and validate
@@ -64,7 +65,7 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
 
   // Build the where condition
   const whereCondition = {
-    organizationId: session.activeOrganizationId,
+    organizationId: session.activeOrganizationId
   };
 
   // Add search condition if provided
@@ -76,22 +77,22 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
         {
           description: {
             contains: search,
-            mode: "insensitive",
-          },
+            mode: "insensitive"
+          }
         },
         {
           status: {
             contains: search,
-            mode: "insensitive",
-          },
+            mode: "insensitive"
+          }
         },
         {
           paymentMethod: {
             contains: search,
-            mode: "insensitive",
-          },
-        },
-      ],
+            mode: "insensitive"
+          }
+        }
+      ]
     };
   }
 
@@ -99,21 +100,21 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
   const totalPayments = await prisma.payment.count({
     where: {
       ...whereCondition,
-      ...(Object.keys(searchCondition).length > 0 ? searchCondition : {}),
-    },
+      ...(Object.keys(searchCondition).length > 0 ? searchCondition : {})
+    }
   });
 
   // Main query with pagination
   const payments = await prisma.payment.findMany({
     where: {
       ...whereCondition,
-      ...(Object.keys(searchCondition).length > 0 ? searchCondition : {}),
+      ...(Object.keys(searchCondition).length > 0 ? searchCondition : {})
     },
     skip: offset,
     take: limitNum,
     orderBy: {
-      createdAt: "desc",
-    },
+      createdAt: "desc"
+    }
   });
 
   // Format payments to ensure dates are strings and ensure all required fields
@@ -126,8 +127,8 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
         total: totalPayments,
         page: pageNum,
         limit: limitNum,
-        totalPages: Math.ceil(totalPayments / limitNum),
-      },
+        totalPages: Math.ceil(totalPayments / limitNum)
+      }
     },
     HttpStatusCodes.OK
   );
@@ -156,11 +157,11 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
   // Ensure the payment is associated with the active organization
   const paymentData = {
     ...body,
-    organizationId: session.activeOrganizationId,
+    organizationId: session.activeOrganizationId
   };
 
   const createdPayment = await prisma.payment.create({
-    data: paymentData,
+    data: paymentData
   });
 
   // Format the response to ensure dates are strings
@@ -194,8 +195,8 @@ export const update: AppRouteHandler<UpdateRoute> = async (c) => {
   const existingPayment = await prisma.payment.findFirst({
     where: {
       id: params.id,
-      organizationId: session.activeOrganizationId,
-    },
+      organizationId: session.activeOrganizationId
+    }
   });
 
   if (!existingPayment) {
@@ -205,7 +206,7 @@ export const update: AppRouteHandler<UpdateRoute> = async (c) => {
   // Update the payment
   const updatedPayment = await prisma.payment.update({
     where: { id: params.id },
-    data: body,
+    data: body
   });
 
   // Format the response to ensure dates are strings
