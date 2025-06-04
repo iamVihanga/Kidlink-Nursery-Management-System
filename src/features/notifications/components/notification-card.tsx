@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDistanceToNow } from "date-fns";
-import { Check, MessageSquare } from "lucide-react";
+import { Check } from "lucide-react";
 import { useCallback } from "react";
 import { cn } from "@/lib/utils";
 

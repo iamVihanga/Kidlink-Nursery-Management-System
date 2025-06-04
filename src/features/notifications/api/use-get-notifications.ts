@@ -10,19 +10,19 @@ export interface Notification {
   senderId: string;
 }
 
-interface NotificationRecipient {
-  id: string;
-  notificationId: string;
-  recipientId: string;
-  readAt: string | null;
-}
+// interface NotificationRecipient {
+//   id: string;
+//   notificationId: string;
+//   recipientId: string;
+//   readAt: string | null;
+// }
 
 export function useGetNotifications(filter?: "all" | "unread" | "read") {
   return useQuery({
     queryKey: ["notifications", filter],
     queryFn: async () => {
       const response = await client.api.notifications.$get({
-        query: filter ? { filter } : undefined
+        query: filter ? { filter } : { filter: "all" }
       });
 
       if (!response.ok) {
