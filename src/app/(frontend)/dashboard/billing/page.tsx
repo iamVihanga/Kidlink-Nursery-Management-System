@@ -46,6 +46,7 @@ export default function BillingPage() {
         <AppPageShell
           title="Billing"
           description="Manage your billing and subscription information"
+          actionComponent={undefined}
         />
 
         <Separator />
@@ -56,7 +57,8 @@ export default function BillingPage() {
               <CreditCard className="size-12 text-muted-foreground mx-auto mb-4" />
               <h2 className="text-xl font-semibold">Billing Coming Soon</h2>
               <p className="text-muted-foreground mt-2">
-                Billing and subscription management features will be available soon.
+                Billing and subscription management features will be available
+                soon.
               </p>
             </div>
           </div>
