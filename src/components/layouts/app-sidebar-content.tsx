@@ -118,6 +118,12 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
         roles: ["owner", "admin"]
       },
       {
+        title: "Lesson Plans",
+        url: "/dashboard/lessons",
+        icon: BadgeAlert,
+        roles: ["owner", "admin"]
+      },
+      {
         title: "Payments",
         url: "/dashboard/payments",
         icon: CreditCard,
