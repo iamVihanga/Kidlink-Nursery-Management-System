@@ -54,7 +54,7 @@ export const NotificationTag_NotificationScalarFieldEnumSchema = z.enum(['id','n
 
 export const NotificationRecipientScalarFieldEnumSchema = z.enum(['id','notificationId','recipientId','readAt']);
 
-export const LessonPlanScalarFieldEnumSchema = z.enum(['id','title','description','createdAt','updatedAt','teacherId','classId']);
+export const LessonPlanScalarFieldEnumSchema = z.enum(['id','title','description','thumbnail','createdAt','updatedAt','teacherId','classId']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -421,6 +421,7 @@ export const LessonPlanSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string(),
+  thumbnail: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   teacherId: z.string(),
@@ -1044,6 +1045,7 @@ export const LessonPlanSelectSchema: z.ZodType<Prisma.LessonPlanSelect> = z.obje
   id: z.boolean().optional(),
   title: z.boolean().optional(),
   description: z.boolean().optional(),
+  thumbnail: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
   teacherId: z.boolean().optional(),
@@ -2744,6 +2746,7 @@ export const LessonPlanWhereInputSchema: z.ZodType<Prisma.LessonPlanWhereInput> 
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   title: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  thumbnail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   teacherId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
@@ -2756,6 +2759,7 @@ export const LessonPlanOrderByWithRelationInputSchema: z.ZodType<Prisma.LessonPl
   id: z.lazy(() => SortOrderSchema).optional(),
   title: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
+  thumbnail: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   teacherId: z.lazy(() => SortOrderSchema).optional(),
@@ -2774,6 +2778,7 @@ export const LessonPlanWhereUniqueInputSchema: z.ZodType<Prisma.LessonPlanWhereU
   NOT: z.union([ z.lazy(() => LessonPlanWhereInputSchema),z.lazy(() => LessonPlanWhereInputSchema).array() ]).optional(),
   title: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  thumbnail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   teacherId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
@@ -2786,6 +2791,7 @@ export const LessonPlanOrderByWithAggregationInputSchema: z.ZodType<Prisma.Lesso
   id: z.lazy(() => SortOrderSchema).optional(),
   title: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
+  thumbnail: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   teacherId: z.lazy(() => SortOrderSchema).optional(),
@@ -2802,6 +2808,7 @@ export const LessonPlanScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Le
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   title: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  thumbnail: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   teacherId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
@@ -4336,6 +4343,7 @@ export const LessonPlanCreateInputSchema: z.ZodType<Prisma.LessonPlanCreateInput
   id: z.string().optional(),
   title: z.string(),
   description: z.string(),
+  thumbnail: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   teacher: z.lazy(() => MemberCreateNestedOneWithoutLessonPlansInputSchema),
@@ -4346,6 +4354,7 @@ export const LessonPlanUncheckedCreateInputSchema: z.ZodType<Prisma.LessonPlanUn
   id: z.string().optional(),
   title: z.string(),
   description: z.string(),
+  thumbnail: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   teacherId: z.string(),
@@ -4355,6 +4364,7 @@ export const LessonPlanUncheckedCreateInputSchema: z.ZodType<Prisma.LessonPlanUn
 export const LessonPlanUpdateInputSchema: z.ZodType<Prisma.LessonPlanUpdateInput> = z.object({
   title: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  thumbnail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   teacher: z.lazy(() => MemberUpdateOneRequiredWithoutLessonPlansNestedInputSchema).optional(),
@@ -4364,6 +4374,7 @@ export const LessonPlanUpdateInputSchema: z.ZodType<Prisma.LessonPlanUpdateInput
 export const LessonPlanUncheckedUpdateInputSchema: z.ZodType<Prisma.LessonPlanUncheckedUpdateInput> = z.object({
   title: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  thumbnail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   teacherId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4374,6 +4385,7 @@ export const LessonPlanCreateManyInputSchema: z.ZodType<Prisma.LessonPlanCreateM
   id: z.string().optional(),
   title: z.string(),
   description: z.string(),
+  thumbnail: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   teacherId: z.string(),
@@ -4383,6 +4395,7 @@ export const LessonPlanCreateManyInputSchema: z.ZodType<Prisma.LessonPlanCreateM
 export const LessonPlanUpdateManyMutationInputSchema: z.ZodType<Prisma.LessonPlanUpdateManyMutationInput> = z.object({
   title: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  thumbnail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -4390,6 +4403,7 @@ export const LessonPlanUpdateManyMutationInputSchema: z.ZodType<Prisma.LessonPla
 export const LessonPlanUncheckedUpdateManyInputSchema: z.ZodType<Prisma.LessonPlanUncheckedUpdateManyInput> = z.object({
   title: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  thumbnail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   teacherId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5496,6 +5510,7 @@ export const LessonPlanCountOrderByAggregateInputSchema: z.ZodType<Prisma.Lesson
   id: z.lazy(() => SortOrderSchema).optional(),
   title: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
+  thumbnail: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   teacherId: z.lazy(() => SortOrderSchema).optional(),
@@ -5506,6 +5521,7 @@ export const LessonPlanMaxOrderByAggregateInputSchema: z.ZodType<Prisma.LessonPl
   id: z.lazy(() => SortOrderSchema).optional(),
   title: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
+  thumbnail: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   teacherId: z.lazy(() => SortOrderSchema).optional(),
@@ -5516,6 +5532,7 @@ export const LessonPlanMinOrderByAggregateInputSchema: z.ZodType<Prisma.LessonPl
   id: z.lazy(() => SortOrderSchema).optional(),
   title: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
+  thumbnail: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   teacherId: z.lazy(() => SortOrderSchema).optional(),
@@ -8523,6 +8540,7 @@ export const LessonPlanCreateWithoutTeacherInputSchema: z.ZodType<Prisma.LessonP
   id: z.string().optional(),
   title: z.string(),
   description: z.string(),
+  thumbnail: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   class: z.lazy(() => ClassCreateNestedOneWithoutLessonPlansInputSchema)
@@ -8532,6 +8550,7 @@ export const LessonPlanUncheckedCreateWithoutTeacherInputSchema: z.ZodType<Prism
   id: z.string().optional(),
   title: z.string(),
   description: z.string(),
+  thumbnail: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   classId: z.string()
@@ -8721,6 +8740,7 @@ export const LessonPlanScalarWhereInputSchema: z.ZodType<Prisma.LessonPlanScalar
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   title: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  thumbnail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   teacherId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
@@ -9280,6 +9300,7 @@ export const LessonPlanCreateWithoutClassInputSchema: z.ZodType<Prisma.LessonPla
   id: z.string().optional(),
   title: z.string(),
   description: z.string(),
+  thumbnail: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   teacher: z.lazy(() => MemberCreateNestedOneWithoutLessonPlansInputSchema)
@@ -9289,6 +9310,7 @@ export const LessonPlanUncheckedCreateWithoutClassInputSchema: z.ZodType<Prisma.
   id: z.string().optional(),
   title: z.string(),
   description: z.string(),
+  thumbnail: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   teacherId: z.string()
@@ -11363,6 +11385,7 @@ export const LessonPlanCreateManyTeacherInputSchema: z.ZodType<Prisma.LessonPlan
   id: z.string().optional(),
   title: z.string(),
   description: z.string(),
+  thumbnail: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   classId: z.string()
@@ -11465,6 +11488,7 @@ export const PaymentUncheckedUpdateManyWithoutMemberInputSchema: z.ZodType<Prism
 export const LessonPlanUpdateWithoutTeacherInputSchema: z.ZodType<Prisma.LessonPlanUpdateWithoutTeacherInput> = z.object({
   title: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  thumbnail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   class: z.lazy(() => ClassUpdateOneRequiredWithoutLessonPlansNestedInputSchema).optional()
@@ -11473,6 +11497,7 @@ export const LessonPlanUpdateWithoutTeacherInputSchema: z.ZodType<Prisma.LessonP
 export const LessonPlanUncheckedUpdateWithoutTeacherInputSchema: z.ZodType<Prisma.LessonPlanUncheckedUpdateWithoutTeacherInput> = z.object({
   title: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  thumbnail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   classId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -11481,6 +11506,7 @@ export const LessonPlanUncheckedUpdateWithoutTeacherInputSchema: z.ZodType<Prism
 export const LessonPlanUncheckedUpdateManyWithoutTeacherInputSchema: z.ZodType<Prisma.LessonPlanUncheckedUpdateManyWithoutTeacherInput> = z.object({
   title: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  thumbnail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   classId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -11496,6 +11522,7 @@ export const LessonPlanCreateManyClassInputSchema: z.ZodType<Prisma.LessonPlanCr
   id: z.string().optional(),
   title: z.string(),
   description: z.string(),
+  thumbnail: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   teacherId: z.string()
@@ -11519,6 +11546,7 @@ export const ChildClassUncheckedUpdateManyWithoutClassInputSchema: z.ZodType<Pri
 export const LessonPlanUpdateWithoutClassInputSchema: z.ZodType<Prisma.LessonPlanUpdateWithoutClassInput> = z.object({
   title: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  thumbnail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   teacher: z.lazy(() => MemberUpdateOneRequiredWithoutLessonPlansNestedInputSchema).optional()
@@ -11527,6 +11555,7 @@ export const LessonPlanUpdateWithoutClassInputSchema: z.ZodType<Prisma.LessonPla
 export const LessonPlanUncheckedUpdateWithoutClassInputSchema: z.ZodType<Prisma.LessonPlanUncheckedUpdateWithoutClassInput> = z.object({
   title: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  thumbnail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   teacherId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -11535,6 +11564,7 @@ export const LessonPlanUncheckedUpdateWithoutClassInputSchema: z.ZodType<Prisma.
 export const LessonPlanUncheckedUpdateManyWithoutClassInputSchema: z.ZodType<Prisma.LessonPlanUncheckedUpdateManyWithoutClassInput> = z.object({
   title: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  thumbnail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   teacherId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),

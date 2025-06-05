@@ -363,6 +363,7 @@ model LessonPlan {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String
+  thumbnail   String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
