@@ -5,6 +5,7 @@ import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
 
 import { serverAuthMiddleware } from "@/server/middlewares/auth-middleware";
 import { LessonPlanSchema } from "@/types/schema-types/index";
+import { addLessonSchema } from "@/features/lessonPlans/schemas/zod-lesson-schema";
 
 const tags = ["Lesson Plans"];
 
@@ -14,7 +15,7 @@ const querySchema = z.object({
   page: z.string().optional().default("1"),
   limit: z.string().optional().default("10"),
   search: z.string().optional(),
-  classId: z.string().optional(),
+  classId: z.string().optional()
 });
 
 const withPaginationSchema = z.object({
@@ -23,15 +24,15 @@ const withPaginationSchema = z.object({
     total: z.number().default(0),
     page: z.number().default(0),
     limit: z.number().default(0),
-    totalPages: z.number().default(0),
-  }),
+    totalPages: z.number().default(0)
+  })
 });
 
 // Create/update schema
 const lessonPlanInputSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
-  classId: z.string().min(1, "Class is required"),
+  classId: z.string().min(1, "Class is required")
 });
 
 // ---------- List Lesson Plans ----------
@@ -41,7 +42,7 @@ export const list = createRoute({
   method: "get",
   middleware: [serverAuthMiddleware],
   request: {
-    query: querySchema,
+    query: querySchema
   },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
@@ -59,8 +60,8 @@ export const list = createRoute({
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       z.object({ message: z.string() }),
       "Organization not found"
-    ),
-  },
+    )
+  }
 });
 
 // ------------ Create Lesson Plan ------------
@@ -71,9 +72,9 @@ export const create = createRoute({
   middleware: [serverAuthMiddleware],
   request: {
     body: jsonContentRequired(
-      lessonPlanInputSchema,
+      addLessonSchema,
       "The lesson plan information to create"
-    ),
+    )
   },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
@@ -91,8 +92,8 @@ export const create = createRoute({
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
       z.object({ message: z.string() }),
       "Server error occurred"
-    ),
-  },
+    )
+  }
 });
 
 export const findOne = createRoute({
@@ -101,7 +102,7 @@ export const findOne = createRoute({
   method: "get",
   middleware: [serverAuthMiddleware],
   request: {
-    params: IdParamsSchema,
+    params: IdParamsSchema
   },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
@@ -123,8 +124,8 @@ export const findOne = createRoute({
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
       z.object({ message: z.string() }),
       "Server error occurred"
-    ),
-  },
+    )
+  }
 });
 
 export const update = createRoute({
@@ -137,7 +138,7 @@ export const update = createRoute({
     body: jsonContentRequired(
       lessonPlanInputSchema.partial(),
       "The lesson plan information to update"
-    ),
+    )
   },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
@@ -159,8 +160,8 @@ export const update = createRoute({
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
       z.object({ message: z.string() }),
       "Server error occurred"
-    ),
-  },
+    )
+  }
 });
 
 export const remove = createRoute({
@@ -169,7 +170,7 @@ export const remove = createRoute({
   method: "delete",
   middleware: [serverAuthMiddleware],
   request: {
-    params: IdParamsSchema,
+    params: IdParamsSchema
   },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
@@ -191,8 +192,8 @@ export const remove = createRoute({
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
       z.object({ message: z.string() }),
       "Server error occurred"
-    ),
-  },
+    )
+  }
 });
 
 export type ListRoute = typeof list;

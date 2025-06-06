@@ -120,8 +120,7 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
     // Find the member record for this user
     const member = await prisma.member.findFirst({
       where: {
-        userId: user.id,
-        role: { in: ["ADMIN", "TEACHER"] } // Make sure user is an admin or teacher
+        userId: user.id
       }
     });
 

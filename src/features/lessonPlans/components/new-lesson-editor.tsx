@@ -25,6 +25,13 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 
 import { NovelEditor } from "@/features/novel/components/editor";
 import { useRouter } from "next/navigation";
@@ -32,21 +39,27 @@ import { useCreateLesson } from "../api/use-add-lesson";
 import { MediaUploader } from "@/modules/media/components/MediaUploader";
 import { MediaUploadPaths } from "@/modules/media/types";
 import { toast } from "sonner";
+import { useGetClasses } from "@/features/classes/api/use-get-classes";
 
 export function NewLessonEditor() {
   const { mutate, isPending } = useCreateLesson();
   const router = useRouter();
+  const { data: classesData, isLoading: classesLoading } = useGetClasses({
+    limit: 100 // Fetch a reasonable number of classes
+  });
 
   const form = useForm<AddLessonSchema>({
     resolver: zodResolver(addLessonSchema),
     defaultValues: {
       title: "",
       description: "{}",
-      thumbnail: ""
+      thumbnail: "",
+      classId: ""
     }
   });
 
   const handleCreateLesson = (values: AddLessonSchema) => {
+    console.log({ values });
     mutate(values, {
       onSuccess: () => {
         form.reset();
@@ -74,6 +87,35 @@ export function NewLessonEditor() {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="classId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Select Class</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={classesLoading}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a class" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {classesData?.classes.map((classItem) => (
+                          <SelectItem key={classItem.id} value={classItem.id}>
+                            {classItem.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -117,7 +159,6 @@ export function NewLessonEditor() {
           <CardFooter className="flex justify-end">
             <Button
               type="submit"
-              onClick={() => form.handleSubmit(handleCreateLesson)}
               icon={<PlusCircle className="size-4" />}
               loading={isPending}
             >
