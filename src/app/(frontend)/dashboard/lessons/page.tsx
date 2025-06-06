@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { PlusCircleIcon } from "lucide-react";
+import { LessonsGrid } from "@/features/lessonPlans/components/lessons-grid";
 
 export default function NotificationPage() {
   return (
@@ -23,6 +24,8 @@ export default function NotificationPage() {
         />
 
         <Separator />
+
+        <LessonsGrid />
       </div>
     </PageContainer>
   );
