@@ -66,11 +66,7 @@ export const get: AppRouteHandler<GetRoute> = async (c) => {
           recipientId: user.id
         }
       },
-      tags: {
-        include: {
-          notificationTag: true
-        }
-      }
+      tags: true
     },
     orderBy: {
       createdAt: "desc"

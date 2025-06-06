@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+// import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import { type Notification } from "../api/use-get-notifications";
@@ -104,7 +104,7 @@ export function NotificationCard({ notification }: NotificationCardProps) {
             {notification.content}
           </div>
 
-          {notification.tags.length > 0 && (
+          {/* {notification.tags.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-1">
               {notification.tags.map((tag) => (
                 <Badge key={tag.id} variant="outline" className="text-xs">
@@ -112,7 +112,7 @@ export function NotificationCard({ notification }: NotificationCardProps) {
                 </Badge>
               ))}
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </Card>
