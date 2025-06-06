@@ -6,6 +6,13 @@ export const addLessonSchema = LessonPlanSchema.omit({
   createdAt: true,
   updatedAt: true,
   teacherId: true
+}).extend({
+  // Ensure classId is required and validated as a string
+  classId: z
+    .string({
+      required_error: "Class is required"
+    })
+    .min(1, "Class is required")
 });
 
 export type AddLessonSchema = z.infer<typeof addLessonSchema>;
