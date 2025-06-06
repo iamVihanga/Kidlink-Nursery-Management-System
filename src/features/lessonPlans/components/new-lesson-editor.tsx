@@ -29,6 +29,9 @@ import { Button } from "@/components/ui/button";
 import { NovelEditor } from "@/features/novel/components/editor";
 import { useRouter } from "next/navigation";
 import { useCreateLesson } from "../api/use-add-lesson";
+import { MediaUploader } from "@/modules/media/components/MediaUploader";
+import { MediaUploadPaths } from "@/modules/media/types";
+import { toast } from "sonner";
 
 export function NewLessonEditor() {
   const { mutate, isPending } = useCreateLesson();
@@ -57,7 +60,7 @@ export function NewLessonEditor() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleCreateLesson)}>
           <CardHeader>
-            <CardTitle>
+            <CardTitle className="space-y-4">
               <FormField
                 control={form.control}
                 name="title"
@@ -75,10 +78,36 @@ export function NewLessonEditor() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="thumbnail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Add Lesson Thumbnail</FormLabel>
+                    <FormControl>
+                      <MediaUploader
+                        acceptedTypes={["image"]}
+                        path={MediaUploadPaths.LESSONS}
+                        onUpload={(file) => {
+                          field.onChange(file.url);
+                        }}
+                        onError={(error) => {
+                          console.log(error);
+                          toast.error("Failed to upload image", {
+                            description: error.message
+                          });
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </CardTitle>
           </CardHeader>
 
-          <CardContent>
+          <CardContent className="mt-4">
             <NovelEditor
               value={form.watch("description")}
               onChange={(value) => form.setValue("description", value)}
@@ -87,6 +116,8 @@ export function NewLessonEditor() {
 
           <CardFooter className="flex justify-end">
             <Button
+              type="submit"
+              onClick={() => form.handleSubmit(handleCreateLesson)}
               icon={<PlusCircle className="size-4" />}
               loading={isPending}
             >

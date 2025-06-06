@@ -11,7 +11,7 @@ const onUpload = async (file: File) => {
   // Image uploader promise
   const promise = mediaUploader.uploadFile({
     file,
-    path: MediaUploadPaths.MATERIAL_ASSETS,
+    path: MediaUploadPaths.LESSONS
   });
 
   // Initiate image upload promise
@@ -41,7 +41,7 @@ const onUpload = async (file: File) => {
         error: (e) => {
           reject(e);
           return e.message;
-        },
+        }
       }
     );
   });
@@ -59,5 +59,5 @@ export const uploadFn = createImageUpload({
       return false;
     }
     return true;
-  },
+  }
 });
