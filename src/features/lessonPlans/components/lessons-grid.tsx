@@ -66,7 +66,7 @@ export function LessonsGrid() {
           <CardHeader className="p-0">
             <div className="relative h-48 w-full">
               <Image
-                src={lesson.thumbnail}
+                src={lesson.thumbnail!}
                 alt={lesson.title}
                 fill
                 className="object-cover"

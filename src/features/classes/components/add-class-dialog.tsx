@@ -144,7 +144,7 @@ export function AddClassDialog({ className }: Props) {
                   name="teacherId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Thumbnail</FormLabel>
+                      <FormLabel>Lead Teacher</FormLabel>
                       <FormControl>
                         <TeachersDropdown
                           value={field.value}
@@ -172,7 +172,6 @@ export function AddClassDialog({ className }: Props) {
 
                 <Button
                   type="submit"
-                  icon={<PlusCircleIcon className="size-4" />}
                   loading={isPending}
                   disabled={sessionPending}
                 >

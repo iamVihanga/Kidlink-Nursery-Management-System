@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import { SignoutButton } from "@/features/auth/components/signout-button";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function NavUser({
   user
@@ -104,6 +105,12 @@ export function NavUser({
             <DropdownMenuSeparator />
 
             <div className="mt-1" />
+
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Button className="w-full" asChild>
+                <Link href="/">Visit Home</Link>
+              </Button>
+            </DropdownMenuItem>
 
             <DropdownMenuItem asChild className="cursor-pointer">
               <SignoutButton className="w-full" />

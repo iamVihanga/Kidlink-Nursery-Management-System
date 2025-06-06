@@ -29,28 +29,40 @@ export function ClassCard({ _class, authContext }: Props) {
   const { setUpdateId } = useClassesGridFilters();
   const { mutate: deleteMutate } = useDeleteClass();
   const { name, description, createdAt } = _class;
-  const formattedDate = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+  const formattedDate = formatDistanceToNow(new Date(createdAt), {
+    addSuffix: true
+  });
 
   return (
-    <Card className="w-full max-w-xs hover:shadow-sm dark:bg-secondary/10 transition-shadow duration-300 p-3">
+    <Card className="w-full max-w-xs h-fit hover:shadow-sm dark:bg-secondary/10 transition-shadow duration-300 p-3">
       <div className="relative">
         {role !== "member" && (
           <div className="absolute right-1 top-1 z-10">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-6 w-6 bg-background/70 rounded-full">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 bg-background/70 rounded-full"
+                >
                   <MoreVertical className="h-3.5 w-3.5" />
                   <span className="sr-only">Actions</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-28">
                 {permissions?.update && (
-                  <DropdownMenuItem className="cursor-pointer text-xs py-1" onClick={() => setUpdateId(_class.id.toString())}>
+                  <DropdownMenuItem
+                    className="cursor-pointer text-xs py-1"
+                    onClick={() => setUpdateId(_class.id.toString())}
+                  >
                     <EditIcon className="size-3 mr-1.5" /> Edit
                   </DropdownMenuItem>
                 )}
                 {permissions?.delete && (
-                  <DropdownMenuItem className="text-destructive cursor-pointer text-xs py-1" onClick={() => deleteMutate({ id: _class.id })}>
+                  <DropdownMenuItem
+                    className="text-destructive cursor-pointer text-xs py-1"
+                    onClick={() => deleteMutate({ id: _class.id })}
+                  >
                     <TrashIcon className="size-3 mr-1.5" /> Delete
                   </DropdownMenuItem>
                 )}
@@ -58,7 +70,7 @@ export function ClassCard({ _class, authContext }: Props) {
             </DropdownMenu>
           </div>
         )}
-        
+
         <div className="aspect-video w-full overflow-hidden rounded-md mb-2">
           <Image
             src="/assets/class_thumbnail.jpg"
@@ -75,18 +87,23 @@ export function ClassCard({ _class, authContext }: Props) {
           {name}
         </h3>
       </Link>
-      
+
       {description && (
         <p className="text-xs text-muted-foreground line-clamp-1 mt-1">
           {description}
         </p>
       )}
-      
+
       <div className="flex items-center justify-between mt-2 pt-2 border-t text-xs">
         <span className="text-muted-foreground truncate max-w-[130px]">
           {formattedDate}
         </span>
-        <Button variant="secondary" size="sm" className="h-7 px-2 text-xs" asChild>
+        <Button
+          variant="secondary"
+          size="sm"
+          className="h-7 px-2 text-xs"
+          asChild
+        >
           <Link href={`/dashboard/classes/${_class.id}`}>Manage</Link>
         </Button>
       </div>

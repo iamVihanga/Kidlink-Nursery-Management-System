@@ -28,7 +28,7 @@ export function SignoutButton({ className, variant }: Props) {
           },
           onSuccess: () => {
             toast.success("Signed out !", { id: toastId });
-            router.refresh();
+            router.push("/");
           },
           onError: (ctx) => {
             toast.error(ctx.error.message, { id: toastId });

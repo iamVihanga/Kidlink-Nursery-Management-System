@@ -153,7 +153,7 @@ export function CreateUserDialog() {
                         <SelectItem value="admin">
                           {`Admin (System Admin)`}
                         </SelectItem>
-                        <SelectItem value="user">User</SelectItem>
+                        <SelectItem value="user">{`User (Nursery Admin / Teacher or Parent)`}</SelectItem>
                       </SelectContent>
                     </Select>
 

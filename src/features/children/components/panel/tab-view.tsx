@@ -159,14 +159,6 @@ export function TabView() {
                             {format(new Date(feedback.createdAt), "MMM d")}
                           </div>
                         </div>
-                        <p className="text-sm mt-2 line-clamp-3">
-                          {feedback.content}
-                        </p>
-                        {feedback.teacherId && (
-                          <div className="mt-2 pt-1 border-t border-border/50 text-xs text-muted-foreground flex justify-end">
-                            By: {"Staff"}
-                          </div>
-                        )}
                       </div>
                     ))}
                   </div>

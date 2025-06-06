@@ -21,14 +21,31 @@ export const columns: ColumnDef<Child>[] = [
           </p>
         </div>
       );
-      
+
       return (
-        <Link 
+        <Link
           href={`/dashboard/children/${row.original.id}`}
           className="hover:underline text-primary cursor-pointer"
         >
           {content}
         </Link>
+      );
+    }
+  },
+  {
+    accessorKey: "parentId",
+    header: "Parent",
+    cell: ({ row }) => {
+      const parentId = row.original.parentId;
+      return parentId ? (
+        <Link
+          href={`/dashboard/children/${parentId}`}
+          className="hover:underline text-primary cursor-pointer"
+        >
+          View Parent
+        </Link>
+      ) : (
+        "No Parent"
       );
     }
   },

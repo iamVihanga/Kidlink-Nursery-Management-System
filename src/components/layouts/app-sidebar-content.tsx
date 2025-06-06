@@ -6,7 +6,6 @@ import {
   AudioWaveform,
   Command,
   GalleryVerticalEnd,
-  Settings2,
   GraduationCapIcon,
   UsersIcon,
   LayoutDashboard,
@@ -17,7 +16,8 @@ import {
   School,
   FileBadge2Icon,
   BadgeAlert,
-  CreditCard
+  CreditCard,
+  BellIcon
 } from "lucide-react";
 
 import { type Session } from "@/lib/auth";
@@ -127,7 +127,7 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
         title: "Payments",
         url: "/dashboard/payments",
         icon: CreditCard,
-        roles: ["owner", "member"]
+        roles: ["member"]
       }
       // {
       //   title: "Materials",
@@ -165,15 +165,15 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
           ]
         : []),
       {
-        title: "Settings",
-        url: "/dashboard/settings",
-        icon: Settings2,
-        items: [
-          {
-            title: "General",
-            url: "/dashboard/settings"
-          }
-        ]
+        title: "Notifications",
+        url: "/dashboard/notifications",
+        icon: BellIcon
+        // items: [
+        //   {
+        //     title: "General",
+        //     url: "/dashboard/settings"
+        //   }
+        // ]
       }
     ]
   };

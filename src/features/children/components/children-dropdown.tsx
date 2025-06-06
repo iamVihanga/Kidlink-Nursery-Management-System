@@ -23,9 +23,10 @@ import { ChevronsUpDown, Check } from "lucide-react";
 type Props = {
   value: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
 };
 
-export function ChildrenDropdown({ value, onChange }: Props) {
+export function ChildrenDropdown({ value, onChange, disabled }: Props) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -43,6 +44,7 @@ export function ChildrenDropdown({ value, onChange }: Props) {
           role="combobox"
           aria-expanded={open}
           className="w-full justify-between"
+          disabled={disabled}
         >
           {value
             ? data?.children.find((child) => child.id === value)?.firstName
