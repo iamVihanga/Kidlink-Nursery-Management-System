@@ -129,7 +129,10 @@ export function AddNewFeedback({ childId }: AddNewFeedbackProps) {
                   <FormItem>
                     <FormLabel>Content</FormLabel>
                     <FormControl>
-                      <Textarea {...field} placeholder="Lorem ipsum" />
+                      <Textarea
+                        {...field}
+                        placeholder="Your child's skills are rising and improving."
+                      />
                     </FormControl>
 
                     <FormMessage {...field} />
@@ -147,6 +150,7 @@ export function AddNewFeedback({ childId }: AddNewFeedbackProps) {
                       <ChildrenDropdown
                         value={field.value}
                         onChange={field.onChange}
+                        disabled
                       />
                     </FormControl>
 

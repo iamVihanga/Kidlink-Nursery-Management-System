@@ -17,10 +17,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fontSans.variable} ${fontHeading.variable}`}
-      suppressHydrationWarning
+      className={`${fontSans.variable} ${fontHeading.variable} font-sans antialiased`}
+      suppressHydrationWarning={true}
     >
-      <body className="font-sans antialiased" suppressHydrationWarning={true}>
+      <body>
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -327,7 +327,7 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
 
               {/* Member ID (would typically be a dropdown in a real implementation) */}
               {/* Member ID - now with test value indicated */}
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="memberId"
                 render={({ field }) => (
@@ -346,7 +346,7 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
 
               {/* Description */}
               <FormField
@@ -354,7 +354,7 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                 name="description"
                 render={({ field }) => (
                   <FormItem className="col-span-2">
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>{`Description (Optional)`}</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
@@ -384,12 +384,6 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                           onChange={() => setSkipImageUpload(!skipImageUpload)}
                           className="rounded border-gray-300 text-primary focus:ring-primary"
                         />
-                        <label
-                          htmlFor="skip-upload"
-                          className="text-sm text-muted-foreground"
-                        >
-                          Skip image upload (for testing)
-                        </label>
                       </div>
                     </div>
 
@@ -435,11 +429,6 @@ export function AddNewPayment({ onPaymentCreated }: AddNewPaymentProps = {}) {
                         )}
                       </div>
                     )}
-
-                    <p className="text-xs text-muted-foreground mt-1">
-                      You can skip uploading a receipt for testing purposes. The
-                      payment will still be created.
-                    </p>
                     <FormMessage />
                   </FormItem>
                 )}

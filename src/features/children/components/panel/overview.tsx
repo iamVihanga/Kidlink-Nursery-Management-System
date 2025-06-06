@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AssignToClass } from "@/features/children/components/assign-to-class";
 
 import { useGetChild } from "@/features/children/api/use-get-child";
 
@@ -130,11 +131,15 @@ export function Overview() {
                   <div className="flex items-center gap-3 mb-2">
                     <BookOpen className="w-4 h-4 text-primary/80" />
                     <span className="text-sm text-muted-foreground">
-                      Classes:
+                      Classe:
                     </span>
-                    <span className="ml-auto text-sm font-medium">
-                      {data.classes?.length || 0}
-                    </span>
+                    {data?.classes && data?.classes?.length > 0 ? (
+                      <span className="ml-auto text-sm font-medium">
+                        {data.classes?.length}
+                      </span>
+                    ) : (
+                      <AssignToClass childId={id} />
+                    )}
                   </div>
 
                   {data.classes && data.classes.length > 0 && (

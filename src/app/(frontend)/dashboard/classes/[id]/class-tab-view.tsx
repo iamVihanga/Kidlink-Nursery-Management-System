@@ -94,21 +94,19 @@ export function ClassTabView({ classId }: ClassTabViewProps) {
             <h3>Teachers ({teachers.length})</h3>
             <div className="grid grid-cols-2 gap-2 mt-4">
               {teachers.map((teacher) => (
-                <Link key={teacher.id} href={`/dashboard/staff/${teacher.id}`}>
-                  <div className="border p-3 rounded flex gap-3">
-                    <Avatar>
-                      <AvatarFallback>
-                        {getInitials(teacher.name)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p>
-                        {teacher.name} {teacher.isLead && <Badge>Lead</Badge>}
-                      </p>
-                      <p className="text-sm text-gray-500">{teacher.email}</p>
-                    </div>
+                // <Link key={teacher.id} href={`/dashboard/staff/${teacher.id}`}>
+                <div key={teacher.id} className="border p-3 rounded flex gap-3">
+                  <Avatar>
+                    <AvatarFallback>{getInitials(teacher.name)}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p>
+                      {teacher.name} {teacher.isLead && <Badge>Lead</Badge>}
+                    </p>
+                    <p className="text-sm text-gray-500">{teacher.email}</p>
                   </div>
-                </Link>
+                </div>
+                // </Link>
               ))}
             </div>
           </TabsContent>
