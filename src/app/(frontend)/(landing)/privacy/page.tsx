@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-export default function PrivacyPolicyPage() {
+export default function PrivacyPage() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Header */}
@@ -29,162 +29,119 @@ export default function PrivacyPolicyPage() {
 
       {/* Main Content */}
       <main className="flex-1 px-6 lg:px-8 py-12">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">
-            Privacy Policy
-          </h1>
-
-          <div className="prose prose-gray max-w-none">
-            <p className="text-gray-600 mb-6">Last Updated: June 1, 2025</p>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                1. Introduction
-              </h2>
-              <p className="mb-4">
-                {`At Kidlink ("we," "our," or "us"), we are committed to
-                protecting your privacy. This Privacy Policy explains how we
-                collect, use, disclose, and safeguard your information when you
-                use our platform.`}
-              </p>
-              <p>
-                {`By accessing or using Kidlink, you agree to this Privacy Policy.
-                If you do not agree, please do not use our service.`}
-              </p>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                2. Information We Collect
-              </h2>
-              <h3 className="text-lg font-medium mb-2">
-                2.1 Personal Information
-              </h3>
-              <ul className="list-disc pl-5 mb-4">
-                <li>Account information (name, email address, password)</li>
-                <li>Profile information (profile picture, contact details)</li>
-                <li>For nursery owners: business information, bank details</li>
-                <li>
-                  For parents: information about your children (name, age, etc.)
-                </li>
-                <li>
-                  For teachers: professional qualifications and background
-                </li>
-              </ul>
-
-              <h3 className="text-lg font-medium mb-2">
-                2.2 Automatically Collected Information
-              </h3>
-              <ul className="list-disc pl-5">
-                <li>
-                  Device information (IP address, browser type, operating
-                  system)
-                </li>
-                <li>Usage data (pages visited, features used, time spent)</li>
-                <li>Cookies and similar technologies</li>
-              </ul>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                3. How We Use Your Information
-              </h2>
-              <p className="mb-4">We use the collected information for:</p>
-              <ul className="list-disc pl-5">
-                <li>Providing and maintaining our service</li>
-                <li>Processing payments</li>
-                <li>
-                  Facilitating communication between nurseries, teachers, and
-                  parents
-                </li>
-                <li>Sending notifications and updates</li>
-                <li>Improving our service and user experience</li>
-                <li>Ensuring security and preventing fraud</li>
-                <li>Complying with legal obligations</li>
-              </ul>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                4. Data Security
-              </h2>
-              <p>
-                We implement appropriate security measures to protect your
-                personal information from unauthorized access, alteration,
-                disclosure, or destruction. However, no method of transmission
-                over the Internet or electronic storage is 100% secure, and we
-                cannot guarantee absolute security.
-              </p>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                {`5. Children's Privacy`}
-              </h2>
-              <p>
-                {`Our service collects limited information about children through
-                their parents or guardians. This information is used solely for
-                the purposes of providing our educational services. We comply
-                with applicable laws regarding children's privacy.`}
-              </p>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                6. Sharing Information
-              </h2>
-              <p className="mb-4">We may share your information with:</p>
-              <ul className="list-disc pl-5">
-                <li>
-                  Nurseries, teachers, and parents as necessary for the service
-                </li>
-                <li>Service providers who assist in operating our platform</li>
-                <li>Legal authorities when required by law</li>
-              </ul>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                7. Your Rights
-              </h2>
-              <p className="mb-4">
-                Depending on your location, you may have the right to:
-              </p>
-              <ul className="list-disc pl-5">
-                <li>Access your personal information</li>
-                <li>Correct inaccurate information</li>
-                <li>Delete your personal information</li>
-                <li>Restrict or object to processing</li>
-                <li>Data portability</li>
-                <li>Withdraw consent</li>
-              </ul>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                8. Changes to This Privacy Policy
-              </h2>
-              <p>
-                {`We may update our Privacy Policy from time to time. We will
-                notify you of any changes by posting the new Privacy Policy on
-                this page and updating the "Last Updated" date.`}
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                9. Contact Us
-              </h2>
-              <p>
-                If you have any questions about this Privacy Policy, please
-                contact us at:
-                <br />
-                Email: privacy@kidlink.com
-                <br />
-                Address: Kidlink Headquarters, 123 Education Lane, London, UK
-              </p>
-            </section>
+        <div className="max-w-3xl mx-auto py-8 px-4">
+          <h1 className="text-3xl font-bold mb-6">Privacy Policy – Kidlink</h1>
+          
+          <div className="text-sm text-muted-foreground mb-6">
+            <p>Effective Date: June 15, 2025</p>
+            <p>Last Updated: June 15, 2025</p>
           </div>
+
+          <p className="mb-6">
+            Welcome to Kidlink, a digital platform developed by MindTech Innovations LLC, Dubai, designed for parents, 
+            children, teachers, and nursery administrators to enhance communication and learning experiences. 
+            Your privacy is important to us, and this Privacy Policy explains how we collect, use, and 
+            protect your personal information.
+          </p>
+
+          <p className="mb-6">
+            By using Kidlink via our mobile apps or website (https://kidlink.app), you agree to this policy.
+          </p>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">1. Information We Collect</h2>
+            <p className="mb-2">We collect the following types of personal and device information:</p>
+            <ul className="list-disc pl-6">
+              <li>Name</li>
+              <li>Email address</li>
+              <li>Age or child's date of birth (if provided)</li>
+              <li>Device information (e.g., operating system, device type)</li>
+            </ul>
+            <p className="mt-2">We collect only the data necessary for providing and improving our services.</p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">2. How We Use Your Information</h2>
+            <p className="mb-2">We use the collected information to:</p>
+            <ul className="list-disc pl-6">
+              <li>Enable educational features and personalized experiences</li>
+              <li>Provide feedback tools between teachers and parents</li>
+              <li>Maintain platform functionality and user experience</li>
+              <li>Communicate updates or support messages (if applicable)</li>
+            </ul>
+            <p className="mt-2">We do not use your data for advertising or marketing purposes.</p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">3. Data Storage & Security</h2>
+            <p>
+              Your data is stored securely on our servers and protected by appropriate technical and organizational 
+              measures. We strive to ensure your personal information is safe and prevent unauthorized access, 
+              disclosure, or modification.
+            </p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">4. No Third-Party Analytics or Advertising</h2>
+            <p>
+              Kidlink does not integrate third-party analytics tools (such as Google Analytics or Facebook SDKs), 
+              and we do not serve advertisements through the platform.
+            </p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">5. User-Generated Content</h2>
+            <p>
+              If you submit or upload any feedback, notes, or data via the app (e.g., teacher notes, child activity logs), 
+              that content is stored securely and used only for intended platform features.
+            </p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">6. Children's Privacy</h2>
+            <p className="mb-2">
+              While Kidlink is not directly used by children under 13, it may contain information about them 
+              (e.g., name, age, learning feedback) provided by parents or teachers. We ensure all such data is treated 
+              with strict confidentiality and in compliance with applicable child protection laws.
+            </p>
+            <p>We do not knowingly collect data directly from children under 13.</p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">7. Data Retention</h2>
+            <p>
+              We retain user information only as long as necessary for the purposes described in this policy. 
+              Users may request deletion of their data by contacting us.
+            </p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">8. Your Rights</h2>
+            <p className="mb-2">You have the right to:</p>
+            <ul className="list-disc pl-6">
+              <li>Access the data we hold about you</li>
+              <li>Request correction or deletion of your data</li>
+              <li>Withdraw consent (where applicable)</li>
+            </ul>
+            <p className="mt-2">To exercise any of these rights, email us at <a href="mailto:info@kidlink.ae" className="text-primary hover:underline">info@kidlink.ae</a>.</p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">9. Changes to This Policy</h2>
+            <p>
+              We may update this Privacy Policy from time to time. Any changes will be posted on our website and 
+              notified in the app where appropriate. Continued use of the platform after such updates implies your 
+              acceptance of the new policy.
+            </p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">10. Contact Us</h2>
+            <p>For questions, feedback, or data-related requests, contact us:</p>
+            <p className="mt-2">MindTech Innovations LLC</p>
+            <p className="flex items-center mt-2">📧 <a href="mailto:info@kidlink.ae" className="text-primary ml-2 hover:underline">info@kidlink.ae</a></p>
+            <p className="flex items-center mt-1">🌐 <a href="https://kidlink.app" className="text-primary ml-2 hover:underline">https://kidlink.app</a></p>
+          </section>
         </div>
       </main>
 

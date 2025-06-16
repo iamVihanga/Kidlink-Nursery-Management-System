@@ -29,188 +29,125 @@ export default function TermsPage() {
 
       {/* Main Content */}
       <main className="flex-1 px-6 lg:px-8 py-12">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">
-            Terms and Conditions
-          </h1>
-
-          <div className="prose prose-gray max-w-none">
-            <p className="text-gray-600 mb-6">Last Updated: June 1, 2025</p>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                1. Acceptance of Terms
-              </h2>
-              <p>
-                By accessing or using Kidlink, you agree to be bound by these
-                Terms and Conditions and all applicable laws and regulations. If
-                you do not agree with any of these terms, you are prohibited
-                from using or accessing Kidlink.
-              </p>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                2. User Accounts
-              </h2>
-              <p className="mb-4">
-                When you create an account with us, you must provide accurate,
-                complete, and current information. You are responsible for
-                safeguarding the password and for all activities that occur
-                under your account.
-              </p>
-              <p>
-                You agree to notify us immediately of any unauthorized access to
-                your account or any other breach of security.
-              </p>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                3. User Roles and Responsibilities
-              </h2>
-
-              <h3 className="text-lg font-medium mb-2">
-                3.1 Nursery Owners/Administrators
-              </h3>
-              <p className="mb-4">
-                As a nursery owner or administrator, you are responsible for:
-              </p>
-              <ul className="list-disc pl-5 mb-4">
-                <li>Providing accurate information about your nursery</li>
-                <li>Managing teacher accounts and parent invitations</li>
-                <li>Ensuring appropriate use of the platform by your staff</li>
-                <li>
-                  {`Maintaining confidentiality of children's and parents'
-                  information`}
-                </li>
-              </ul>
-
-              <h3 className="text-lg font-medium mb-2">3.2 Teachers</h3>
-              <p className="mb-4">As a teacher, you are responsible for:</p>
-              <ul className="list-disc pl-5 mb-4">
-                <li>Creating appropriate content for lesson plans</li>
-                <li>Providing accurate feedback about children</li>
-                <li>
-                  Maintaining professional conduct when using the platform
-                </li>
-              </ul>
-
-              <h3 className="text-lg font-medium mb-2">3.3 Parents</h3>
-              <p className="mb-4">As a parent, you are responsible for:</p>
-              <ul className="list-disc pl-5">
-                <li>Providing accurate information about your children</li>
-                <li>Using the platform in accordance with these terms</li>
-                <li>Respecting the privacy of other users</li>
-              </ul>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                4. Payments and Subscriptions
-              </h2>
-              <p className="mb-4">
-                Some features of Kidlink may require payment or subscription. By
-                subscribing to our paid services, you agree to pay all fees in
-                accordance with the pricing and terms displayed at the time of
-                purchase.
-              </p>
-              <p>
-                We reserve the right to change our pricing structure at any
-                time. Any changes will be communicated in advance.
-              </p>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                5. Content
-              </h2>
-              <p className="mb-4">
-                Users retain ownership of any intellectual property rights they
-                hold in the content they upload to Kidlink. By uploading
-                content, you grant Kidlink a worldwide, non-exclusive license to
-                use, reproduce, modify, and display the content in connection
-                with the service.
-              </p>
-              <p>
-                You are responsible for ensuring that you have the necessary
-                rights to any content you upload or share through our platform.
-              </p>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                6. Prohibited Activities
-              </h2>
-              <p className="mb-4">
-                You may not engage in any of the following activities:
-              </p>
-              <ul className="list-disc pl-5">
-                <li>Using the service for any unlawful purpose</li>
-                <li>Uploading or sharing inappropriate or harmful content</li>
-                <li>
-                  {`Attempting to gain unauthorized access to other users'
-                  accounts`}
-                </li>
-                <li>Interfering with the proper functioning of the service</li>
-                <li>Impersonating another person or entity</li>
-                <li>
-                  Using the service to collect personal information about users
-                  without their consent
-                </li>
-              </ul>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                7. Limitation of Liability
-              </h2>
-              <p>
-                To the maximum extent permitted by law, Kidlink shall not be
-                liable for any indirect, incidental, special, consequential, or
-                punitive damages resulting from your use of or inability to use
-                the service.
-              </p>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                8. Termination
-              </h2>
-              <p>
-                We may terminate or suspend your account and access to the
-                service at our sole discretion, without prior notice, for
-                conduct that we believe violates these Terms or is harmful to
-                other users, us, or third parties, or for any other reason.
-              </p>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                9. Changes to These Terms
-              </h2>
-              <p>
-                {`We reserve the right to modify these Terms at any time. We will
-                notify you of any changes by posting the new Terms on this page
-                and updating the "Last Updated" date.`}
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                10. Contact Us
-              </h2>
-              <p>
-                If you have any questions about these Terms, please contact us
-                at:
-                <br />
-                Email: legal@kidlink.com
-                <br />
-                Address: Kidlink Headquarters, 123 Education Lane, London, UK
-              </p>
-            </section>
-          </div>
+        <div className="max-w-3xl mx-auto py-8 px-4">
+        <h1 className="text-3xl font-bold mb-6">Terms and Conditions – Kidlink</h1>
+        
+        <div className="text-sm text-muted-foreground mb-6">
+          <p>Effective Date: June 15, 2025</p>
+          <p>Last Updated: June 15, 2025</p>
         </div>
+
+        <p className="mb-6">
+          Welcome to Kidlink, a platform by MindTech Innovations LLC offering parental control, educational content, 
+          and teacher feedback tools for families and nursery environments. By accessing or using Kidlink via our 
+          mobile apps or web portal, you agree to be bound by these Terms and Conditions ("Terms"). If you do not 
+          agree, please discontinue use of the service.
+        </p>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">1. Eligibility</h2>
+          <p>
+            Kidlink is designed for use by parents, children (via guardians), teachers, and nursery administrators. 
+            Use of the platform is only permitted under adult supervision and in accordance with applicable laws.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">2. User Accounts</h2>
+          <p>
+            Registration is not required to access the main features of Kidlink. However, users may provide 
+            information to personalize their experience.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">3. Acceptable Use</h2>
+          <p className="mb-2">You agree not to misuse Kidlink. You must not:</p>
+          <ul className="list-disc pl-6">
+            <li>Share harmful, offensive, or misleading content</li>
+            <li>Upload content violating any third-party rights</li>
+            <li>Interfere with the normal functioning of the app or site</li>
+          </ul>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">4. User-Generated Content</h2>
+          <p>
+            You may submit content (e.g., child feedback, educational notes). By doing so, you grant us a 
+            non-exclusive license to use, store, and display such content for operational purposes.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">5. Data Collection</h2>
+          <p className="mb-2">We collect limited personal data including:</p>
+          <ul className="list-disc pl-6">
+            <li>Name</li>
+            <li>Email</li>
+            <li>Age</li>
+            <li>Device information</li>
+          </ul>
+          <p className="mt-2">
+            We do not use third-party analytics or advertising services. All data is handled in accordance 
+            with relevant data protection laws.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">6. Privacy</h2>
+          <p>
+            Your privacy is important to us. Please review our Privacy Policy for detailed information on 
+            how we collect, store, and use your data.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">7. Payments and Refunds</h2>
+          <p>
+            Kidlink operates on a freemium model, offering basic features for free and optional upgrades or subscriptions.
+            All payments made are non-refundable, unless otherwise required by law.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">8. Intellectual Property</h2>
+          <p>
+            All content, branding, and features are the property of MindTech Innovations LLC. You may not reproduce 
+            or reuse any part of the platform without express written permission.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">9. Limitation of Liability</h2>
+          <p>
+            Kidlink is provided "as is" without any warranties. MindTech Innovations LLC is not liable for any 
+            indirect or consequential damages arising from the use of the service.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">10. Governing Law</h2>
+          <p>
+            These Terms are governed by the laws of Dubai, United Arab Emirates. Any legal disputes shall be 
+            resolved in the courts of Dubai.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">11. Changes to Terms</h2>
+          <p>
+            We may update these Terms from time to time. Changes will be communicated via the app or our website. 
+            Continued use after updates constitutes acceptance of the revised Terms.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">12. Contact Us</h2>
+          <p>For questions or support, contact:</p>
+          <p className="flex items-center mt-2">📧 <a href="mailto:info@kidlink.ae" className="text-primary ml-2 hover:underline">info@kidlink.ae</a></p>
+          <p className="flex items-center mt-1">🌐 <a href="https://kidlink.app" className="text-primary ml-2 hover:underline">https://kidlink.app</a></p>
+        </section>
+      </div>
       </main>
 
       {/* Footer */}

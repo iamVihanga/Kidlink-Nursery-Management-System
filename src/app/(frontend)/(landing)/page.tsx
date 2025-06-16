@@ -49,12 +49,16 @@ export default function LandingPage() {
         </nav>
 
         <div className="flex items-center space-x-3">
-          <Button variant="ghost" className="text-gray-600 hover:text-gray-900">
-            Log In
-          </Button>
-          <Button className="bg-gray-900 hover:bg-gray-800 text-white">
-            Sign Up
-          </Button>
+          <Link href="/signin">
+            <Button variant="ghost" className="text-gray-600 hover:text-gray-900">
+              Log In
+            </Button>
+          </Link>
+          <Link href="/signup">
+            <Button className="bg-gray-900 hover:bg-gray-800 text-white">
+              Sign Up
+            </Button>
+          </Link>
         </div>
       </header>
 
@@ -64,7 +68,7 @@ export default function LandingPage() {
           {/* Hero Text */}
           <div className="space-y-6">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight">
-              {`Your child's`}
+              {`Your child's `}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">
                 nursery journey
               </span>{" "}

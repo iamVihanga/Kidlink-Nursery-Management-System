@@ -31,11 +31,10 @@ export default async function AuthLayout({ children }: Props) {
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2 text-background">
               <p className="text-base font-heading font-semibold pr-28">
-                &ldquo;Rathagala.lk is most exclusive Car Dealership Ad Listing
-                Platform with Unlimited Ads all around in Sri Lanka.&rdquo;
+                &ldquo;Kidlink is redefining early childhood engagement by connecting nursery admins, teachers, and parents with real-time updates and effortless communication.&rdquo;
               </p>
 
-              <footer className="text-sm opacity-50">{`A.R. Perera (CEO. Rathagala.lk)`}</footer>
+              <footer className="text-sm opacity-50">{`Bashitha (CEO, Kidlink)`}</footer>
             </blockquote>
           </div>
         </div>
