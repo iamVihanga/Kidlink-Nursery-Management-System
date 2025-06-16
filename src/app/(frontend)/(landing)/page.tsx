@@ -49,12 +49,16 @@ export default function LandingPage() {
         </nav>
 
         <div className="flex items-center space-x-3">
-          <Button variant="ghost" className="text-gray-600 hover:text-gray-900">
-            Log In
-          </Button>
-          <Button className="bg-gray-900 hover:bg-gray-800 text-white">
-            Sign Up
-          </Button>
+          <Link href="/signin">
+            <Button variant="ghost" className="text-gray-600 hover:text-gray-900">
+              Log In
+            </Button>
+          </Link>
+          <Link href="/signup">
+            <Button className="bg-gray-900 hover:bg-gray-800 text-white">
+              Sign Up
+            </Button>
+          </Link>
         </div>
       </header>
 
